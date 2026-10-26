@@ -1,0 +1,426 @@
+[
+  {
+    "id": "2026-10",
+    "name": "A biblioteca dos pequenos feitiços",
+    "month": "Outubro",
+    "title": "Pequenos rituais.",
+    "emphasis": "Novos capítulos.",
+    "subtitle": "Tem coisas bonitas esperando por você. Um dia de cada vez, a gente chega lá.",
+    "layout": "halloween",
+    "atmosphere": "stars",
+    "objects": [
+      "Poção de estrelas",
+      "Lanterna de abóbora",
+      "Fantasma de bolso"
+    ],
+    "asset": null,
+    "light": false,
+    "tokens": {
+      "--bg": "#211b31",
+      "--surface": "#30283e",
+      "--text": "#f8f0e8",
+      "--muted": "#c0afca",
+      "--line": "#514259",
+      "--accent": "#eec4a0",
+      "--goal-lavender": "#d8c0ec",
+      "--goal-peach": "#ebbd9c",
+      "--goal-sage": "#bbcfb6"
+    }
+  },
+  {
+    "id": "2026-11",
+    "name": "O oceano das histórias esquecidas",
+    "month": "Novembro",
+    "title": "Há mundos inteiros",
+    "emphasis": "entre as páginas.",
+    "subtitle": "Cada dia de prática aproxima você das suas próximas conquistas.",
+    "layout": "tidal",
+    "atmosphere": "bubbles",
+    "objects": [
+      "Livro de pérolas",
+      "Vidro do mar",
+      "Jardim de corais"
+    ],
+    "asset": "/editions/2026-11.png",
+    "light": false,
+    "tokens": {
+      "--bg": "#102d36",
+      "--surface": "#183d46",
+      "--text": "#eef4e9",
+      "--muted": "#b4ced1",
+      "--line": "#3a6268",
+      "--accent": "#d9c59b",
+      "--goal-lavender": "#a9d2cf",
+      "--goal-peach": "#e4bea5",
+      "--goal-sage": "#b7d5ba"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 621,
+      "objectAspect": 0.787109375,
+      "objectSheetHeight": 254.09429280397023,
+      "sceneRatio": 2.489465153970827
+    }
+  },
+  {
+    "id": "2026-12",
+    "name": "A casa dos contos de Natal",
+    "month": "Dezembro",
+    "title": "Seus pequenos rituais,",
+    "emphasis": "embrulhados em cuidado.",
+    "subtitle": "Acompanhe seus dias de prática e as recompensas que esperam por você.",
+    "layout": "village",
+    "atmosphere": "embers",
+    "objects": [
+      "Livros de presente",
+      "Casinha de Natal",
+      "Sino da biblioteca"
+    ],
+    "asset": "/editions/2026-12.png",
+    "light": false,
+    "tokens": {
+      "--bg": "#292c26",
+      "--surface": "#363b30",
+      "--text": "#fcf2df",
+      "--muted": "#cbc9b2",
+      "--line": "#626650",
+      "--accent": "#e8bd91",
+      "--goal-lavender": "#cbd4b0",
+      "--goal-peach": "#efbd9d",
+      "--goal-sage": "#b7d0ad"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 646,
+      "objectAspect": 0.73828125,
+      "objectSheetHeight": 270.8994708994709,
+      "sceneRatio": 2.392523364485981
+    }
+  },
+  {
+    "id": "2027-01",
+    "name": "O atlas dos mundos possíveis",
+    "month": "Janeiro",
+    "title": "Um novo capítulo.",
+    "emphasis": "Mundos por descobrir.",
+    "subtitle": "Escolha seus próximos passos e acompanhe cada dia conquistado.",
+    "layout": "atlas",
+    "atmosphere": "stars",
+    "objects": [
+      "Atlas de bolso",
+      "Globo de estrelas",
+      "Carta de desejos"
+    ],
+    "asset": "/editions/2027-01.png",
+    "light": false,
+    "tokens": {
+      "--bg": "#202a3e",
+      "--surface": "#2c374c",
+      "--text": "#f8f0df",
+      "--muted": "#bfcbdb",
+      "--line": "#54617a",
+      "--accent": "#e5c38d",
+      "--goal-lavender": "#b8cae8",
+      "--goal-peach": "#e5c28c",
+      "--goal-sage": "#c4d1bc"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 606,
+      "objectAspect": 0.81640625,
+      "objectSheetHeight": 244.97607655502392,
+      "sceneRatio": 2.5514950166112955
+    }
+  },
+  {
+    "id": "2027-02",
+    "name": "O baile das histórias secretas",
+    "month": "Fevereiro",
+    "title": "Pequenos passos.",
+    "emphasis": "Histórias extraordinárias.",
+    "subtitle": "Cultive seus hábitos e descubra o que cada conquista pode abrir.",
+    "layout": "salon",
+    "atmosphere": "glimmer",
+    "objects": [
+      "Máscara de histórias",
+      "Convite lacrado",
+      "Teatro de bolso"
+    ],
+    "asset": "/editions/2027-02.png",
+    "light": false,
+    "tokens": {
+      "--bg": "#352235",
+      "--surface": "#493047",
+      "--text": "#f9eee9",
+      "--muted": "#d4bacd",
+      "--line": "#79576d",
+      "--accent": "#e6bd8c",
+      "--goal-lavender": "#d9b9db",
+      "--goal-peach": "#edbf9e",
+      "--goal-sage": "#c8d2b3"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 611,
+      "objectAspect": 0.806640625,
+      "objectSheetHeight": 247.94188861985472,
+      "sceneRatio": 2.530477759472817
+    }
+  },
+  {
+    "id": "2027-03",
+    "name": "A sociedade dos leitores noturnos",
+    "month": "Março",
+    "title": "Seu tempo de cuidar.",
+    "emphasis": "Seu próximo capítulo.",
+    "subtitle": "Registre o que fez por você hoje e acompanhe seu progresso.",
+    "layout": "reading",
+    "atmosphere": "rain",
+    "objects": [
+      "Café de leitura",
+      "Luminária noturna",
+      "Marcador de outono"
+    ],
+    "asset": "/editions/2027-03.png",
+    "light": false,
+    "tokens": {
+      "--bg": "#202a33",
+      "--surface": "#2b3740",
+      "--text": "#f5eee3",
+      "--muted": "#bec9ce",
+      "--line": "#566875",
+      "--accent": "#deb493",
+      "--goal-lavender": "#bdc5df",
+      "--goal-peach": "#dfba98",
+      "--goal-sage": "#b6c9b5"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 594,
+      "objectAspect": 0.83984375,
+      "objectSheetHeight": 238.13953488372093,
+      "sceneRatio": 2.6033898305084744
+    }
+  },
+  {
+    "id": "2027-04",
+    "name": "O jardim das páginas vivas",
+    "month": "Abril",
+    "title": "O que você cultiva",
+    "emphasis": "ganha novas páginas.",
+    "subtitle": "Cada dia feito continua contando para o seu sonho.",
+    "layout": "herbarium",
+    "atmosphere": "motes",
+    "objects": [
+      "Herbário de sonhos",
+      "Terrário de musgo",
+      "Chá de folhas"
+    ],
+    "asset": "/editions/2027-04.png",
+    "light": true,
+    "tokens": {
+      "--bg": "#e8e4d7",
+      "--surface": "#f6f0e2",
+      "--text": "#333b30",
+      "--muted": "#616952",
+      "--line": "#b7b79c",
+      "--accent": "#c4a278",
+      "--goal-lavender": "#536b57",
+      "--goal-peach": "#8b563d",
+      "--goal-sage": "#597153"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 620,
+      "objectAspect": 0.7890625,
+      "objectSheetHeight": 253.46534653465346,
+      "sceneRatio": 2.4935064935064934
+    }
+  },
+  {
+    "id": "2027-05",
+    "name": "Cartas que atravessam o tempo",
+    "month": "Maio",
+    "title": "Um dia de cada vez.",
+    "emphasis": "Uma história só sua.",
+    "subtitle": "Guarde seus pequenos avanços e acompanhe a chegada de cada recompensa.",
+    "layout": "letters",
+    "atmosphere": "motes",
+    "objects": [
+      "Cartas guardadas",
+      "Selo de cera",
+      "Romance com rosa"
+    ],
+    "asset": "/editions/2027-05.png",
+    "light": true,
+    "tokens": {
+      "--bg": "#e8ddcf",
+      "--surface": "#f8efdf",
+      "--text": "#46342e",
+      "--muted": "#795f52",
+      "--line": "#c3ac94",
+      "--accent": "#b78467",
+      "--goal-lavender": "#775a66",
+      "--goal-peach": "#8a5545",
+      "--goal-sage": "#66714e"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 632,
+      "objectAspect": 0.765625,
+      "objectSheetHeight": 261.2244897959184,
+      "sceneRatio": 2.445859872611465
+    }
+  },
+  {
+    "id": "2027-06",
+    "name": "A livraria no fim da rua",
+    "month": "Junho",
+    "title": "Um refúgio para ler.",
+    "emphasis": "Um espaço para crescer.",
+    "subtitle": "Seus hábitos e recompensas, no seu próprio ritmo.",
+    "layout": "bookshop",
+    "atmosphere": "embers",
+    "objects": [
+      "Chá e capítulos",
+      "Livraria de bolso",
+      "Vela de leitura"
+    ],
+    "asset": "/editions/2027-06.png",
+    "light": false,
+    "tokens": {
+      "--bg": "#212e3a",
+      "--surface": "#2b3d48",
+      "--text": "#f8eddb",
+      "--muted": "#bfced1",
+      "--line": "#506a72",
+      "--accent": "#e5ba88",
+      "--goal-lavender": "#b7cdd8",
+      "--goal-peach": "#e3bb91",
+      "--goal-sage": "#bfcca9"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 593,
+      "objectAspect": 0.841796875,
+      "objectSheetHeight": 237.58700696055683,
+      "sceneRatio": 2.607809847198642
+    }
+  },
+  {
+    "id": "2027-07",
+    "name": "O expresso dos capítulos perdidos",
+    "month": "Julho",
+    "title": "A próxima parada",
+    "emphasis": "começa com você.",
+    "subtitle": "Conte seus dias de prática e acompanhe cada conquista pelo caminho.",
+    "layout": "train",
+    "atmosphere": "rain",
+    "objects": [
+      "Bilhete de viagem",
+      "Mala de histórias",
+      "Lanterna do expresso"
+    ],
+    "asset": "/editions/2027-07.png",
+    "light": false,
+    "tokens": {
+      "--bg": "#1f3438",
+      "--surface": "#2c4548",
+      "--text": "#f8edda",
+      "--muted": "#bed1ce",
+      "--line": "#587371",
+      "--accent": "#d9b486",
+      "--goal-lavender": "#aacbc4",
+      "--goal-peach": "#dfba94",
+      "--goal-sage": "#c7cfac"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 620,
+      "objectAspect": 0.7890625,
+      "objectSheetHeight": 253.46534653465346,
+      "sceneRatio": 2.4935064935064934
+    }
+  },
+  {
+    "id": "2027-08",
+    "name": "O arquivo dos casos impossíveis",
+    "month": "Agosto",
+    "title": "Pequenas descobertas.",
+    "emphasis": "Grandes conquistas.",
+    "subtitle": "Cada registro é mais um passo para completar suas metas.",
+    "layout": "archive",
+    "atmosphere": "dust",
+    "objects": [
+      "Chave de capítulos",
+      "Lupa de histórias",
+      "Dossiê iluminado"
+    ],
+    "asset": "/editions/2027-08.png",
+    "light": false,
+    "tokens": {
+      "--bg": "#2d3029",
+      "--surface": "#3a4034",
+      "--text": "#f4eedc",
+      "--muted": "#c5cbb6",
+      "--line": "#666e56",
+      "--accent": "#d6bd8c",
+      "--goal-lavender": "#c7cba9",
+      "--goal-peach": "#ddbc94",
+      "--goal-sage": "#b8c5a8"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 613,
+      "objectAspect": 0.802734375,
+      "objectSheetHeight": 249.1484184914842,
+      "sceneRatio": 2.522167487684729
+    }
+  },
+  {
+    "id": "2027-09",
+    "name": "A oficina dos livros encantados",
+    "month": "Setembro",
+    "title": "Novas páginas.",
+    "emphasis": "Novas possibilidades.",
+    "subtitle": "Cultive seus rituais e acompanhe o que está florescendo.",
+    "layout": "atelier",
+    "atmosphere": "petals",
+    "objects": [
+      "Caderno artesanal",
+      "Pássaro de papel",
+      "Flores e linhas"
+    ],
+    "asset": "/editions/2027-09.png",
+    "light": true,
+    "tokens": {
+      "--bg": "#e5e8dd",
+      "--surface": "#f6f4e9",
+      "--text": "#34433b",
+      "--muted": "#5c6c60",
+      "--line": "#b0beb0",
+      "--accent": "#b598b0",
+      "--goal-lavender": "#5b705f",
+      "--goal-peach": "#8c604f",
+      "--goal-sage": "#6c7264"
+    },
+    "geometry": {
+      "width": 1536,
+      "height": 1024,
+      "objectTop": 643,
+      "objectAspect": 0.744140625,
+      "objectSheetHeight": 268.76640419947506,
+      "sceneRatio": 2.403755868544601
+    }
+  }
+]

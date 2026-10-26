@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tiny-dreams-local",
+  "account_id": "3c445942a6cfb5df16edd05ed9fcc9a4",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-26",
+  "workers_dev": false,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tiny-dreams",
+      "database_id": "1196ac61-6df2-4a85-a1ff-481f2ea31f9f",
+      "migrations_dir": "drizzle",
+      "remote": true
+    }
+  ]
+}

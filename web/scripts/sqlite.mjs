@@ -1,0 +1,5 @@
+// Local-only adapter. Production receives the Cloudflare D1 binding from Sites.
+import {DatabaseSync} from 'node:sqlite';
+import {mkdirSync,readFileSync} from 'node:fs';
+import {dirname} from 'node:path';
+export function localDB(path){mkdirSync(dirname(path),{recursive:true});const sqlite=new DatabaseSync(path);sqlite.exec('PRAGMA foreign_keys=ON');if(!sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='goals'").get())sqlite.exec(readFileSync(new URL('../drizzle/0000_gentle_moon.sql',import.meta.url),'utf8').replaceAll('--> statement-breakpoint',''));function execute(stmt){const s=sqlite.prepare(stmt.sql);const rows=s.columns().length?s.all(...stmt.params):(s.run(...stmt.params),[]);return {results:rows,success:true}}return{prepare(sql){return{sql,params:[],bind(...params){this.params=params;return this},async all(){return execute(this)},async run(){return execute(this)}}},async batch(statements){sqlite.exec('BEGIN');try{const results=statements.map(execute);sqlite.exec('COMMIT');return results}catch(e){sqlite.exec('ROLLBACK');throw e}}}}

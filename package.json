@@ -1,0 +1,12 @@
+{
+  "name": "tiny-dreams-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "test": "npm --prefix web test",
+    "validate": "npm --prefix web run validate",
+    "dev:offline": "npm --prefix web run dev:offline",
+    "db:migrate": "npm --prefix web run db:migrate"
+  }
+}

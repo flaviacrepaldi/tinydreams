@@ -1,0 +1,17 @@
+{
+  "name": "tiny-dreams",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bash scripts/build.sh",
+    "dev": "npm run build && node scripts/dev.mjs",
+    "test": "node scripts/test.mjs && node scripts/test-d1-adapter.mjs && node scripts/test-editions.mjs",
+    "validate": "node scripts/validate-artifact.mjs",
+    "dev:offline": "npm run build && TINY_DREAMS_DB=sqlite node scripts/dev.mjs",
+    "db:migrate": "wrangler d1 migrations apply DB --remote",
+    "test:d1": "node scripts/test-d1-live.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.153.0"
+  }
+}
