@@ -10,8 +10,8 @@ async function call(path='',method='GET',body,owner='planner'){const r=await api
 const plan={kind:'habit',start:'2026-01-01',end:'2026-12-31',weekdays:[1,3,5],notes:'',unit:'',tasks:[],items:[]};
 const goal={title:'Teste',reward:'',target:2,color:'sage',plan};
 try{
- assert.equal(daysUntil('2026-11-12','2026-10-26'),17);
- assert.equal(daysUntil('2026-10-26','2026-10-26'),0);
+ assert.equal(daysUntil('2026-11-12','2026-10-26'),18);
+ assert.equal(daysUntil('2026-10-26','2026-10-26'),1);
  assert.equal(daysUntil('2026-10-25','2026-10-26'),-1);
  assert.equal(daysUntil('invalid','2026-10-26'),null);
  assert.equal(practiceDays('2026-10-26','2026-11-01',[0,1,2,3,4,5,6]),7);

@@ -68,3 +68,9 @@ Creating a past-start habit opens its missing-day history. Cards expose a link t
 
 ## Feature communication
 When a user asks about a capability that already exists, point out where to find it before proposing or implementing an enhancement. Distinguish existing functionality from newly added behavior. The user explicitly requested this after discovering historical day entry in the existing calendar.
+
+## Inclusive deadline countdown
+The user explicitly wants today's date included in the card countdown. Count both today and the end date; a deadline today displays one day with “termina hoje”. An expired deadline remains expired. This is independent from the scheduled practice-day total and daily outcome records.
+
+## Daily actions on the front
+The user wants failure recording directly on the dream card, beside success, rather than behind the history link. Show both daily outcomes on the overview and Today. Impulse habits use “Resisti hoje” and “Cedi ao impulso”; ordinary habits use “Fiz hoje” and “Falha hoje”. Repeating the selected result clears it; switching results corrects the day. Quick actions must not open the history dialog. Quantity/task success still opens the required recording controls, and a failure cannot contradict already-complete measurements/tasks.

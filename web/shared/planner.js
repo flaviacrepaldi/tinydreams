@@ -57,7 +57,8 @@ export function practiceDays(start,end,weekdays){
 
 export function daysUntil(end,day){
  if(!validDay(end)||!validDay(day))return null;
- return Math.round((Date.parse(end+'T12:00:00Z')-Date.parse(day+'T12:00:00Z'))/86400000);
+ const difference=Math.round((Date.parse(end+'T12:00:00Z')-Date.parse(day+'T12:00:00Z'))/86400000);
+ return difference>=0?difference+1:difference;
 }
 
 export const outcomeOf = (g,day) => g.days.includes(day)?'success':(g.failures||[]).includes(day)?'failure':null;
