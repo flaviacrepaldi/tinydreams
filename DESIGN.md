@@ -359,3 +359,6 @@ The creation form groups weekdays and completion rules within “Sua rotina”. 
 
 ### Dream symbols
 Use the original monochrome thin-stroke SVG icon style, with rounded caps, 1.5px strokes, and currentColor. “Símbolo do sonho” offers sixteen icon-only choices with accessible labels in a four-column grid, selected preview, and pressed state. The same SVG appears in the card's upper-left symbol position and Today. Native emoji are internal compatibility keys only, not rendered UI. Illustrated amulets remain automatic and independent of symbol choice.
+
+### Dated habit countdown
+A habit deadline owns the card's prominent countdown: calendar days until the end date, labeled “dias até o prazo”. The date row shows the date without a second competing number. Progress remains completed days out of all scheduled “dias do período”; past missed dates never appear as time remaining. On the deadline date show “O prazo termina hoje”, and after it “Prazo encerrado”. Only actual target completion shows the celebration state. Undated habits retain the practice-day countdown.

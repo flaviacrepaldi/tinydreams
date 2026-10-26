@@ -51,3 +51,8 @@ export function practiceDays(start,end,weekdays){
  for(let n=0;n<length%7;n++)if(selected.has((first.getUTCDay()+n)%7))count++;
  return count;
 }
+
+export function daysUntil(end,day){
+ if(!validDay(end)||!validDay(day))return null;
+ return Math.round((Date.parse(end+'T12:00:00Z')-Date.parse(day+'T12:00:00Z'))/86400000);
+}

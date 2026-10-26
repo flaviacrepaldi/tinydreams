@@ -4,12 +4,16 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {api} from '../worker/api.js';
 import {localDB} from './sqlite.mjs';
-import {progress,complete,practiceDays,targetOf} from '../shared/planner.js';
+import {progress,complete,practiceDays,targetOf,daysUntil} from '../shared/planner.js';
 const dir=mkdtempSync(join(tmpdir(),'tiny-planner-')),DB=localDB(join(dir,'test.sqlite'));
 async function call(path='',method='GET',body,owner='planner'){const r=await api(new Request('https://test/api/goals'+path,{method,headers:{'oai-authenticated-user-id':owner},...(body?{body:JSON.stringify(body)}:{})}),{DB});return {status:r.status,data:await r.json()}}
 const plan={kind:'habit',start:'2026-01-01',end:'2026-12-31',weekdays:[1,3,5],notes:'',unit:'',tasks:[],items:[]};
 const goal={title:'Teste',reward:'',target:2,color:'sage',plan};
 try{
+ assert.equal(daysUntil('2026-11-12','2026-10-26'),17);
+ assert.equal(daysUntil('2026-10-26','2026-10-26'),0);
+ assert.equal(daysUntil('2026-10-25','2026-10-26'),-1);
+ assert.equal(daysUntil('invalid','2026-10-26'),null);
  assert.equal(practiceDays('2026-10-26','2026-11-01',[0,1,2,3,4,5,6]),7);
  assert.equal(practiceDays('2026-10-26','2026-11-01',[1,3,5]),3);
  assert.equal(practiceDays('2026-10-26','2026-10-26',[1]),1);
