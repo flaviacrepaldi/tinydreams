@@ -9,7 +9,7 @@ async function screenshot(name,width,height=1000){await cdp('Emulation.setDevice
 
 
 
-await cdp('Page.enable');await cdp('Page.navigate',{url:'http://localhost:4177'});await wait("typeof state!=='undefined'&&!state.busy");await js('showDemo()');await click('#newGoalButton');
+await cdp('Page.enable');await cdp('Page.navigate',{url:'http://localhost:4177'});await wait("typeof state!=='undefined'&&!state.busy");await js('showDemo()');await click('#newGoalButton');await js("document.querySelector('#goalTarget').value=21");
 if(!await js("document.querySelector('#taskFields').hidden"))throw Error('Tasks should be hidden for simple check');
 await js("document.querySelector('#goalTitle').value='Rotina personalizada';document.querySelector('#habitMeasure').value='tasks';syncKind()");
 await click('#addRoutine');await js("document.querySelector('.routine-row .row-title').value='Primeira tarefa';document.querySelector('.routine-row .row-title').dispatchEvent(new Event('input',{bubbles:true}))");await click('.finish-task');

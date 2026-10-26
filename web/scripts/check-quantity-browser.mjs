@@ -9,7 +9,7 @@ async function screenshot(name,width,height=1000){await cdp('Emulation.setDevice
 
 
 await cdp('Page.enable');await cdp('Page.navigate',{url:'http://localhost:4177'});await wait("typeof state!=='undefined'&&!state.busy");
-await js('showDemo()');await click('#newGoalButton');
+await js('showDemo()');await click('#newGoalButton');await js("document.querySelector('#goalTarget').value=21");
 await js("document.querySelector('#goalTitle').value='Quantidade diária';document.querySelector('#habitMeasure').value='quantity';syncKind();document.querySelector('#goalDailyTarget').value=2;document.querySelector('#goalDailyUnit').value='litros'");
 await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
 await js("document.querySelector('#dailyQuantityFields').scrollIntoView({block:'center'})");

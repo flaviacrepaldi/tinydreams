@@ -5,7 +5,7 @@ async function goals(db,owner,id){
  const rows=await db.prepare('SELECT * FROM goals WHERE owner = ? ORDER BY created_at ASC').bind(owner).all();
  const days=await db.prepare('SELECT c.goal_id, c.day FROM checkins c JOIN goals g ON c.goal_id=g.id WHERE g.owner = ? ORDER BY c.day').bind(owner).all();
  const entries=await db.prepare('SELECT e.* FROM goal_entries e JOIN goals g ON e.goal_id=g.id WHERE g.owner=? ORDER BY e.day,e.entry_key').bind(owner).all();
- const result=rows.results.map(g=>({...g,plan:g.plan?JSON.parse(g.plan):null,days:days.results.filter(d=>d.goal_id===g.id).map(d=>d.day),entries:entries.results.filter(e=>e.goal_id===g.id).map(e=>({key:e.entry_key,day:e.day,value:e.value,note:e.note}))}));return id?result.find(g=>g.id===id):result;
+ const result=rows.results.map(g=>({...g,plan:g.plan?JSON.parse(g.plan):null,days:days.results.filter(d=>d.goal_id===g.id).map(d=>d.day),entries:entries.results.filter(e=>e.goal_id===g.id).map(e=>({key:e.entry_key,day:e.day,value:e.value,note:e.note}))})).map(g=>({...g,target:targetOf(g),redeemed:complete(g)?g.redeemed:0}));return id?result.find(g=>g.id===id):result;
 }
 export async function api(request,env){
  const url=new URL(request.url),owner=request.headers.get('oai-authenticated-user-id');
@@ -75,7 +75,7 @@ export async function api(request,env){
   if((!plan||plan.kind==='habit')&&(!Number.isInteger(body.target)||body.target>3650))return json({error:'Use uma meta de 1 a 3650 dias.'},400);
   if(existing&&planOf(existing).kind!==(plan?.kind||'habit')&&(existing.days.length||existing.entries.length))return json({error:'Crie outro sonho para mudar o tipo sem perder seu histórico.'},400);
   if(existing?.entries.length&&planOf(existing).kind==='habit'&&(Boolean(planOf(existing).dailyTarget)!==Boolean(plan?.dailyTarget)||(planOf(existing).dailyTarget&&planOf(existing).unit!==plan.unit)))return json({error:'Crie outro hábito para mudar a unidade ou a forma de medir sem misturar registros.'},400);
-  const gid=id||crypto.randomUUID(),target=plan?.kind==='list'?plan.items.length:body.target;
+  const gid=id||crypto.randomUUID(),target=targetOf({target:body.target,plan});
   if(id)await env.DB.prepare('UPDATE goals SET title=?,reward=?,target=?,color=?,plan=?,redeemed=0 WHERE id=? AND owner=?').bind(body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,id,owner).run();
   else await env.DB.prepare('INSERT INTO goals (id,owner,title,reward,target,color,plan,created_at) VALUES (?,?,?,?,?,?,?,?)').bind(gid,owner,body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,new Date().toISOString()).run();
   return json(await goals(env.DB,owner,gid),id?200:201);

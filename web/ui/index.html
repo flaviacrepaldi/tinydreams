@@ -10,7 +10,7 @@
 <label for="goalTitle">O que você quer cultivar?</label><input id="goalTitle" maxlength="100" placeholder="Um sonho do seu jeito" required>
 <label for="goalKind">Como acompanhar?</label><select id="goalKind"><option value="habit">Hábito · marcar dias de prática</option><option value="list">Lista · livros, consultas ou etapas</option><option value="amount">Valor · dinheiro ou quantidade</option></select>
 <div class="form-row"><div><label for="goalStart">Começa em (opcional)</label><input id="goalStart" type="date"></div><div><label for="goalEnd">Prazo (opcional)</label><input id="goalEnd" type="date"></div></div>
-<div class="form-row"><div id="targetField"><label for="goalTarget" id="targetLabel">Quantos dias de prática?</label><input id="goalTarget" type="number" min="1" max="3650" value="21" required></div><div id="unitField" hidden><label for="goalUnit">Unidade</label><input id="goalUnit" maxlength="30" placeholder="R$, páginas, km…"></div></div>
+<div class="form-row"><div id="targetField"><label for="goalTarget" id="targetLabel">Quantos dias de prática?</label><input id="goalTarget" type="number" min="1" max="3650" required placeholder="Defina ou escolha um período" aria-describedby="durationHint"><p id="durationHint" class="form-hint" aria-live="polite">Com início e término, a meta vem dos dias da rotina. Sem período completo, defina a quantidade.</p></div><div id="unitField" hidden><label for="goalUnit">Unidade</label><input id="goalUnit" maxlength="30" placeholder="R$, páginas, km…"></div></div>
 <section id="habitFields" class="habit-setup" aria-labelledby="habitSetupTitle">
 <h3 id="habitSetupTitle">Sua rotina</h3>
 <fieldset class="weekday-field"><legend>Em quais dias?</legend><div id="goalWeekdays" class="day-options"></div></fieldset>

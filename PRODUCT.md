@@ -57,3 +57,6 @@ The user requests that updates always be available on the same preview port. Kee
 
 ## Symbols and amulet ownership
 The user chooses each dream's small outline symbol, in the original thin-stroke SVG style. Do not render colorful native emoji or offer native-keyboard emoji entry. A labeled picker offers book, water, leaf, star, target, moon, fruit, strength, music, writing, savings, flower, sun, heart, coffee, and home. The app chooses the illustrated amulet automatically and preserves it on edits. Symbols appear consistently on cards and Today, independent of monthly artwork. Legacy `plan.emoji` values remain the internal persistence keys for compatibility.
+
+## Dates and practice targets
+Habit dates define the practice-day target whenever both start and end are set, using scheduled weekdays across the inclusive range. This rule applies to existing goals on read, display, saving, and reward eligibility, overriding stale defaults. The form shows the computed target read-only; without a complete period, require an explicit manual target with no prefilled 21-day default. Daily quantities and cumulative amount/list goals remain independent. Cards distinguish calendar days to deadline from practice days remaining.

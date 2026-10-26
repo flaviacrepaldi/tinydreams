@@ -4,12 +4,20 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {api} from '../worker/api.js';
 import {localDB} from './sqlite.mjs';
-import {progress,complete} from '../shared/planner.js';
+import {progress,complete,practiceDays,targetOf} from '../shared/planner.js';
 const dir=mkdtempSync(join(tmpdir(),'tiny-planner-')),DB=localDB(join(dir,'test.sqlite'));
 async function call(path='',method='GET',body,owner='planner'){const r=await api(new Request('https://test/api/goals'+path,{method,headers:{'oai-authenticated-user-id':owner},...(body?{body:JSON.stringify(body)}:{})}),{DB});return {status:r.status,data:await r.json()}}
 const plan={kind:'habit',start:'2026-01-01',end:'2026-12-31',weekdays:[1,3,5],notes:'',unit:'',tasks:[],items:[]};
 const goal={title:'Teste',reward:'',target:2,color:'sage',plan};
 try{
+ assert.equal(practiceDays('2026-10-26','2026-11-01',[0,1,2,3,4,5,6]),7);
+ assert.equal(practiceDays('2026-10-26','2026-11-01',[1,3,5]),3);
+ assert.equal(practiceDays('2026-10-26','2026-10-26',[1]),1);
+ assert.equal(practiceDays('2026-10-26','2026-10-26',[0]),0);
+ assert.equal(practiceDays('2024-02-28','2024-03-01',[0,1,2,3,4,5,6]),3);
+ assert.equal(practiceDays('2026-03-07','2026-03-10',[0,1,2,3,4,5,6]),4);
+ assert.equal(practiceDays('2026-11-01','2026-10-26',[1]),null);
+ assert.equal(practiceDays('2026-02-30','2026-03-01',[1]),null);
  let g=(await call('','POST',goal)).data;
  assert.equal((await call('/'+g.id+'/check','POST',{day:'2026-01-04',done:true})).status,400);
  assert.equal((await call('/'+g.id+'/check','POST',{day:'2026-01-05',done:true})).status,200);
@@ -67,5 +75,12 @@ try{
  assert.equal((await call('','POST',{...goal,plan:{...plan,emoji:'texto'}})).status,400);
  assert.equal((await call('','POST',{...goal,plan:{...plan,emoji:'💧📖'}})).status,400);
  assert.equal((await call('/'+g.id,'PATCH',{...goal,plan:{...plan,emoji:'👩🏽‍🎨'}})).data.plan.emoji,'👩🏽‍🎨');
+ const datedPlan={...plan,start:'2026-10-26',end:'2026-11-12',weekdays:[0,1,2,3,4,5,6]};
+ g=(await call('','POST',{...goal,target:21,plan:datedPlan})).data;assert.equal(g.target,18);
+ assert.equal(targetOf({...g,target:21}),18);
+ await DB.prepare('UPDATE goals SET target=21 WHERE id=?').bind(g.id).run();
+ assert.equal((await call()).data.find(item=>item.id===g.id).target,18);
+ r=await call('/'+g.id,'PATCH',{...goal,target:21,plan:{...datedPlan,weekdays:[1,3,5]}});assert.equal(r.data.target,8);
+ assert.equal((await call('','POST',{...goal,plan:{...datedPlan,start:'2026-10-26',end:'2026-10-26',weekdays:[0]}})).status,400);
  console.log('PASS: schedules, periods, task-level daily completion and undo, list item identity, decimal deposits, idempotency, owner isolation, rewards, cleanup, daily quantities, per-day isolation, threshold completion, and decimal precision.');
 }finally{rmSync(dir,{recursive:true,force:true})}

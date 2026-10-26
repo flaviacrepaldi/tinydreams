@@ -10,7 +10,7 @@ async function screenshot(name,width,height=1000){await cdp('Emulation.setDevice
 
 
 
-await cdp('Page.enable');await cdp('Page.navigate',{url:'http://localhost:4177'});await wait("typeof state!=='undefined'&&!state.busy");await js('showDemo()');await click('#newGoalButton');
+await cdp('Page.enable');await cdp('Page.navigate',{url:'http://localhost:4177'});await wait("typeof state!=='undefined'&&!state.busy");await js('showDemo()');await click('#newGoalButton');await js("document.querySelector('#goalTarget').value=21");
 if(!await js("!document.querySelector('#goalColor')"))throw Error('Amulet selector remains');
 await js("document.querySelector('#goalTitle').value='Meu sonho personalizado'");await click('[data-emoji="💧"]');
 if(!await js("document.querySelector('#goalEmoji').value==='💧' && document.querySelector('[data-emoji=\"💧\"]').getAttribute('aria-pressed')==='true'"))throw Error('Picker not selected');

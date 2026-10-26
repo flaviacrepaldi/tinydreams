@@ -20,13 +20,18 @@ export function validatePlan(p){
   if(p.tasks.length)throw Error('Escolha tarefas ou quantidade diária para este hábito.');
  }
  if(p.kind==='habit'&&p.tasks.length&&p.weekdays.some(d=>!p.tasks.some(t=>t.weekdays.includes(d))))throw Error('Adicione pelo menos uma tarefa para cada dia da rotina.');
+ if(p.kind==='habit'&&p.start&&p.end){const count=practiceDays(p.start,p.end,p.weekdays);if(count<1||count>3650)throw Error('Escolha um período com 1 a 3650 dias da rotina.');}
  if(p.kind==='list'&&!p.items.length)throw Error('Adicione pelo menos uma etapa, livro ou consulta.');
  return p;
 }
 export function scheduled(g,day){const p=planOf(g);return (!p.start||day>=p.start)&&(!p.end||day<=p.end)&&p.weekdays.includes(weekday(day));}
 export function tasksOn(g,day){return planOf(g).tasks.filter(t=>t.weekdays.includes(weekday(day)));}
 export function progress(g){const p=planOf(g);if(p.kind==='amount')return Math.round((g.entries||[]).reduce((n,e)=>n+e.value,0)*100)/100;if(p.kind==='list')return p.items.filter(i=>(g.entries||[]).some(e=>e.key===i.id)).length;return g.days.length;}
-export const targetOf = g => planOf(g).kind==='list'?planOf(g).items.length:g.target;
+export function targetOf(g){
+ const p=planOf(g);if(p.kind==='list')return p.items.length;
+ if(p.kind==='habit'&&p.start&&p.end){const count=practiceDays(p.start,p.end,p.weekdays);if(count!==null)return count}
+ return g.target;
+}
 export const complete = g => progress(g)>=targetOf(g);
 export function dayDone(g,day){return g.days.includes(day);}
 
@@ -37,3 +42,12 @@ export function validEmoji(value){
  return [...new Intl.Segmenter('pt-BR',{granularity:'grapheme'}).segment(value)].length===1&&/[\p{Extended_Pictographic}\p{Regional_Indicator}\u20E3]/u.test(value);
 }
 export const automaticAmulet = title => ['lavender','peach','sage'][[...title].reduce((sum,c)=>sum+c.codePointAt(0),0)%3];
+
+// Inclusive calendar range; UTC avoids daylight-saving and device-timezone drift.
+export function practiceDays(start,end,weekdays){
+ if(!validDay(start)||!validDay(end)||end<start)return null;
+ const first=new Date(start+'T12:00:00Z'),length=Math.round((Date.parse(end+'T12:00:00Z')-first.getTime())/86400000)+1;
+ const selected=new Set(weekdays),weeks=Math.floor(length/7);let count=weeks*selected.size;
+ for(let n=0;n<length%7;n++)if(selected.has((first.getUTCDay()+n)%7))count++;
+ return count;
+}
