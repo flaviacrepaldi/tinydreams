@@ -1,4 +1,4 @@
-import {validDay,planOf,validatePlan,scheduled,tasksOn,progress,targetOf,complete} from '../shared/planner.js';
+import {validDay,planOf,validatePlan,scheduled,tasksOn,progress,targetOf,complete,dailyTotal} from '../shared/planner.js';
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
 const saoPauloDay=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 async function goals(db,owner,id){
@@ -29,8 +29,8 @@ export async function api(request,env){
   if(typeof body.done!=='boolean')return json({error:'Informe se o registro foi feito.'},400);
   const statements=[];
   if(action==='check'){
-   if(p.kind!=='habit'||(p.tasks.length&&body.done))return json({error:'Registre as tarefas ou etapas deste sonho.'},400);
-   if(!body.done&&p.tasks.length)statements.push(env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=? AND day=?').bind(id,day));
+   if(p.kind!=='habit'||((p.tasks.length||p.dailyTarget)&&body.done))return json({error:'Registre as tarefas ou etapas deste sonho.'},400);
+   if(!body.done&&(p.tasks.length||p.dailyTarget))statements.push(env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=? AND day=?').bind(id,day));
    if(body.done&&!scheduled(existing,day))return json({error:'Este dia está fora da rotina ou do período do sonho.'},400);
    statements.push(body.done?env.DB.prepare('INSERT INTO checkins (goal_id,day) VALUES (?,?) ON CONFLICT(goal_id,day) DO NOTHING').bind(id,day):env.DB.prepare('DELETE FROM checkins WHERE goal_id=? AND day=?').bind(id,day));
   }else{
@@ -38,7 +38,7 @@ export async function api(request,env){
    if(typeof key!=='string'||!/^[-\w:]{1,100}$/.test(key))return json({error:'Registro inválido.'},400);
    if(p.kind==='list'){
     if(!p.items.some(i=>i.id===key))return json({error:'Etapa não encontrada.'},400);
-   }else if(p.kind==='habit'){
+   }else if(p.kind==='habit'&&!p.dailyTarget){
     const task=tasksOn(existing,day).find(t=>`${day}:${t.id}`===key);
     if(!task)return json({error:'Tarefa não prevista para este dia.'},400);
    }else{
@@ -48,7 +48,13 @@ export async function api(request,env){
    if(body.done&&((p.start&&day<p.start)||(p.end&&day>p.end)||(p.kind==='habit'&&!scheduled(existing,day))))return json({error:'Escolha uma data dentro do período e da rotina do sonho.'},400);
    const note=body.note??'';if(typeof note!=='string'||note.length>300)return json({error:'Use até 300 caracteres para a anotação.'},400);
    statements.push(body.done?env.DB.prepare('INSERT INTO goal_entries (goal_id,entry_key,day,value,note) VALUES (?,?,?,?,?) ON CONFLICT(goal_id,entry_key) DO UPDATE SET day=excluded.day,value=excluded.value,note=excluded.note').bind(id,key,day,value,note):env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=? AND entry_key=?').bind(id,key));
-   if(p.kind==='habit'){
+   if(p.kind==='habit'&&p.dailyTarget){
+    const old=(existing.entries||[]).find(e=>e.key===key);
+    if(old&&old.day!==day)return json({error:'Remova o registro antes de alterar sua data.'},400);
+    // Compute completion inside the same transaction as the contribution, including concurrent additions.
+    statements.push(env.DB.prepare('INSERT INTO checkins (goal_id,day) SELECT ?,? WHERE (SELECT COALESCE(ROUND(SUM(value),2),0) FROM goal_entries WHERE goal_id=? AND day=?) >= ? ON CONFLICT(goal_id,day) DO NOTHING').bind(id,day,id,day,p.dailyTarget));
+    statements.push(env.DB.prepare('DELETE FROM checkins WHERE goal_id=? AND day=? AND (SELECT COALESCE(ROUND(SUM(value),2),0) FROM goal_entries WHERE goal_id=? AND day=?) < ?').bind(id,day,id,day,p.dailyTarget));
+   }else if(p.kind==='habit'){
     const records=(existing.entries||[]).filter(e=>e.key!==key);if(body.done)records.push({key});
     const done=tasksOn(existing,day).every(t=>records.some(e=>e.key===`${day}:${t.id}`));
     statements.push(done?env.DB.prepare('INSERT INTO checkins (goal_id,day) VALUES (?,?) ON CONFLICT(goal_id,day) DO NOTHING').bind(id,day):env.DB.prepare('DELETE FROM checkins WHERE goal_id=? AND day=?').bind(id,day));
@@ -68,6 +74,7 @@ export async function api(request,env){
   try{if(plan)plan=validatePlan(plan)}catch(e){return json({error:e.message},400)}
   if((!plan||plan.kind==='habit')&&(!Number.isInteger(body.target)||body.target>3650))return json({error:'Use uma meta de 1 a 3650 dias.'},400);
   if(existing&&planOf(existing).kind!==(plan?.kind||'habit')&&(existing.days.length||existing.entries.length))return json({error:'Crie outro sonho para mudar o tipo sem perder seu histórico.'},400);
+  if(existing?.entries.length&&planOf(existing).kind==='habit'&&(Boolean(planOf(existing).dailyTarget)!==Boolean(plan?.dailyTarget)||(planOf(existing).dailyTarget&&planOf(existing).unit!==plan.unit)))return json({error:'Crie outro hábito para mudar a unidade ou a forma de medir sem misturar registros.'},400);
   const gid=id||crypto.randomUUID(),target=plan?.kind==='list'?plan.items.length:body.target;
   if(id)await env.DB.prepare('UPDATE goals SET title=?,reward=?,target=?,color=?,plan=?,redeemed=0 WHERE id=? AND owner=?').bind(body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,id,owner).run();
   else await env.DB.prepare('INSERT INTO goals (id,owner,title,reward,target,color,plan,created_at) VALUES (?,?,?,?,?,?,?,?)').bind(gid,owner,body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,new Date().toISOString()).run();

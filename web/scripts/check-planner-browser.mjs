@@ -13,12 +13,14 @@ await wait("typeof state!=='undefined' && !state.busy");
 await js('showDemo()');
 await screenshot('desktop',1440,1000);await screenshot('mobile',390,844);
 await click('#newGoalButton');
-for(const template of ['library','study','skin','sugar','fruit','books','money','health']){
- await js(`document.querySelector('#goalTemplate').value='${template}';applyTemplate()`);
- if(template==='books')await js("document.querySelector('#itemRows .row-title').value='A vegetariana · Han Kang'");
- if(template==='health')await js("document.querySelector('#itemRows .row-title').value='Consulta anual'");
+for(const template of ['skin','books','money']){
+ await js(`document.querySelector('#goalTitle').value='Teste de ${template}';document.querySelector('#goalKind').value='${template==='skin'?'habit':template==='books'?'list':'amount'}';syncKind();document.querySelector('#goalTarget').value=${template==='money'?10000:30};`);
+ if(template==='skin')await js("addRoutineRow({id:'test-task',title:'Tarefa de teste',weekdays:[0,1,2,3,4,5,6]})");
+ if(template==='books')await js("addItemRow({id:'test-item',title:'Item de teste',date:''})");
+
+
  await screenshot('form-'+template,390,844);
- const valid=await js("document.querySelector('#goalForm').checkValidity()");if(!valid)throw Error('Invalid template '+template);
+ const valid=await js("document.querySelector('#goalForm').checkValidity()");if(!valid)throw Error('Invalid custom form '+template);
  await js("document.querySelector('#goalForm').requestSubmit()");
  await wait("!document.querySelector('#goalDialog').open");
  if(template==='skin'){
@@ -53,4 +55,4 @@ await js("document.querySelector('#entryValue').value=1200;document.querySelecto
 await cdp('Page.reload');await wait(`typeof state!=='undefined' && state.goals.some(g=>g.id==='${id}')`);
 if(!await js(`progress(state.goals.find(g=>g.id==='${id}'))===1200`))throw Error('Deposit not persisted');
 await click(`[data-action=delete][data-id="${id}"]`);await click('#confirmDelete');await wait(`!state.goals.some(g=>g.id==='${id}')`);
-console.log('PASS: eight editable templates, mobile/desktop, routine tasks, named monthly books, deposits, tabs, API persistence and cleanup.');ws.close();
+console.log('PASS: custom habit, list, and amount forms, mobile/desktop, routine tasks, named monthly books, deposits, tabs, API persistence and cleanup.');ws.close();

@@ -14,6 +14,10 @@ export function validatePlan(p){
   if(p.tasks.includes(item)&&(!Array.isArray(item.weekdays)||!item.weekdays.length||item.weekdays.some(d=>!Number.isInteger(d)||d<0||d>6)))throw Error('Escolha os dias de cada tarefa.');
   if(p.items.includes(item)&&((item.date&&!validDay(item.date))||(item.date&&p.start&&item.date<p.start)||(item.date&&p.end&&item.date>p.end)))throw Error('As datas das etapas devem ficar dentro do período do sonho.');
  }
+ if(p.dailyTarget!=null){
+  if(p.kind!=='habit'||!Number.isFinite(p.dailyTarget)||p.dailyTarget<=0||p.dailyTarget>1000000000||Math.abs(Math.round(p.dailyTarget*100)-p.dailyTarget*100)>0.00001||!p.unit.trim())throw Error('Informe uma quantidade diária positiva, com até duas casas decimais, e a unidade.');
+  if(p.tasks.length)throw Error('Escolha tarefas ou quantidade diária para este hábito.');
+ }
  if(p.kind==='habit'&&p.tasks.length&&p.weekdays.some(d=>!p.tasks.some(t=>t.weekdays.includes(d))))throw Error('Adicione pelo menos uma tarefa para cada dia da rotina.');
  if(p.kind==='list'&&!p.items.length)throw Error('Adicione pelo menos uma etapa, livro ou consulta.');
  return p;
@@ -24,3 +28,5 @@ export function progress(g){const p=planOf(g);if(p.kind==='amount')return Math.r
 export const targetOf = g => planOf(g).kind==='list'?planOf(g).items.length:g.target;
 export const complete = g => progress(g)>=targetOf(g);
 export function dayDone(g,day){return g.days.includes(day);}
+
+export const dailyTotal = (g,day) => Math.round((g.entries||[]).filter(e=>e.day===day).reduce((sum,e)=>sum+e.value,0)*100)/100;

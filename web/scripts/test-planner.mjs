@@ -44,5 +44,24 @@ try{
  r=await call('/'+g.id+'/entry','POST',{key:'deposit',day:'2026-01-05',done:false});assert.equal(progress(r.data),0);
  assert.equal((await call('/'+g.id,'DELETE')).status,200);
  assert.equal((await DB.prepare('SELECT * FROM goal_entries WHERE goal_id=?').bind(g.id).all()).results.length,0);
- console.log('PASS: schedules, periods, task-level daily completion and undo, list item identity, decimal deposits, idempotency, owner isolation, rewards, and cleanup.');
+ g=(await call('','POST',{...goal,target:30,plan:{...plan,weekdays:[0,1,2,3,4,5,6],unit:'litros',dailyTarget:2}})).data;
+ assert.equal((await call('/'+g.id+'/check','POST',{day:'2026-01-05',done:true})).status,400);
+ const drink=(key,value,day='2026-01-05',done=true)=>call('/'+g.id+'/entry','POST',{key,value,day,done});
+ r=await drink('cup1',0.5);assert.equal(r.data.days.length,0);
+ r=await drink('cup1',0.5);assert.equal(r.data.entries.length,1);
+ r=await drink('cup2',1.5);assert.deepEqual(r.data.days,['2026-01-05']);
+ r=await drink('cup3',0.25,'2026-01-06');assert.deepEqual(r.data.days,['2026-01-05']);
+ assert.equal((await drink('cup3',0.25,'2026-01-05')).status,400);
+ r=await drink('cup2',1.5,'2026-01-05',false);assert.equal(r.data.days.length,0);
+ r=await drink('cup4',1.5);assert.equal(r.data.days.length,1);
+ assert.equal((await drink('bad',-1)).status,400);
+ assert.equal((await drink('bad',0.001)).status,400);
+ assert.equal((await drink('bad',1,'2099-01-01')).status,400);
+ assert.equal((await call('/'+g.id,'PATCH',{...goal,plan:{...plan,unit:'copos',dailyTarget:8}})).status,400);
+ assert.equal((await call('','POST',{...goal,plan:{...plan,unit:'litros',dailyTarget:0}})).status,400);
+ r=await call('/'+g.id+'/check','POST',{day:'2026-01-05',done:false});assert.equal(r.data.days.length,0);assert.equal(r.data.entries.filter(e=>e.day==='2026-01-05').length,0);
+ // Decimal sums use the same rounding in JavaScript and SQL.
+ g=(await call('','POST',{...goal,plan:{...plan,weekdays:[0,1,2,3,4,5,6],unit:'litros',dailyTarget:0.3}})).data;
+ await drink('decimal1',0.1);r=await drink('decimal2',0.2);assert.equal(r.data.days.length,1);
+ console.log('PASS: schedules, periods, task-level daily completion and undo, list item identity, decimal deposits, idempotency, owner isolation, rewards, cleanup, daily quantities, per-day isolation, threshold completion, and decimal precision.');
 }finally{rmSync(dir,{recursive:true,force:true})}
