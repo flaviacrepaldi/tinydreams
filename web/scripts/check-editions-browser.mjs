@@ -37,7 +37,7 @@ for(const edition of catalog){
   await viewport(390,844);await js("document.querySelector('#newGoalButton').click()");
   assert.equal(await js("getComputedStyle(document.querySelector('#goalTitle')).fontSize"),'16px');
   assert.equal(await js("document.querySelector('#goalDialog').getBoundingClientRect().width<=innerWidth"),true);
-  assert.deepEqual(await js("[...document.querySelector('#goalColor').options].map(o=>o.textContent)"),edition.objects);
+  assert.equal(await js("!!document.querySelector('#goalEmoji') && !document.querySelector('#goalColor')"),true);
   await js("document.querySelector('[data-close=goalDialog]').click()");
   await js("document.querySelector('[data-view=today]').click()");assert.equal(await js("document.querySelectorAll('.today-row').length"),3);
   await js("document.querySelector('[data-view=calendar]').click()");assert.ok(await js("document.querySelectorAll('.calendar-day').length>27"));

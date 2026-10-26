@@ -3,7 +3,7 @@ import {fileURLToPath} from 'node:url';
 import {readFile} from 'node:fs/promises';
 import worker from '../worker/index.js';
 
-const port=Number(process.env.PORT||4173);
+const port=Number(process.env.PORT||4175);
 const mode=process.env.TINY_DREAMS_DB||'d1';
 let db;
 if(mode==='sqlite'){

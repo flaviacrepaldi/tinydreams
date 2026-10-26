@@ -353,3 +353,9 @@ The creation dialog opens directly as a custom form, without a template selector
 
 ### Quantity-based habits
 Within the habit form, “Quando o dia fica feito?” reveals an optional daily quantity and free-text unit. The main target still counts completed practice days. Quantity habits show today's numeric progress on the overview and Today, and open a dated contribution form instead of a manual done button. History offers removable contributions and a per-day progress bar; completion follows the threshold automatically. Task controls are hidden and disabled in this mode. Units stay consistent within a habit with recorded quantities.
+
+### Compact task editor
+The creation form groups weekdays and completion rules within “Sua rotina”. Three explicit modes separate a manual daily check, scheduled tasks, and daily quantities. Only the selected mode's fields are visible and participate in validation. Task details use a native accordion: the collapsed summary shows the name and weekday schedule, while the editor provides name, a seven-column weekday selector, remove, and “Pronto”. New tasks inherit the routine weekdays. A live coverage hint identifies selected routine days with no task. Saved task routines reopen in task mode, preserving their entries and dates.
+
+### Dream symbols
+Use the original monochrome thin-stroke SVG icon style, with rounded caps, 1.5px strokes, and currentColor. “Símbolo do sonho” offers sixteen labeled choices in a four-column grid, selected preview, and pressed state. The same SVG appears in the card's upper-left symbol position and Today. Native emoji are internal compatibility keys only, not rendered UI. Illustrated amulets remain automatic and independent of symbol choice.

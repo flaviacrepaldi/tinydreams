@@ -51,3 +51,9 @@ Lists support individually named books, appointments, or milestones with optiona
 
 ## Daily quantities
 Habits may use a daily numeric threshold and a custom unit (such as liters or glasses). Contributions accumulate within their own practice date; reaching the daily threshold creates the day's check-in and contributes one practice day toward the habit target. Removing contributions below the threshold undoes that day. Totals do not carry into other dates. This mode is separate from cumulative amount goals and from task-based routines. Existing goal JSON and entry storage support it without another schema migration.
+
+## Stable local preview
+The user requests that updates always be available on the same preview port. Keep the user-facing local app at http://localhost:4175 and restart that instance when rebuilding embedded frontend assets. Separate offline QA servers may use other ports internally; do not direct the user to those servers.
+
+## Symbols and amulet ownership
+The user chooses each dream's small outline symbol, in the original thin-stroke SVG style. Do not render colorful native emoji or offer native-keyboard emoji entry. A labeled picker offers book, water, leaf, star, target, moon, fruit, strength, music, writing, savings, flower, sun, heart, coffee, and home. The app chooses the illustrated amulet automatically and preserves it on edits. Symbols appear consistently on cards and Today, independent of monthly artwork. Legacy `plan.emoji` values remain the internal persistence keys for compatibility.

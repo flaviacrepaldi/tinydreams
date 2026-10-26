@@ -27,7 +27,6 @@ function applyEdition(){
   document.querySelector('#editionPreviewBanner').hidden=!preview;
   document.querySelector('#resetEdition').hidden=!preview;
   previewSelect.value=selected.id;
-  [...document.querySelector('#goalColor').options].forEach((option,index)=>option.textContent=selected.objects[index]);
   const parts=calendarParts(date);if(!preview&&parts.birthday&&selected.id==='2027-01'){title.firstChild.textContent='Feliz aniversário!';emphasis.textContent='Um novo capítulo seu.';document.querySelector('.intro').textContent='Hoje é dia de celebrar você e as histórias que ainda vai viver.';}
   document.title=`Tiny Dreams · ${selected.name}`;
   document.querySelector('#dateLabel').textContent=date.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',timeZone:THEME_TIME_ZONE});

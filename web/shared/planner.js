@@ -2,6 +2,7 @@ export const validDay = day => typeof day==='string' && /^\d{4}-\d{2}-\d{2}$/.te
 export const weekday = day => new Date(day+'T12:00:00Z').getUTCDay();
 export const planOf = g => g.plan || {kind:'habit',start:'',end:'',weekdays:[0,1,2,3,4,5,6],notes:'',unit:'',tasks:[],items:[]};
 export function validatePlan(p){
+ if(p?.emoji!=null&&!validEmoji(p.emoji))throw Error('Escolha um único emoji para o sonho.');
  if(!p || !['habit','list','amount'].includes(p.kind))throw Error('Escolha como acompanhar este sonho.');
  if((p.start&&!validDay(p.start))||(p.end&&!validDay(p.end))||(p.start&&p.end&&p.end<p.start))throw Error('Confira as datas de início e prazo.');
  if(!Array.isArray(p.weekdays)||!p.weekdays.length||p.weekdays.some(d=>!Number.isInteger(d)||d<0||d>6))throw Error('Escolha pelo menos um dia da semana.');
@@ -30,3 +31,9 @@ export const complete = g => progress(g)>=targetOf(g);
 export function dayDone(g,day){return g.days.includes(day);}
 
 export const dailyTotal = (g,day) => Math.round((g.entries||[]).filter(e=>e.day===day).reduce((sum,e)=>sum+e.value,0)*100)/100;
+
+export function validEmoji(value){
+ if(typeof value!=='string'||!value||value.length>32)return false;
+ return [...new Intl.Segmenter('pt-BR',{granularity:'grapheme'}).segment(value)].length===1&&/[\p{Extended_Pictographic}\p{Regional_Indicator}\u20E3]/u.test(value);
+}
+export const automaticAmulet = title => ['lavender','peach','sage'][[...title].reduce((sum,c)=>sum+c.codePointAt(0),0)%3];

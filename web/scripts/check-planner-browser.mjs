@@ -15,7 +15,7 @@ await screenshot('desktop',1440,1000);await screenshot('mobile',390,844);
 await click('#newGoalButton');
 for(const template of ['skin','books','money']){
  await js(`document.querySelector('#goalTitle').value='Teste de ${template}';document.querySelector('#goalKind').value='${template==='skin'?'habit':template==='books'?'list':'amount'}';syncKind();document.querySelector('#goalTarget').value=${template==='money'?10000:30};`);
- if(template==='skin')await js("addRoutineRow({id:'test-task',title:'Tarefa de teste',weekdays:[0,1,2,3,4,5,6]})");
+ if(template==='skin')await js("document.querySelector('#habitMeasure').value='tasks';syncKind();addRoutineRow({id:'test-task',title:'Tarefa de teste',weekdays:[0,1,2,3,4,5,6]})");
  if(template==='books')await js("addItemRow({id:'test-item',title:'Item de teste',date:''})");
 
 

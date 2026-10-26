@@ -63,5 +63,9 @@ try{
  // Decimal sums use the same rounding in JavaScript and SQL.
  g=(await call('','POST',{...goal,plan:{...plan,weekdays:[0,1,2,3,4,5,6],unit:'litros',dailyTarget:0.3}})).data;
  await drink('decimal1',0.1);r=await drink('decimal2',0.2);assert.equal(r.data.days.length,1);
+ g=(await call('','POST',{...goal,plan:{...plan,emoji:'💧'}})).data;assert.equal(g.plan.emoji,'💧');
+ assert.equal((await call('','POST',{...goal,plan:{...plan,emoji:'texto'}})).status,400);
+ assert.equal((await call('','POST',{...goal,plan:{...plan,emoji:'💧📖'}})).status,400);
+ assert.equal((await call('/'+g.id,'PATCH',{...goal,plan:{...plan,emoji:'👩🏽‍🎨'}})).data.plan.emoji,'👩🏽‍🎨');
  console.log('PASS: schedules, periods, task-level daily completion and undo, list item identity, decimal deposits, idempotency, owner isolation, rewards, cleanup, daily quantities, per-day isolation, threshold completion, and decimal precision.');
 }finally{rmSync(dir,{recursive:true,force:true})}

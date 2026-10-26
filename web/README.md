@@ -4,7 +4,7 @@ A private, literary world for tracking habits, practice days, and personal rewar
 
 ## Local app with remote D1
 
-Requires Node.js 24. The default `npm run dev` now uses the real Cloudflare D1 database **tiny-dreams** through its official HTTP query API. The page stays on http://localhost:4173 and has not been published.
+Requires Node.js 24. The default `npm run dev` now uses the real Cloudflare D1 database **tiny-dreams** through its official HTTP query API. The page stays on http://localhost:4175 and has not been published.
 
 ```sh
 cd web
@@ -77,3 +77,8 @@ Lists contain individually named and optionally dated steps, with actual complet
 A habit can use a positive `plan.dailyTarget` and `plan.unit` instead of a manual check or routine tasks. Dated contributions share the existing entries table. The API updates the contribution and uses the database sum to add/remove the daily check-in in one transaction. Quantities accept two decimal places; retries with the same entry key are idempotent, units cannot change after quantities have been recorded, and contributions do not carry over between dates. Overall habit targets and streaks continue to count completed days. No new database migration is required.
 
 `node scripts/check-quantity-browser.mjs` expects an offline server on 4177 and Chrome DevTools on 9223. It verifies partial daily progress, threshold completion, undo, independent dates, Today progress, and the mobile form using demonstration data only.
+
+The user-facing preview uses port **4175** consistently. Run `PORT=4175 npm run dev`, and restart that same process after rebuilding embedded assets. Other ports are reserved for internal offline QA. `node scripts/check-task-editor-browser.mjs` checks the compact task editor against the offline QA server on 4177, including completion modes, task accordion, saving/reopening, removal, and mobile layout.
+
+### Card symbols and automatic amulets
+A four-column picker selects among sixteen thin-stroke SVG symbols matching the original card style. The same symbol appears on cards and Today. Native emoji are no longer displayed or entered; existing `plan.emoji` values remain internal compatibility keys. New dreams receive an automatically assigned amulet, preserved on editing. Monthly editions affect illustrated amulets independently of selected symbols. `scripts/check-emoji-browser.mjs` verifies selection, card/Today rendering, editing, amulet preservation, and mobile sizing.
