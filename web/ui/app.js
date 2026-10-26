@@ -42,8 +42,8 @@ Object.assign(icons,{
 const emojiChoices=[['📖','Livro','book'],['💧','Água','water'],['🌿','Folha','leaf'],['⭐','Estrela','star'],['🎯','Meta','target'],['🌙','Lua','moon'],['🍎','Fruta','apple'],['💪','Força','strength'],['🎵','Música','music'],['✍️','Escrita','pen'],['💰','Poupança','coin'],['🌸','Flor','flower'],['☀️','Sol','sun'],['❤️','Coração','heart'],['☕','Café','coffee'],['🏡','Casa','home']];
 function symbolChoice(value){return emojiChoices.find(([emoji])=>emoji===value)||emojiChoices.find(([emoji])=>emoji===({'✨':'⭐','💫':'⭐','🍓':'🍎','🫧':'💧'}[value]))||emojiChoices[0]}
 function goalEmoji(g){const value=planOf(g).emoji||({sage:'🌿',peach:'⭐',lavender:'📖'}[g.color]||'📖');return icon(symbolChoice(value)[2],'card-symbol')}
-$('#emojiChoices').innerHTML=emojiChoices.map(([value,name,symbol])=>`<button type="button" class="emoji-choice" data-emoji="${value}" aria-label="${name}" aria-pressed="false">${icon(symbol)}<span>${name}</span></button>`).join('');
-function updateEmojiPicker(){const selected=symbolChoice($('#goalEmoji').value.trim());$('#emojiPreview').innerHTML=icon(selected[2]);$('#symbolName').textContent=selected[1];document.querySelectorAll('[data-emoji]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.emoji===selected[0])))}
+$('#emojiChoices').innerHTML=emojiChoices.map(([value,name,symbol])=>`<button type="button" class="emoji-choice" data-emoji="${value}" aria-label="${name}" aria-pressed="false">${icon(symbol)}</button>`).join('');
+function updateEmojiPicker(){const selected=symbolChoice($('#goalEmoji').value.trim());$('#emojiPreview').innerHTML=icon(selected[2]);document.querySelectorAll('[data-emoji]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.emoji===selected[0])))}
 $('#emojiChoices').addEventListener('click',event=>{const button=event.target.closest('[data-emoji]');if(button){$('#goalEmoji').value=button.dataset.emoji;updateEmojiPicker()}});
 const weekNames=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 const fmt=n=>new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(n);
