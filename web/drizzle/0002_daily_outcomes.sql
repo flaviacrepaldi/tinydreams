@@ -1,0 +1,1 @@
+CREATE TABLE day_failures (goal_id TEXT NOT NULL REFERENCES goals(id) ON DELETE CASCADE, day TEXT NOT NULL, PRIMARY KEY(goal_id,day));

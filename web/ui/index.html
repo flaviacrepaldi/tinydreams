@@ -15,8 +15,9 @@
 <h3 id="habitSetupTitle">Sua rotina</h3>
 <fieldset class="weekday-field"><legend>Em quais dias?</legend><div id="goalWeekdays" class="day-options"></div></fieldset>
 <label for="habitMeasure">O que torna o dia concluído?</label>
-<select id="habitMeasure"><option value="check">Marcar o dia como feito</option><option value="tasks">Concluir as tarefas do dia</option><option value="quantity">Atingir uma quantidade diária</option></select>
+<select id="habitMeasure"><option value="check">Marcar o dia como feito</option><option value="tasks">Concluir as tarefas do dia</option><option value="quantity">Atingir uma quantidade diária</option><option value="impulse">Resistir a um impulso</option></select>
 <p id="completionHint" class="form-hint"></p>
+<div id="impulseFields" hidden><label for="goalSupport">Meu combinado para quando a vontade vier (opcional)</label><textarea id="goalSupport" rows="2" maxlength="500" placeholder="O que quero lembrar ou fazer nesse momento?"></textarea><p class="form-hint">Registre as vontades que superou e o resultado de cada dia. Um dia difícil não apaga os anteriores.</p></div>
 <div id="dailyQuantityFields" hidden><div class="form-row"><div><label for="goalDailyTarget">Quantidade por dia</label><input id="goalDailyTarget" type="number" min="0.01" max="1000000000" step="0.01"></div><div><label for="goalDailyUnit">Unidade</label><input id="goalDailyUnit" maxlength="30" placeholder="litros, copos…"></div></div></div>
 <div id="taskFields" hidden>
 <div class="task-list-heading"><h4>Tarefas do hábito</h4><span id="taskCount" class="muted"></span></div>

@@ -2,10 +2,14 @@ import {validDay,planOf,validatePlan,scheduled,tasksOn,progress,targetOf,complet
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
 const saoPauloDay=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 async function goals(db,owner,id){
- const rows=await db.prepare('SELECT * FROM goals WHERE owner = ? ORDER BY created_at ASC').bind(owner).all();
- const days=await db.prepare('SELECT c.goal_id, c.day FROM checkins c JOIN goals g ON c.goal_id=g.id WHERE g.owner = ? ORDER BY c.day').bind(owner).all();
- const entries=await db.prepare('SELECT e.* FROM goal_entries e JOIN goals g ON e.goal_id=g.id WHERE g.owner=? ORDER BY e.day,e.entry_key').bind(owner).all();
- const result=rows.results.map(g=>({...g,plan:g.plan?JSON.parse(g.plan):null,days:days.results.filter(d=>d.goal_id===g.id).map(d=>d.day),entries:entries.results.filter(e=>e.goal_id===g.id).map(e=>({key:e.entry_key,day:e.day,value:e.value,note:e.note}))})).map(g=>({...g,target:targetOf(g),redeemed:complete(g)?g.redeemed:0}));return id?result.find(g=>g.id===id):result;
+ // Read outcomes and successes in one snapshot so a correction never appears in both states.
+ const [rows,days,entries,failures]=await db.batch([
+  db.prepare('SELECT * FROM goals WHERE owner = ? ORDER BY created_at ASC').bind(owner),
+  db.prepare('SELECT c.goal_id, c.day FROM checkins c JOIN goals g ON c.goal_id=g.id WHERE g.owner = ? ORDER BY c.day').bind(owner),
+  db.prepare('SELECT e.* FROM goal_entries e JOIN goals g ON e.goal_id=g.id WHERE g.owner=? ORDER BY e.day,e.entry_key').bind(owner),
+  db.prepare('SELECT f.goal_id,f.day FROM day_failures f JOIN goals g ON f.goal_id=g.id WHERE g.owner=? ORDER BY f.day').bind(owner)
+ ]);
+ const result=rows.results.map(g=>({...g,plan:g.plan?JSON.parse(g.plan):null,failures:failures.results.filter(f=>f.goal_id===g.id).map(f=>f.day),days:days.results.filter(d=>d.goal_id===g.id).map(d=>d.day),entries:entries.results.filter(e=>e.goal_id===g.id).map(e=>({key:e.entry_key,day:e.day,value:e.value,note:e.note}))})).map(g=>({...g,target:targetOf(g),redeemed:complete(g)?g.redeemed:0}));return id?result.find(g=>g.id===id):result;
 }
 export async function api(request,env){
  const url=new URL(request.url),owner=request.headers.get('oai-authenticated-user-id');
@@ -23,6 +27,20 @@ export async function api(request,env){
  }
  if(request.method==='GET'&&!id)return json(await goals(env.DB,owner));
  const existing=id?await goals(env.DB,owner,id):null;if(id&&!existing)return json({error:'Este sonho não foi encontrado.'},404);
+ if(request.method==='POST'&&action==='outcome'){
+  const p=planOf(existing),day=body.day,status=body.status;
+  if(p.kind!=='habit'||!validDay(day)||day>saoPauloDay()||!['success','failure',null].includes(status))return json({error:'Escolha um dia válido até hoje e seu resultado.'},400);
+  if(status&&!scheduled(existing,day))return json({error:'Este dia está fora da rotina ou do período do sonho.'},400);
+  if(status==='success'&&p.dailyTarget&&dailyTotal(existing,day)<p.dailyTarget)return json({error:'Registre a quantidade deste dia antes de concluí-lo.'},400);
+  if(status==='success'&&p.tasks.length&&!tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`)))return json({error:'Conclua as tarefas previstas para este dia.'},400);
+  if(status==='failure'&&(p.dailyTarget&&dailyTotal(existing,day)>=p.dailyTarget||p.tasks.length&&tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`))))return json({error:'Corrija os registros deste dia antes de marcá-lo como falha.'},400);
+  const statements=[env.DB.prepare('DELETE FROM checkins WHERE goal_id=? AND day=?').bind(id,day),env.DB.prepare('DELETE FROM day_failures WHERE goal_id=? AND day=?').bind(id,day)];
+  if(status==='success')statements.push(env.DB.prepare('INSERT INTO checkins (goal_id,day) VALUES (?,?)').bind(id,day));
+  if(status==='failure')statements.push(env.DB.prepare('INSERT INTO day_failures (goal_id,day) VALUES (?,?)').bind(id,day));
+  if(status===null&&(p.tasks.length||p.dailyTarget))statements.push(env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=? AND day=?').bind(id,day));
+  statements.push(env.DB.prepare('UPDATE goals SET redeemed=CASE WHEN (SELECT COUNT(*) FROM checkins WHERE goal_id=?) < ? THEN 0 ELSE redeemed END WHERE id=? AND owner=?').bind(id,targetOf(existing),id,owner));
+  await env.DB.batch(statements);return json(await goals(env.DB,owner,id));
+ }
  if(request.method==='POST'&&['check','entry'].includes(action)){
   const p=planOf(existing),day=body.day;
   if(!validDay(day)||day>saoPauloDay())return json({error:'Escolha uma data válida até hoje.'},400);
@@ -38,6 +56,8 @@ export async function api(request,env){
    if(typeof key!=='string'||!/^[-\w:]{1,100}$/.test(key))return json({error:'Registro inválido.'},400);
    if(p.kind==='list'){
     if(!p.items.some(i=>i.id===key))return json({error:'Etapa não encontrada.'},400);
+   }else if(p.kind==='habit'&&p.impulse){
+    if(!key.startsWith('urge:'))return json({error:'Registro de impulso inválido.'},400);
    }else if(p.kind==='habit'&&!p.dailyTarget){
     const task=tasksOn(existing,day).find(t=>`${day}:${t.id}`===key);
     if(!task)return json({error:'Tarefa não prevista para este dia.'},400);
@@ -54,12 +74,13 @@ export async function api(request,env){
     // Compute completion inside the same transaction as the contribution, including concurrent additions.
     statements.push(env.DB.prepare('INSERT INTO checkins (goal_id,day) SELECT ?,? WHERE (SELECT COALESCE(ROUND(SUM(value),2),0) FROM goal_entries WHERE goal_id=? AND day=?) >= ? ON CONFLICT(goal_id,day) DO NOTHING').bind(id,day,id,day,p.dailyTarget));
     statements.push(env.DB.prepare('DELETE FROM checkins WHERE goal_id=? AND day=? AND (SELECT COALESCE(ROUND(SUM(value),2),0) FROM goal_entries WHERE goal_id=? AND day=?) < ?').bind(id,day,id,day,p.dailyTarget));
-   }else if(p.kind==='habit'){
+   }else if(p.kind==='habit'&&!p.impulse){
     const records=(existing.entries||[]).filter(e=>e.key!==key);if(body.done)records.push({key});
     const done=tasksOn(existing,day).every(t=>records.some(e=>e.key===`${day}:${t.id}`));
     statements.push(done?env.DB.prepare('INSERT INTO checkins (goal_id,day) VALUES (?,?) ON CONFLICT(goal_id,day) DO NOTHING').bind(id,day):env.DB.prepare('DELETE FROM checkins WHERE goal_id=? AND day=?').bind(id,day));
    }
   }
+  if(p.kind==='habit'&&(action==='check'&&body.done||!p.impulse&&action==='entry'))statements.push(env.DB.prepare('DELETE FROM day_failures WHERE goal_id=? AND day=? AND EXISTS (SELECT 1 FROM checkins WHERE goal_id=? AND day=?)').bind(id,day,id,day));
   statements.push(env.DB.prepare('UPDATE goals SET redeemed=0 WHERE id=? AND owner=?').bind(id,owner));
   await env.DB.batch(statements);return json(await goals(env.DB,owner,id));
  }
@@ -67,13 +88,13 @@ export async function api(request,env){
   if(!complete(existing))return json({error:'Sua recompensa ainda está crescendo. Continue cuidando do sonho.'},400);
   await env.DB.prepare('UPDATE goals SET redeemed=1 WHERE id=? AND owner=?').bind(id,owner).run();return json(await goals(env.DB,owner,id));
  }
- if(request.method==='DELETE'&&id&&!action){await env.DB.batch([env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=?').bind(id),env.DB.prepare('DELETE FROM checkins WHERE goal_id=?').bind(id),env.DB.prepare('DELETE FROM goals WHERE id=? AND owner=?').bind(id,owner)]);return json({ok:true})}
+ if(request.method==='DELETE'&&id&&!action){await env.DB.batch([env.DB.prepare('DELETE FROM day_failures WHERE goal_id=?').bind(id),env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=?').bind(id),env.DB.prepare('DELETE FROM checkins WHERE goal_id=?').bind(id),env.DB.prepare('DELETE FROM goals WHERE id=? AND owner=?').bind(id,owner)]);return json({ok:true})}
  if((request.method==='POST'&&!id)||(request.method==='PATCH'&&id&&!action)){
   if(typeof body.title!=='string'||!body.title.trim()||body.title.trim().length>100||typeof body.reward!=='string'||body.reward.trim().length>160||!Number.isFinite(body.target)||body.target<1||body.target>1000000000||!['lavender','peach','sage'].includes(body.color))return json({error:'Preencha o nome e uma meta válida.'},400);
   let plan=body.plan??existing?.plan??null;
   try{if(plan)plan=validatePlan(plan)}catch(e){return json({error:e.message},400)}
   if((!plan||plan.kind==='habit')&&(!Number.isInteger(body.target)||body.target>3650))return json({error:'Use uma meta de 1 a 3650 dias.'},400);
-  if(existing&&planOf(existing).kind!==(plan?.kind||'habit')&&(existing.days.length||existing.entries.length))return json({error:'Crie outro sonho para mudar o tipo sem perder seu histórico.'},400);
+  if(existing&&planOf(existing).kind!==(plan?.kind||'habit')&&(existing.days.length||existing.entries.length||existing.failures.length))return json({error:'Crie outro sonho para mudar o tipo sem perder seu histórico.'},400);
   if(existing?.entries.length&&planOf(existing).kind==='habit'&&(Boolean(planOf(existing).dailyTarget)!==Boolean(plan?.dailyTarget)||(planOf(existing).dailyTarget&&planOf(existing).unit!==plan.unit)))return json({error:'Crie outro hábito para mudar a unidade ou a forma de medir sem misturar registros.'},400);
   const gid=id||crypto.randomUUID(),target=targetOf({target:body.target,plan});
   if(id)await env.DB.prepare('UPDATE goals SET title=?,reward=?,target=?,color=?,plan=?,redeemed=0 WHERE id=? AND owner=?').bind(body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,id,owner).run();

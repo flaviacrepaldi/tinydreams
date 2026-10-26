@@ -8,6 +8,9 @@ export function validatePlan(p){
  if(!Array.isArray(p.weekdays)||!p.weekdays.length||p.weekdays.some(d=>!Number.isInteger(d)||d<0||d>6))throw Error('Escolha pelo menos um dia da semana.');
  if(typeof p.notes!=='string'||p.notes.length>2000||typeof p.unit!=='string'||p.unit.length>30)throw Error('As observações devem ter até 2000 caracteres e a unidade até 30.');
  if(!Array.isArray(p.tasks)||p.tasks.length>30||!Array.isArray(p.items)||p.items.length>120)throw Error('Use até 30 tarefas de rotina ou 120 etapas.');
+ if(p.impulse!=null&&typeof p.impulse!=='boolean')throw Error('Escolha um modo de hábito válido.');
+ if(p.support!=null&&(typeof p.support!=='string'||p.support.length>500))throw Error('Use até 500 caracteres para seu combinado.');
+ if(p.impulse&&(p.kind!=='habit'||p.tasks.length||p.dailyTarget))throw Error('O hábito de resistir ao impulso tem seu próprio registro diário.');
  const ids=new Set();
  for(const item of [...p.tasks,...p.items]){
   if(typeof item.id!=='string'||!/^[-\w]{1,80}$/.test(item.id)||ids.has(item.id)||typeof item.title!=='string'||!item.title.trim()||item.title.length>200)throw Error('Cada tarefa precisa de um nome (até 200 caracteres).');
@@ -56,3 +59,14 @@ export function daysUntil(end,day){
  if(!validDay(end)||!validDay(day))return null;
  return Math.round((Date.parse(end+'T12:00:00Z')-Date.parse(day+'T12:00:00Z'))/86400000);
 }
+
+export const outcomeOf = (g,day) => g.days.includes(day)?'success':(g.failures||[]).includes(day)?'failure':null;
+export function pastPracticeDays(g,asOf){
+ const p=planOf(g);if(p.kind!=='habit'||!p.start||!validDay(asOf))return [];
+ const end=p.end&&p.end<asOf?p.end:asOf,days=[];
+ for(const d=new Date(p.start+'T12:00:00Z');d.toISOString().slice(0,10)<=end;d.setUTCDate(d.getUTCDate()+1)){
+  const day=d.toISOString().slice(0,10);if(day<asOf&&scheduled(g,day))days.push(day);
+ }
+ return days;
+}
+export const pendingPastDays = (g,asOf) => pastPracticeDays(g,asOf).filter(day=>!outcomeOf(g,day));

@@ -362,3 +362,8 @@ Use the original monochrome thin-stroke SVG icon style, with rounded caps, 1.5px
 
 ### Dated habit countdown
 A habit deadline owns the card's prominent countdown: calendar days until the end date, labeled “dias até o prazo”. The date row shows the date without a second competing number. Progress remains completed days out of all scheduled “dias do período”; past missed dates never appear as time remaining. On the deadline date show “O prazo termina hoje”, and after it “Prazo encerrado”. Only actual target completion shows the celebration state. Undated habits retain the practice-day countdown.
+
+### Impulse and past-day recording
+The habit completion selector adds “Resistir a um impulso”, revealing an optional personal agreement. Its detail view separates “Uma vontade de cada vez” (a dated resisted-urge record plus optional note) from “Como foi o dia?” (success/failure/unrecorded). Use plain, supportive copy: setbacks preserve prior successes; moment records do not imply whole-day success. Keep the selected date explicit.
+
+Daily history uses a pending/all filter, 14-row pagination, dated status labels, direct success/failure actions for simple/impulse habits, and a date-editor link. Task and quantity histories open their existing controls for success. New past-start dreams open the pending history automatically, and cards retain a backfill link. No outcome is assumed for missing dates. Current-day explicit failure ends a streak; completed practice remains. Calendar uses filled points for successes, hollow squares for failures, and dotted points for partial entries, with text/ARIA labels and explicit date editing instead of a toggle that loses the distinction.
