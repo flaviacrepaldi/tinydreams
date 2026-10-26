@@ -62,3 +62,13 @@ The talisman strip is scaled uniformly with `background-size: auto 100%`; keep i
 `ui/magic.js` owns the decorative night canvas, visibility observers, and persistent device-local motion preference. CSS animates the potion, bubbles, ghost, and check-in reward feedback without altering artwork proportions. Disable motion in preferences; OS reduced-motion takes precedence. No dependencies, sound, or D1 calls are added by the animation controller.
 
 `node scripts/check-editions-browser.mjs` runs against a separate offline QA server on port4174 (override `TINY_DREAMS_QA_URL`). It checks all editions at320/390/768/1440px, forms/tabs/data preservation, no future-image preloading, preview reset, date-based birthday selection, and reduced motion. Captures stay under `.impeccable/review/editions/` and must not be forwarded to chat.
+
+## Custom habit tracker
+
+The default overview retains habits, accumulated practice, schedule-aware streaks, progress, and rewards. Each goal now has optional start/deadline dates and notes. Habit schedules select weekdays and may define different tasks per weekday (for example, daily skincare plus Sunday exfoliation). All scheduled tasks must be done before a day counts. Editing tasks preserves completed days; individual tasks and entire completed days can be undone in history.
+
+Lists contain individually named and optionally dated steps, with actual completion dates: use twelve slots for monthly books or a list of annual appointments. Amount goals record positive decimal contributions with a unit, date, and optional note; each entry can be removed. Rewards are optional for every type. Tracking type is fixed once a goal has records. Eight editable form templates cover the supplied examples without inserting personal data automatically.
+
+`0001_personal_planner.sql` adds nullable plan configuration and the `goal_entries` table, preserving the original goal IDs and check-ins. The local dev server checks and applies this additive migration on startup, for both remote D1 and SQLite. The planner migration was applied to the dedicated D1 database on October 26, 2026. Future hosted installations should apply the packaged migrations normally.
+
+`npm test` includes planner API validation, weekday/date constraints, per-task daily completion, list-item identity, decimal contributions, idempotency, isolation, and undo. `node scripts/check-planner-browser.mjs` expects an offline QA server on port 4175 and Chrome DevTools on 9223; it checks all eight templates, routine/list/amount interactions, responsive layouts, persistence, and cleanup. It uses in-memory demonstration data and removes its own offline persistence fixture.

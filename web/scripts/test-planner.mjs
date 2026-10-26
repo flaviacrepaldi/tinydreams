@@ -1,0 +1,48 @@
+import assert from 'node:assert/strict';
+import {mkdtempSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {api} from '../worker/api.js';
+import {localDB} from './sqlite.mjs';
+import {progress,complete} from '../shared/planner.js';
+const dir=mkdtempSync(join(tmpdir(),'tiny-planner-')),DB=localDB(join(dir,'test.sqlite'));
+async function call(path='',method='GET',body,owner='planner'){const r=await api(new Request('https://test/api/goals'+path,{method,headers:{'oai-authenticated-user-id':owner},...(body?{body:JSON.stringify(body)}:{})}),{DB});return {status:r.status,data:await r.json()}}
+const plan={kind:'habit',start:'2026-01-01',end:'2026-12-31',weekdays:[1,3,5],notes:'',unit:'',tasks:[],items:[]};
+const goal={title:'Teste',reward:'',target:2,color:'sage',plan};
+try{
+ let g=(await call('','POST',goal)).data;
+ assert.equal((await call('/'+g.id+'/check','POST',{day:'2026-01-04',done:true})).status,400);
+ assert.equal((await call('/'+g.id+'/check','POST',{day:'2026-01-05',done:true})).status,200);
+ assert.equal((await call('','POST',{...goal,plan:{...plan,end:'2025-01-01'}})).status,400);
+ const tasks=[{id:'daily',title:'Hidratar',weekdays:[0,1,2,3,4,5,6]},{id:'sunday',title:'Esfoliar',weekdays:[0]}];
+ g=(await call('','POST',{...goal,plan:{...plan,weekdays:[0,1,2,3,4,5,6],tasks}})).data;
+ const entry=(key,day,done=true)=>call('/'+g.id+'/entry','POST',{key,day,done});
+ assert.equal((await entry('2026-01-04:daily','2026-01-04')).data.days.length,0);
+ assert.equal((await entry('2026-01-04:sunday','2026-01-04')).data.days.length,1);
+ assert.equal((await entry('2026-01-04:sunday','2026-01-04')).data.days.length,1);
+ assert.equal((await entry('2026-01-04:daily','2026-01-04',false)).data.days.length,0);
+ assert.equal((await entry('2026-01-05:sunday','2026-01-05')).status,400);
+ assert.equal((await entry('2026-01-05:daily','2026-01-05')).data.days.length,1);
+ assert.equal((await call('/'+g.id,'PATCH',{...goal,plan:{...plan,weekdays:[0,1,2,3,4,5,6],tasks:tasks.map(t=>({...t,title:t.title+' atualizado'}))}})).data.days.length,1);
+ assert.equal((await call('/'+g.id+'/check','POST',{day:'2026-01-05',done:false})).data.days.length,0);
+ const items=[{id:'book1',title:'Livro escolhido',date:'2026-01-31'},{id:'book2',title:'Outro livro',date:'2026-02-28'}];
+ g=(await call('','POST',{...goal,plan:{...plan,kind:'list',items}})).data;
+ assert.equal((await call('/'+g.id+'/check','POST',{day:'2026-01-05',done:true})).status,400);
+ assert.equal((await entry('unknown','2026-01-05')).status,400);
+ let r=await entry('book1','2026-01-05');assert.equal(progress(r.data),1);
+ r=await entry('book1','2026-01-06');assert.equal(progress(r.data),1);
+ r=await entry('book2','2026-01-06');assert.equal(complete(r.data),true);
+ assert.equal((await call('/'+g.id+'/redeem','POST',{})).status,200);
+ r=await entry('book1','2026-01-06',false);assert.equal(r.data.redeemed,0);assert.equal(complete(r.data),false);
+ g=(await call('','POST',{...goal,target:10000,plan:{...plan,kind:'amount',unit:'R$'}})).data;
+ assert.equal((await call('/'+g.id+'/entry','POST',{key:'deposit',day:'2026-01-05',value:-10,done:true})).status,400);
+ r=await call('/'+g.id+'/entry','POST',{key:'deposit',day:'2026-01-05',value:1234.56,done:true});assert.equal(progress(r.data),1234.56);
+ r=await call('/'+g.id+'/entry','POST',{key:'deposit',day:'2026-01-05',value:1234.56,done:true});assert.equal(progress(r.data),1234.56);
+ assert.equal((await call('/'+g.id+'/entry','POST',{key:'bad',day:'2026-01-05',value:0.001,done:true})).status,400);
+ assert.equal((await call('/'+g.id+'/entry','POST',{key:'other',day:'2026-01-05',value:1,done:true},'someone')).status,404);
+ assert.equal((await call('/'+g.id+'/redeem','POST',{})).status,400);
+ r=await call('/'+g.id+'/entry','POST',{key:'deposit',day:'2026-01-05',done:false});assert.equal(progress(r.data),0);
+ assert.equal((await call('/'+g.id,'DELETE')).status,200);
+ assert.equal((await DB.prepare('SELECT * FROM goal_entries WHERE goal_id=?').bind(g.id).all()).results.length,0);
+ console.log('PASS: schedules, periods, task-level daily completion and undo, list item identity, decimal deposits, idempotency, owner isolation, rewards, and cleanup.');
+}finally{rmSync(dir,{recursive:true,force:true})}

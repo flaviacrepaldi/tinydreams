@@ -345,3 +345,8 @@ Current evidence covers all twelve editions at 320/390/768/1440px, form and tab 
 - **Don't** preload future artwork, reveal surprise images in main chat, or open previews without explicit action.
 - **Don't** add scattered decorative phrases; retain headings, subtitles, instructions, status, and data.
 - **Don't** let illustration obscure task labels, progress, reward names, or controls.
+
+## Custom habit plans
+Keep the dream overview as the default. Reuse existing seasonal surfaces and talismans for habit, list, and amount progress. Cards show schedule, optional deadline, accumulated progress in its own unit, optional reward, and an explicit action opening the routine/list/history. The Today view includes scheduled habits and outstanding dated steps due by today. Only simple habits use direct calendar day toggles; tasks, books, and contributions are corrected in their detailed history.
+
+The creation dialog offers eight editable starting templates and a custom option. Type-specific fields reveal weekday checkboxes and repeatable tasks, individually dated list items, or a numeric target and unit. Start, deadline, notes, and reward are optional. The native dialog scrolls on phones, all fields have labels, and hidden type fields do not participate in validation. Amount recording has its own dated entry form and reversible ledger. Routine recording offers a date selector, individual task controls, total practice, streak, and completed-day history. Existing recorded goals retain their tracking type to keep their history meaningful.

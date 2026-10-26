@@ -21,6 +21,9 @@ if(mode==='sqlite'){
   throw new Error('TINY_DREAMS_DB must be d1 or sqlite.');
 }
 
+const {migratePlanner}=await import('./migrate-planner.mjs');
+await migratePlanner(db);
+
 const editionCatalog=JSON.parse(await readFile(new URL('../ui/editions.json',import.meta.url),'utf8'));
 const editionPaths=new Set(editionCatalog.map(e=>e.asset).filter(Boolean));
 const staticAssets={async fetch(request){
@@ -38,7 +41,7 @@ const server=createServer(async(req,res)=>{
     let size=0;
     for await(const part of req){
       size+=part.length;
-      if(size>8192){res.writeHead(413);res.end('Request too large');return;}
+      if(size>192000){res.writeHead(413);res.end('Request too large');return;}
       parts.push(part);
     }
     const headers=new Headers(req.headers);
