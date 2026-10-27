@@ -7,6 +7,7 @@ async function wait(expression){const end=Date.now()+10000;while(Date.now()<end)
 async function click(selector){await js(`document.querySelector(${JSON.stringify(selector)}).click()`)}
 await mkdir('/tmp/tiny-shelf-review',{recursive:true});await cdp('Page.enable');await cdp('Page.navigate',{url:'http://localhost:4181'});await wait("typeof state!=='undefined'&&!state.busy");
 const assert=async(expression,message)=>{if(!await js(expression))throw Error(message)};
+await assert("!document.querySelector('#editionDetails,#editionPreview,#previewEdition,#editionPreviewBanner')",'Surprise-revealing controls still visible');
 await js(`state.demo=true;state.goals=[{id:'shelf-demo',title:'Meu capítulo realizado',target:1,color:'sage',reward:'Uma leitura especial',days:[],entries:[],failures:[]}];state.view='dreams';render()`);
 await click('[data-action=quick-outcome][data-status=success]');
 await assert("complete(state.goals[0])&&!document.querySelector('#milestone').hidden&&document.querySelector('#milestone').textContent.includes('virou uma história')",'Final completion scene missing');
@@ -22,11 +23,11 @@ await js(`state.goals.push({id:'list-demo',title:'Minha lista',target:2,color:'l
 await assert("completionDay(state.goals.find(g=>g.id==='amount-demo'))===dayBefore(1)&&completionDay(state.goals.find(g=>g.id==='list-demo'))===dayBefore(1)",'List/amount completion date incorrect');
 await js(`state.goals[0].title='<img src=x onerror=alert(1)> '+ 'Um sonho de nome bem longo '.repeat(3);render()`);await assert("!document.querySelector('.dream-book img')",'Unescaped title');await js("state.goals[0].title='Meu capítulo realizado';render()");
 for(const edition of ['2026-10','2026-11','2026-12','2027-01','2027-02','2027-03','2027-04','2027-05','2027-06','2027-07','2027-08','2027-09']){
- if(edition!=='2026-10')await js(`document.querySelector('#editionPreview').value='${edition}';document.querySelector('#previewEdition').click()`);
- for(const width of [320,390,768,1440]){await cdp('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600});await js('document.fonts.ready');await assert('document.documentElement.scrollWidth<=innerWidth','Overflow '+edition+' '+width)}
+ if(edition!=='2026-10')await js(`DreamThemes.preview('${edition}')`);
+ for(const width of [320,390,768,1440]){await cdp('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600});await js('document.fonts.ready');await assert('document.documentElement.scrollWidth<=innerWidth','Overflow '+edition+' '+width);await assert("[...document.querySelectorAll('.book-record .text-button')].every(b=>{const s=getComputedStyle(b);return s.textDecorationLine==='none'&&s.borderTopStyle==='solid'&&b.getBoundingClientRect().height>=44})",'Button affordance missing '+edition)}
  await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:900,deviceScaleFactor:1,mobile:true});await js("document.querySelector('#content').scrollIntoView()");const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/tiny-shelf-review/'+edition+'.png',Buffer.from(png.data,'base64'));
 }
-await js("document.querySelector('#resetEdition').click();state.view='dreams';state.goals.push({id:'scene-demo',title:'Um capítulo por dia',target:1,color:'sage',reward:'Uma edição especial',days:[],entries:[]});render()");await click('[data-action=quick-outcome][data-status=success][data-id=scene-demo]');
+await js("DreamThemes.reset();state.view='dreams';state.goals.push({id:'scene-demo',title:'Um capítulo por dia',target:1,color:'sage',reward:'Uma edição especial',days:[],entries:[]});render()");await click('[data-action=quick-outcome][data-status=success][data-id=scene-demo]');
 await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:900,deviceScaleFactor:1,mobile:true});const scene=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/tiny-shelf-review/final-scene.png',Buffer.from(scene.data,'base64'));
 await click('#leaveDemo');await assert("document.querySelector('#milestone').hidden&&!state.demo",'Demo ceremony leaked into real data');
 console.log('PASS: day/final/all-today celebrations, modal deferral, correction deduplication, shelf undo, redemption, list/amount dates, escaped titles, reduced motion, all 12 editions at 320/390/768/1440px. Demo records only; no real writes.');ws.close();

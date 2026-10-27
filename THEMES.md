@@ -68,3 +68,6 @@ A estação orienta luz, cores, vegetação e materiais. Cada universo deve ser 
 
 ## Política de surpresa e texto
 Não enviar imagens futuras no chat. Não carregar artes futuras antecipadamente na página. As prévias em Preferências ficam fechadas e dependem de ação explícita. Manter títulos e subtítulos, com instruções e status funcionais; remover frases decorativas soltas.
+
+## Atualização: temas somente como surpresa
+Por pedido da usuária, as prévias e os controles de aplicar edições foram removidos das Preferências. Os temas aparecem automaticamente no mês correspondente, no horário de São Paulo. Não oferecer um seletor de layouts nem carregar artes futuras antecipadamente. Esta decisão substitui a política anterior de prévias por ação explícita.

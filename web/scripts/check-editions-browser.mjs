@@ -17,7 +17,7 @@ async function screenshot(name){await js('document.fonts.ready');await js('scrol
 await cdp('Page.enable');await cdp('Runtime.enable');await cdp('Network.enable');await cdp('Network.setCacheDisabled',{cacheDisabled:true});await cdp('Page.navigate',{url:base});await wait("typeof DreamThemes!=='undefined' && typeof state!=='undefined' && !state.busy");
 assert.equal(await js('DreamThemes.current.id'),'2026-10');
 assert.equal(await js("performance.getEntriesByType('resource').some(r=>r.name.includes('/editions/'))"),false,'Future art must not be loaded in advance');
-assert.equal(await js("document.querySelector('#editionDetails').open"),false);
+assert.equal(await js("!!document.querySelector('#editionDetails,#editionPreview,#previewEdition,#editionPreviewBanner')"),false);
 await js('showDemo()');const original=await js('JSON.stringify(state.goals)');
 const response=await fetch(base+'/editions/unknown.png');assert.equal(response.status,404);
 for(const edition of catalog){
@@ -25,12 +25,11 @@ for(const edition of catalog){
   if(edition.asset){await js(`new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error('Artwork unavailable'));image.src=${JSON.stringify(edition.asset)}})`);}
   assert.equal(await js('DreamThemes.current.id'),edition.id);
   assert.equal(await js('JSON.stringify(state.goals)'),original,'Theme previews must not mutate records');
-  assert.equal(await js("document.querySelector('#editionPreviewBanner').hidden"),false);
   assert.equal(await js("document.querySelector('.moon-note,.season-note,footer')!==null"),false,'No scattered decorative phrases');
   for(const width of [320,390,768,1440]){
     await viewport(width);
     assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false,edition.id+' overflow at '+width);
-    assert.equal(await js("document.querySelector('[data-action=check]').getBoundingClientRect().height>=40"),true);
+    assert.equal(await js("document.querySelector('[data-action=quick-outcome][data-status=success]').getBoundingClientRect().height>=40"),true);
     if(width<=390)assert.equal(await js("[...document.querySelectorAll('.goal h2')].every(h=>h.getBoundingClientRect().width>=110)"),true,edition.id+' title space');
     if(width===390||width===1440)await screenshot(edition.id+(width===390?'-mobile':'-desktop'));
   }
