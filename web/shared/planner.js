@@ -44,7 +44,14 @@ export function validEmoji(value){
  if(typeof value!=='string'||!value||value.length>32)return false;
  return [...new Intl.Segmenter('pt-BR',{granularity:'grapheme'}).segment(value)].length===1&&/[\p{Extended_Pictographic}\p{Regional_Indicator}\u20E3]/u.test(value);
 }
-export const automaticAmulet = () => ['lavender','peach','sage'][Math.floor(Math.random()*3)];
+export function automaticAmulet(goals=[]){
+ const colors=['lavender','peach','sage'],previous=goals.at(-1)?.color;
+ const candidates=colors.filter(color=>color!==previous);
+ const counts=Object.fromEntries(colors.map(color=>[color,goals.filter(g=>g.color===color).length]));
+ const minimum=Math.min(...candidates.map(color=>counts[color]));
+ const choices=candidates.filter(color=>counts[color]===minimum);
+ return choices[Math.floor(Math.random()*choices.length)];
+}
 
 // Inclusive calendar range; UTC avoids daylight-saving and device-timezone drift.
 export function practiceDays(start,end,weekdays){

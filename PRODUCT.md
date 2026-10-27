@@ -115,3 +115,6 @@ New tydreams randomly receive one of the three persistent amulet slots with equa
 
 ## History button visibility
 Home cards show history actions only when an explicit start date is earlier than today in São Paulo. Simple habits without such a date hide the history button. Task, quantity, impulse, amount and list controls remain available for daily use, but their labels do not advertise history until the dream has a past start. Pending-day backfill continues to show only for past scheduled dates with missing outcomes. Calendar corrections and the completed-dream shelf keep their existing history access.
+
+## Mixed amulet distribution
+The user wants variety and asks to avoid the previous amulet whenever possible. New dream assignment excludes the last dream's amulet and randomly chooses among the least-used remaining slots. Existing saved assignments stay stable unless the user requests a reshuffle. An explicitly requested reshuffle should prefer different assignments for each dream, adjacent variety, and balanced use of all three slots when feasible. This supersedes the earlier independent equal-probability draw.
