@@ -411,3 +411,6 @@ The user requested a further increase after seeing the assigned pumpkin. Home ca
 
 ## Connected Big Dream grouping
 The user wants the cover to visually contain its tydreams. A shared outer boundary now encloses the cover and the grid/gallery, with connected corners, an internal divider, and inset page spacing. The mobile swipe gallery stays inside this boundary; the cover has no independent bottom gap or separate closed frame. Empty-state text belongs to the same container. This supersedes the earlier detached cover-and-gallery treatment.
+
+## Amulets as keepsakes
+Each card now carries data-amulet-edition resolved from the dream's immutable created_at, independently of the room's data-edition. Per-card art URL and source geometry preserve the exact original illustrated object across month changes. October's three objects retain their sizing and progress treatment; its ghost remains stationary, and potion/lantern motion retains pause/accessibility rules. Later amulet sheets render only for dreams created in those editions. The room, Big Dream cover and progress marker remain tied to the current month. This supersedes earlier statements that an existing dream's artwork changes every month.

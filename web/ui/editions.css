@@ -179,3 +179,29 @@ html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary h2,html[
  html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .talisman{width:118px;background-size:auto 115%}
  html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary h2,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .goal-meta,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .deadline,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .countdown{max-width:calc(100% - 126px)}
 }
+/* Amulets belong to the dream's creation edition, independently of today's room. */
+html[data-edition] .dream-overview .goal[data-amulet-edition] .dream-summary .talisman{width:128px;height:calc(128px * var(--amulet-aspect,.666667));top:28px;right:0;background:var(--amulet-objects) left bottom/300% var(--amulet-sheet-height,300%) no-repeat;filter:none;animation:none;transform:none}
+html[data-edition] .dream-overview .goal[data-amulet-edition].peach .dream-summary .talisman{background-position:center bottom}
+html[data-edition] .dream-overview .goal[data-amulet-edition].sage .dream-summary .talisman{background-position:right bottom}
+html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"] .dream-summary .talisman{width:calc(250px * .455);height:250px;top:0;background:url('/talismans.png') left center/auto 100% no-repeat;filter:grayscale(calc(1 - var(--charge))) brightness(calc(.72 + var(--charge)*.28))}
+html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .talisman{width:142px;background-position:center center;background-size:auto 125%}
+html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .dream-summary .talisman{width:130px;background:none}
+html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary h2,html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .goal-meta,html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .deadline,html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .countdown{max-width:calc(100% - 150px)}
+html[data-edition] .goal[data-amulet-edition]:not([data-amulet-edition="2026-10"]) .talisman::before,html[data-edition] .goal[data-amulet-edition]:not([data-amulet-edition="2026-10"]) .talisman::after{display:none}
+html[data-edition] .goal[data-amulet-edition="2026-10"].lavender .talisman::before,html[data-edition] .goal[data-amulet-edition="2026-10"].lavender .talisman::after{display:block}
+@media(max-width:360px){
+ html[data-edition] .dream-overview .goal[data-amulet-edition] .dream-summary .talisman{width:112px;height:calc(112px * var(--amulet-aspect,.666667))}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"] .dream-summary .talisman{width:calc(230px * .455);height:230px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .dream-summary .talisman{width:112px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .talisman{width:118px;background-size:auto 115%}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary h2,html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .goal-meta,html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .deadline,html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .countdown{max-width:calc(100% - 126px)}
+}
+html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].lavender .dream-summary .talisman{animation:potion-stir 6.5s ease-in-out infinite;animation-delay:var(--magic-delay,0s);animation-play-state:paused}
+html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .talisman{animation:lantern-rock 8s ease-in-out infinite;animation-delay:var(--magic-delay,0s);animation-play-state:paused}
+html[data-edition][data-motion="active"] .dream-overview .goal[data-amulet-edition="2026-10"] .dream-summary .talisman.magic-visible{animation-play-state:running}
+html[data-edition][data-motion="active"] .dream-overview .goal[data-amulet-edition="2026-10"].lavender.celebrate .dream-summary .talisman{animation:enchant 1.2s ease-out,potion-stir 6.5s ease-in-out 1.2s infinite}
+html[data-edition][data-motion="active"] .dream-overview .goal[data-amulet-edition="2026-10"].peach.celebrate .dream-summary .talisman{animation:enchant 1.2s ease-out,lantern-rock 8s ease-in-out 1.2s infinite}
+html[data-edition][data-motion="active"] .dream-overview .goal[data-amulet-edition]:not([data-amulet-edition="2026-10"]).celebrate .dream-summary .talisman{animation:chapter-reveal .9s ease-out}
+html[data-edition] .dream-overview .goal .goal-menu{align-items:center}
+html[data-edition] .dream-overview .goal .goal-menu .diary-button{width:44px;height:44px;color:var(--accent)}
+html[data-edition] .dream-overview .goal .goal-menu .diary-button svg{width:20px;height:20px}

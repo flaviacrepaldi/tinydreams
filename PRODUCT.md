@@ -118,3 +118,9 @@ Home cards show history actions only when an explicit start date is earlier than
 
 ## Mixed amulet distribution
 The user wants variety and asks to avoid the previous amulet whenever possible. New dream assignment excludes the last dream's amulet and randomly chooses among the least-used remaining slots. Existing saved assignments stay stable unless the user requests a reshuffle. An explicitly requested reshuffle should prefer different assignments for each dream, adjacent variety, and balanced use of all three slots when feasible. This supersedes the earlier independent equal-probability draw.
+
+## Lifetime amulet identity
+The user wants each tydream to keep its original amulet across monthly theme changes. Resolve its birth edition from its immutable persisted created_at timestamp using the São Paulo theme calendar, then combine that edition's art/geometry with the saved amulet slot. Existing October dreams keep their current potion, pumpkin or stationary ghost cloche; newly created dreams receive the three objects of their actual creation month. Editing a title, dates or group does not change birth edition. This needs no migration or record rewriting. Personal data still determines progress; the current monthly world and its progress marker continue to change normally. Only the active scenery and artwork required by existing dreams load; never preload future amulet kits. Demo goals without created_at follow their explicitly selected QA edition.
+
+## Impulse diary action
+Impulse habits open their existing impulse/history details from a thin-stroke diary icon beside Edit in the card's top action row. Remove the duplicate bottom text button for impulse habits. The icon remains keyboard/touch accessible with a 44px target and an explicit accessible name; other habit types keep their existing detail controls.

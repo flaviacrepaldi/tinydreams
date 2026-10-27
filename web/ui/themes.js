@@ -31,5 +31,5 @@ function reset(){preview=null;applyEdition();}
 // An open tab also changes edition at the first check after local midnight.
 setInterval(()=>{if(document.hidden||preview)return;const parts=calendarParts();if(parts.edition+'-'+parts.day!==lastDate)applyEdition();},30000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!preview)applyEdition();});
-window.DreamThemes={get current(){return current;},get previewId(){return preview;},preview(id){if(!editions.some(e=>e.id===id))throw Error('Unknown edition');preview=id;applyEdition();},reset};
+window.DreamThemes={forCreation(createdAt){const date=new Date(createdAt);return createdAt&&Number.isFinite(date.getTime())?editionForDate(editions,date):current;},get current(){return current;},get previewId(){return preview;},preview(id){if(!editions.some(e=>e.id===id))throw Error('Unknown edition');preview=id;applyEdition();},reset};
 applyEdition();
