@@ -7,7 +7,7 @@ Saved project assets:
 - `web/assets/ghost-jar-v2.png` — 1024×1536 RGBA; empty stationary cloche, including flowers, moss, brass and glass.
 - `web/assets/ghost-spirit-v2.png` — 1254×1254 RGBA; isolated friendly spirit with real alpha.
 
-The browser combines the complete jar, a clipped interior containing the spirit, and the jar's lower foreground. The spirit stays visible and completes a continuous nine-second circular tumble inside the stationary glass. A rotating transform with a small radial translation gives a closed loop and a full body turn, without fading or diving behind the plants. The foreground still preserves the glass/plant layering. All layer sizes preserve the generated canvas ratios. The original color/progress filter applies to the composite. Only the October edition uses these assets; other editions retain their own artwork.
+The browser combines the complete jar, a clipped interior containing the spirit, and the jar's lower foreground. The spirit stays visible and completes a continuous nine-second circular tumble inside the stationary glass. A counterclockwise body turn follows a small closed path, with translation applied independently of rotation and the pivot at the illustrated torso (58% 48%). This avoids a foot-anchored orbit and keeps the spirit visible without fading. The foreground still preserves the glass/plant layering. All layer sizes preserve the generated canvas ratios. The original color/progress filter applies to the composite. Only the October edition uses these assets; other editions retain their own artwork.
 
 ## Exact built-in prompts
 

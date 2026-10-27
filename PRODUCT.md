@@ -100,3 +100,6 @@ The user wants more prominent amulets on compact home cards across editions. Oct
 
 ## Calendar dream symbols
 Completed calendar dates show the chosen outline symbol of each tydream instead of a success dot, consistently across themes. Show all completed dreams for a date; filtered views retain only the selected dream. Habit successes stamp their practice date, list completions stamp their actual entry date, and cumulative amounts stamp the date the target was reached. Failure and partial-record markers remain distinct. Symbols wrap within the calendar cell on mobile, with completed titles available to assistive technology and on hover. No native colorful emoji or changes to stored outcomes.
+
+## Big Dream book-cover presentation
+Named Big Dreams have editorial book-cover headers: a binding edge, inset foil-like rule, book emblem, large name (including an optional emoji typed from the mobile keyboard), and a truthful total/completed tydream summary. Use a subtle crop of the current edition's already-loaded illustration for material and light; never load future artwork. The header connects directly to the mobile page gallery and compact desktop grid. Unassigned dreams retain a simpler heading. No data model change is needed for name emojis.

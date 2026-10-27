@@ -57,7 +57,7 @@ html[data-edition="2026-10"] .goal.sage .ghost-scene {display:block;position:abs
 html[data-edition="2026-10"] .ghost-jar,html[data-edition="2026-10"] .ghost-foreground {background-image:url('/ghost-jar-v2.png')}
 .ghost-foreground {clip-path:inset(63% 0 0 0)}
 .ghost-viewport {position:absolute;inset:24% 12% 17%;overflow:hidden;border-radius:45% 45% 8% 8%}
-.ghost-spirit {position:absolute;left:24%;top:20%;width:52%;aspect-ratio:1;background-position:center;background-size:contain;background-repeat:no-repeat;transform-origin:50% 50%;animation:ghost-orbit 9s linear infinite;animation-delay:var(--magic-delay,0s);animation-play-state:paused}
+.ghost-spirit {position:absolute;left:24%;top:20%;width:52%;aspect-ratio:1;background-position:center;background-size:contain;background-repeat:no-repeat;transform-origin:58% 48%;animation:ghost-orbit 9s linear infinite;animation-delay:var(--magic-delay,0s);animation-play-state:paused}
 html[data-edition="2026-10"] .ghost-spirit {background-image:url('/ghost-spirit-v2.png')}
 .ghost-viewport::before,.ghost-viewport::after {content:'';position:absolute;left:68%;top:75%;width:3px;height:3px;border:1px solid #eadfc5;border-radius:50%;opacity:0;animation:jar-bubble 8s ease-out infinite;animation-play-state:paused;pointer-events:none}
 .ghost-viewport::after {left:38%;width:2px;height:2px;animation-delay:-3s}
@@ -70,8 +70,18 @@ html[data-edition="2026-10"][data-motion="active"] .goal.peach .talisman.magic-v
 html[data-edition="2026-10"] .goal.peach.celebrate .talisman {animation:enchant 1.2s ease-out,lantern-rock 8s ease-in-out 1.2s infinite}
 html[data-motion="paused"] .goal.celebrate .reward,html[data-motion="paused"] .goal.celebrate .reward::after,html[data-motion="paused"] .goal.celebrate .reward>svg {animation:none}
 html[data-motion="active"] .goal.celebrate .progress>span {background-image:linear-gradient(100deg,transparent 30%,#fff5de9c 50%,transparent 70%);background-size:240% 100%;animation:bookmark-shine 1.3s cubic-bezier(.16,1,.3,1)}
-@keyframes ghost-orbit {from{transform:rotate(-12deg) translateX(18%)}to{transform:rotate(348deg) translateX(18%)}}
-@keyframes ghost-cheer {0%,100%{transform:rotate(-12deg) translateX(18%)}35%{transform:rotate(18deg) translateX(18%) scale(1.06)}70%{transform:rotate(-24deg) translateX(18%)}}
+@keyframes ghost-orbit {
+0%{transform:translate(0,-8%) rotate(-12deg)}
+12.5%{transform:translate(-10%,-4%) rotate(-57deg)}
+25%{transform:translate(-14%,6%) rotate(-102deg)}
+37.5%{transform:translate(-10%,16%) rotate(-147deg)}
+50%{transform:translate(0,20%) rotate(-192deg)}
+62.5%{transform:translate(10%,16%) rotate(-237deg)}
+75%{transform:translate(14%,6%) rotate(-282deg)}
+87.5%{transform:translate(10%,-4%) rotate(-327deg)}
+100%{transform:translate(0,-8%) rotate(-372deg)}
+}
+@keyframes ghost-cheer {0%,100%{transform:translate(0,-8%) rotate(-12deg)}35%{transform:translate(-4%,-14%) rotate(-32deg) scale(1.06)}70%{transform:translate(3%,-4%) rotate(-6deg)}}
 @keyframes jar-bubble {0%,40%,100%{opacity:0;transform:translateY(0) scale(.7)}48%{opacity:.5}78%{opacity:0;transform:translate(3px,-28px) scale(1.15)}}
 @keyframes lantern-rock {0%,100%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-2px) rotate(.8deg)}}
 @keyframes bookmark-shine {from{background-position:130% 0}to{background-position:-130% 0}}

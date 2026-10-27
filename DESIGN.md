@@ -394,3 +394,8 @@ Compact home amulets now use 170px artwork height for October, a 100px-wide ghos
 
 ## Calendar completion stamps
 Use each dream's existing thin-stroke SVG symbol for completed dates, replacing the generic filled dot. Multiple completions wrap within the same cell (18px symbols, 16px on phones); use the active edition accent and include the dream names in the date's accessible label. Keep the hollow failure square and partial-record dot distinct. The calendar legend describes these states.
+
+## Big Dream bound-volume headers
+Named groupings use a 148px editorial cover on desktop, with a narrow binding, inset fine rule, book emblem, 32px literary title, and total/completed count. Mobile places the emblem and Organizar button on the first row and the 28px name and summary below, preserving space for emoji and long names. The cover uses active edition surfaces and a low-opacity crop of its current artwork; paper editions soften the crop further. The existing swipe gallery follows immediately. Unassigned groups keep their plain heading. Group name hints explain mobile-keyboard emoji support.
+
+The ghost's latest motion direction is counterclockwise: a head-first turn around the illustrated torso at 58% 48%, with independent translation along a small closed path. This supersedes the earlier clockwise radial transform, which looked anchored to its tail.

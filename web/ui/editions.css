@@ -110,3 +110,31 @@ html[data-edition] .dream-overview .goal .plan-open,html[data-edition] .dream-ov
 html[data-edition="2026-10"] .dream-overview .goal.sage .talisman{width:100px;height:170px;top:52px;right:10px}
 
 html[data-edition] .goal .countdown-lead{flex-basis:100%;font:12px/1.4 var(--sans);color:var(--muted);margin-bottom:-2px}
+/* Big Dreams: bound volumes with an illustrated cover and an open run of pages. */
+.big-dream-volume{--cover-art:url('/garden.png');position:relative;padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:38px}
+html:not([data-edition="2026-10"]) .big-dream-volume{--cover-art:var(--edition-scene)}
+.big-dream-volume>.group-heading{position:relative;isolation:isolate;display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:20px;min-height:148px;padding:28px 28px 28px 42px;margin:0 0 18px;background:linear-gradient(90deg,var(--bg) 7px,var(--surface) 7px,var(--surface) 12px,var(--line) 12px,var(--line) 13px,var(--surface) 13px);border-radius:5px 16px 16px 5px;overflow:hidden}
+.big-dream-volume>.group-heading::before{content:'';position:absolute;inset:0;z-index:-2;background-image:var(--cover-art);background-position:center 62%;background-size:cover;opacity:.13;pointer-events:none}
+.big-dream-volume>.group-heading::after{content:'';position:absolute;inset:12px 12px 12px 22px;z-index:-1;border:1px solid var(--line);border-radius:2px 9px 9px 2px;pointer-events:none}
+.big-dream-volume>.group-heading .volume-title{position:relative;min-width:0}
+.big-dream-volume>.group-heading h2{font:400 32px/1.15 var(--serif);letter-spacing:-.5px;text-wrap:balance;margin:0;overflow-wrap:anywhere}
+.big-dream-volume>.group-heading p{margin-top:12px;font-size:13px;color:var(--text)}
+.volume-emblem{display:flex;align-items:center;justify-content:center;color:var(--accent);width:48px;height:56px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.volume-emblem svg{width:36px;height:36px}
+.big-dream-volume>.group-heading>.text-button{background:var(--bg);position:relative;align-self:center;max-width:100%}
+html[data-edition] .big-dream-volume>.goal-grid{padding-bottom:8px}
+html[data-paper="true"] .big-dream-volume>.group-heading::before{opacity:.08}
+html[data-layout="letters"] .big-dream-volume>.group-heading,html[data-layout="herbarium"] .big-dream-volume>.group-heading{border-radius:3px 10px 10px 3px}
+html[data-layout="archive"] .big-dream-volume>.group-heading::after{border-style:double;border-width:3px}
+.big-dream-volume>.group-empty{padding:8px 12px 0;font-size:14px}
+@media(max-width:560px){
+ .big-dream-volume{margin-bottom:30px;padding-bottom:12px}
+ .big-dream-volume>.group-heading{grid-template-columns:minmax(0,1fr) auto;gap:16px 12px;min-height:0;padding:24px 22px 22px 30px;margin-bottom:10px}
+ .big-dream-volume>.group-heading .volume-emblem{grid-column:1;justify-content:flex-start;width:36px;height:32px;border:0}
+ .big-dream-volume>.group-heading .volume-emblem svg{width:30px;height:30px}
+ .big-dream-volume>.group-heading .volume-title{grid-column:1/-1;grid-row:2}
+ .big-dream-volume>.group-heading>.text-button{grid-column:2;grid-row:1;justify-self:end;min-height:44px;padding:8px 12px}
+ .big-dream-volume>.group-heading h2{font-size:28px;line-height:1.2}
+ .big-dream-volume>.group-heading p{margin-top:10px;font-size:12px}
+ .big-dream-volume>.group-heading::after{inset:10px 10px 10px 17px}
+}
