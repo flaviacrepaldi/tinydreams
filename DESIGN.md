@@ -405,3 +405,9 @@ The user stopped the rotating ghost animation. Remove both the ambient orbit and
 
 ## Monthly progress symbols
 Replace the progress fill's circular endpoint with a 22px outline SVG marker selected by the active edition's progressSymbol. All 12 authored editions have distinct symbols, with October's friendly ghost visible now and future symbols remaining unrevealed. Use the goal color for strokes and theme surface for fill; keep the numeric label and progressbar ARIA values. Markers follow the existing width transition and remain static under reduced motion. Apply the same marker to daily quantity progress; retain personal dream symbols on cards and calendar.
+
+## More prominent card amulets
+The user requested a further increase after seeing the assigned pumpkin. Home cards now reserve a separate summary area for text and artwork, so October's 250px-tall source art (230px on narrow phones), 130px-wide cloche, and 128px-wide seasonal objects can be larger without crossing the progress bar. Text has its own reserved column; narrow phones use smaller reservations. Keep the ghost stationary.
+
+## Connected Big Dream grouping
+The user wants the cover to visually contain its tydreams. A shared outer boundary now encloses the cover and the grid/gallery, with connected corners, an internal divider, and inset page spacing. The mobile swipe gallery stays inside this boundary; the cover has no independent bottom gap or separate closed frame. Empty-state text belongs to the same container. This supersedes the earlier detached cover-and-gallery treatment.

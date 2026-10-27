@@ -88,3 +88,11 @@ html[data-motion=active] .milestone{animation:chapter-arrival .7s cubic-bezier(.
 .calendar-marks .failure-dot,.calendar-marks .partial-dot{display:inline-block;width:5px;height:5px;flex:0 0 5px;background:transparent;border:1px solid var(--muted)}
 .calendar-marks .partial-dot{border:1px dotted var(--accent);border-radius:50%}
 @media(max-width:560px){.calendar-marks{gap:3px}.calendar-marks .calendar-symbol{width:16px;height:16px;flex-basis:16px}.calendar-marks .calendar-symbol svg{width:16px;height:16px}}
+.target-label{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:16px 0 5px}
+.target-label>label{margin:0;min-width:0}
+.field-info{flex-shrink:0}
+.field-info>summary{display:flex;align-items:center;justify-content:center;width:44px;height:44px;list-style:none;cursor:pointer;color:var(--muted);border-radius:8px}
+.field-info>summary::-webkit-details-marker{display:none}
+.field-info>summary svg{width:20px;height:20px}
+.field-info>summary:hover,.field-info[open]>summary{color:var(--text);background:var(--bg)}
+.field-info>.form-hint{position:absolute;top:100%;left:0;z-index:2;width:100%;margin:4px 0 0;padding:14px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;font-size:13px;line-height:1.6;box-shadow:0 12px 24px #0003}

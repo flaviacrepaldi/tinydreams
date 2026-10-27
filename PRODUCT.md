@@ -112,3 +112,6 @@ The leading edge of a dream's progress bar uses the current monthly edition's ow
 
 ## Random amulet assignment
 New tydreams randomly receive one of the three persistent amulet slots with equal probability, independently of their title. Save the selected slot with the dream; editing and reloading preserve it. Existing dreams retain their current amulets. Each monthly edition maps the same three slots to its own three illustrated objects.
+
+## History button visibility
+Home cards show history actions only when an explicit start date is earlier than today in São Paulo. Simple habits without such a date hide the history button. Task, quantity, impulse, amount and list controls remain available for daily use, but their labels do not advertise history until the dream has a past start. Pending-day backfill continues to show only for past scheduled dates with missing outcomes. Calendar corrections and the completed-dream shelf keep their existing history access.

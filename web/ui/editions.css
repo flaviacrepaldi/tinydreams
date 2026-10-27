@@ -148,3 +148,34 @@ html[data-edition] .dream-overview .goal .countdown-lead{margin:0}
 .progress-token svg{display:block;width:100%;height:100%;fill:var(--surface);stroke:currentColor;stroke-width:1.6;filter:drop-shadow(0 2px 2px #0003)}
 #routineChecks .progress{overflow:visible}#routineChecks .progress>span{position:relative}
 html[data-edition] .dream-overview .goal .progress-label{margin-top:13px}
+/* Give the illustration a real area, so larger amulets never cover the progress. */
+html[data-edition] .dream-overview .dream-summary{position:relative;display:flow-root;min-height:260px;padding-bottom:12px}
+html[data-edition] .dream-overview .goal .dream-summary .talisman{--art-height:250px;width:calc(250px * .455);height:250px;top:0;right:0}
+html[data-edition="2026-10"] .dream-overview .goal.sage .dream-summary .talisman{width:130px;height:250px;top:0;right:0}
+html[data-edition]:not([data-edition="2026-10"]) .dream-overview .goal .dream-summary .talisman{width:128px;height:calc(128px * var(--object-aspect,.666667));top:28px;right:0}
+html[data-edition] .dream-overview .goal .dream-summary h2,html[data-edition] .dream-overview .goal .dream-summary .goal-meta,html[data-edition] .dream-overview .goal .dream-summary .deadline,html[data-edition] .dream-overview .goal .dream-summary .countdown{max-width:calc(100% - 138px)}
+@media(max-width:360px){
+ html[data-edition] .dream-overview .goal .dream-summary .talisman{--art-height:230px;width:calc(230px * .455);height:230px}
+ html[data-edition="2026-10"] .dream-overview .goal.sage .dream-summary .talisman{width:112px;height:230px}
+ html[data-edition]:not([data-edition="2026-10"]) .dream-overview .goal .dream-summary .talisman{width:112px;height:calc(112px * var(--object-aspect,.666667))}
+ html[data-edition] .dream-overview .goal .dream-summary h2,html[data-edition] .dream-overview .goal .dream-summary .goal-meta,html[data-edition] .dream-overview .goal .dream-summary .deadline,html[data-edition] .dream-overview .goal .dream-summary .countdown{max-width:calc(100% - 120px)}
+}
+/* One bound Big Dream contains its cover and all its tydream pages. */
+.big-dream-volume{padding:0;border:1px solid var(--line);border-radius:5px 16px 16px 5px;background:var(--bg);overflow:hidden}
+html[data-edition] .big-dream-volume>.group-heading{margin:0;border-radius:0;border-bottom:1px solid var(--line)}
+.big-dream-volume>.group-heading::after{bottom:0;border-bottom:0;border-radius:2px 9px 0 0}
+html[data-edition] .dream-overview .big-dream-volume>.goal-grid{padding:18px 18px 20px}
+.big-dream-volume>.group-empty{margin:0;padding:22px 24px 26px}
+@media(max-width:560px){
+ .big-dream-volume{padding:0;margin-bottom:28px}
+ html[data-edition] .dream-overview .big-dream-volume>.goal-grid{padding:12px 10px 16px;scroll-padding-inline:10px;grid-auto-columns:calc(100% - 24px)}
+ html[data-edition] .dream-overview .big-dream-volume>.goal-grid:has(>.goal:only-child){grid-auto-columns:100%}
+ .big-dream-volume>.group-empty{padding:18px 20px 22px}
+}
+/* The pumpkin's source art has more breathing room than the separate ghost jar. */
+html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .talisman{width:142px;background-size:auto 125%}
+html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary h2,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .goal-meta,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .deadline,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .countdown{max-width:calc(100% - 150px)}
+@media(max-width:360px){
+ html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .talisman{width:118px;background-size:auto 115%}
+ html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary h2,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .goal-meta,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .deadline,html[data-edition="2026-10"] .dream-overview .goal.peach .dream-summary .countdown{max-width:calc(100% - 126px)}
+}
