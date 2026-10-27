@@ -25,6 +25,31 @@ export async function api(request,env){
   try{body=raw?JSON.parse(raw):{}}catch{return json({error:'Dados inválidos.'},400)}
   if(!body||Array.isArray(body)||typeof body!=='object')return json({error:'Dados inválidos.'},400);
  }
+ if(id==='groups'){
+  const groupId=action;
+  const list=async()=> (await env.DB.prepare('SELECT id,name,created_at FROM dream_groups WHERE owner=? ORDER BY created_at,id').bind(owner).all()).results;
+  if(request.method==='GET'&&!groupId)return json(await list());
+  if(groupId&&!(await list()).some(g=>g.id===groupId))return json({error:'Este Big Dream não foi encontrado.'},404);
+  if(request.method==='DELETE'&&groupId){
+   await env.DB.batch([env.DB.prepare('UPDATE goals SET group_id=NULL WHERE group_id=? AND owner=?').bind(groupId,owner),env.DB.prepare('DELETE FROM dream_groups WHERE id=? AND owner=?').bind(groupId,owner)]);
+   return json({ok:true});
+  }
+  if(request.method==='POST'&&!groupId||request.method==='PATCH'&&groupId){
+   if(typeof body.name!=='string'||!body.name.trim()||body.name.trim().length>80)return json({error:'Dê um nome ao Big Dream, com até 80 caracteres.'},400);
+   const name=body.name.trim(),known=await list();
+   if(known.some(g=>g.id!==groupId&&g.name.toLocaleLowerCase('pt-BR')===name.toLocaleLowerCase('pt-BR')))return json({error:'Já existe um Big Dream com esse nome.'},400);
+   if(body.goalIds!==undefined&&(!Array.isArray(body.goalIds)||body.goalIds.some(v=>typeof v!=='string')||new Set(body.goalIds).size!==body.goalIds.length))return json({error:'Escolha tydreams válidos para o Big Dream.'},400);
+   const owned=body.goalIds!==undefined?await goals(env.DB,owner):[];
+   if(body.goalIds?.some(id=>!owned.some(g=>g.id===id)))return json({error:'Um dos tydreams não foi encontrado.'},400);
+   const gid=groupId||crypto.randomUUID(),statements=[groupId?env.DB.prepare('UPDATE dream_groups SET name=? WHERE id=? AND owner=?').bind(name,gid,owner):env.DB.prepare('INSERT INTO dream_groups (id,owner,name,created_at) VALUES (?,?,?,?)').bind(gid,owner,name,new Date().toISOString())];
+   if(body.goalIds!==undefined){
+    statements.push(env.DB.prepare('UPDATE goals SET group_id=NULL WHERE group_id=? AND owner=?').bind(gid,owner));
+    for(const goalId of body.goalIds)statements.push(env.DB.prepare('UPDATE goals SET group_id=? WHERE id=? AND owner=?').bind(gid,goalId,owner));
+   }
+   await env.DB.batch(statements);return json((await list()).find(g=>g.id===gid),groupId?200:201);
+  }
+  return json({error:'Ação não permitida para este Big Dream.'},405);
+ }
  if(request.method==='GET'&&!id)return json(await goals(env.DB,owner));
  const existing=id?await goals(env.DB,owner,id):null;if(id&&!existing)return json({error:'Este sonho não foi encontrado.'},404);
  if(request.method==='POST'&&action==='outcome'){
@@ -96,9 +121,11 @@ export async function api(request,env){
   if((!plan||plan.kind==='habit')&&(!Number.isInteger(body.target)||body.target>3650))return json({error:'Use uma meta de 1 a 3650 dias.'},400);
   if(existing&&planOf(existing).kind!==(plan?.kind||'habit')&&(existing.days.length||existing.entries.length||existing.failures.length))return json({error:'Crie outro sonho para mudar o tipo sem perder seu histórico.'},400);
   if(existing?.entries.length&&planOf(existing).kind==='habit'&&(Boolean(planOf(existing).dailyTarget)!==Boolean(plan?.dailyTarget)||(planOf(existing).dailyTarget&&planOf(existing).unit!==plan.unit)))return json({error:'Crie outro hábito para mudar a unidade ou a forma de medir sem misturar registros.'},400);
+  const groupId=body.groupId===undefined?(existing?.group_id??null):body.groupId;
+  if(groupId!==null&&(typeof groupId!=='string'||!(await env.DB.prepare('SELECT id FROM dream_groups WHERE id=? AND owner=?').bind(groupId,owner).all()).results.length))return json({error:'Escolha um Big Dream válido.'},400);
   const gid=id||crypto.randomUUID(),target=targetOf({target:body.target,plan});
-  if(id)await env.DB.prepare('UPDATE goals SET title=?,reward=?,target=?,color=?,plan=?,redeemed=0 WHERE id=? AND owner=?').bind(body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,id,owner).run();
-  else await env.DB.prepare('INSERT INTO goals (id,owner,title,reward,target,color,plan,created_at) VALUES (?,?,?,?,?,?,?,?)').bind(gid,owner,body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,new Date().toISOString()).run();
+  if(id)await env.DB.prepare('UPDATE goals SET title=?,reward=?,target=?,color=?,plan=?,group_id=?,redeemed=0 WHERE id=? AND owner=?').bind(body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,groupId,id,owner).run();
+  else await env.DB.prepare('INSERT INTO goals (id,owner,title,reward,target,color,plan,group_id,created_at) VALUES (?,?,?,?,?,?,?,?,?)').bind(gid,owner,body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,groupId,new Date().toISOString()).run();
   return json(await goals(env.DB,owner,gid),id?200:201);
  }
  return json({error:'Caminho não encontrado.'},404);

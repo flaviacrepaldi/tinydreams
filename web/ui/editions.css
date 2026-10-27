@@ -73,3 +73,36 @@ html:not([data-edition="2026-10"])[data-motion="active"][data-atmosphere="rain"]
 @keyframes lamplight-success{0%,100%{filter:none}35%{filter:brightness(1.5) saturate(1.15)}}
 @keyframes paper-success{0%,100%{transform:none}35%{transform:rotate(-4deg) translateY(-4px)}65%{transform:rotate(2deg)}}
 @media(prefers-reduced-motion:reduce){html .goal.celebrate .talisman{animation:none!important}}
+/* Compact home works in every edition; the current world's artwork stays alive. */
+.overview-tools,.group-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}.overview-tools{margin:8px 0 30px}.overview-tools h2{font:400 26px/1.25 var(--serif);margin:0}.dream-group{margin:0 0 34px}.group-heading{margin-bottom:16px}.group-heading h2{font:400 24px/1.25 var(--serif);margin:0;overflow-wrap:anywhere}.group-heading p{margin:6px 0 0;color:var(--muted);font-size:12px}.group-heading>div{min-width:0}.group-heading>button{flex-shrink:0}.group-empty{color:var(--muted);font-size:14px;line-height:1.6;margin:12px 0 24px}.overview-add{margin-bottom:24px}.group-members{border:0;padding:0;margin:24px 0}.group-members legend{font-size:16px;font-weight:650}.group-member{display:flex;align-items:center;gap:12px;padding:12px 0;margin:0;border-bottom:1px solid var(--line);cursor:pointer}.group-member input{width:20px;height:20px;flex-shrink:0;accent-color:var(--accent)}.group-member span{min-width:0}.group-member strong{display:block;font-size:14px;font-weight:500;overflow-wrap:anywhere}.group-member small{display:block;color:var(--muted);font-size:12px;margin-top:3px}#deleteGroup{margin-top:16px}#groupDeleteConfirm{margin-top:20px;font-size:14px}
+html[data-edition] .dream-overview .goal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:0;overflow:visible;scroll-snap-type:none}
+html[data-edition] .dream-overview .goal-grid>.goal{display:block;grid-column:auto;grid-row:auto;flex-basis:auto;min-width:0;min-height:0;margin:0;padding:18px;text-align:left;border-radius:13px;overflow:hidden}
+html[data-edition] .dream-overview .goal .goal-top{min-height:32px}
+html[data-edition] .dream-overview .goal .small-button{width:36px;height:36px}
+html[data-edition] .dream-overview .goal .talisman{position:absolute;float:none;left:auto;right:12px;top:70px;margin:0;--art-height:108px;width:calc(108px * .455);height:108px}
+html[data-edition]:not([data-edition="2026-10"]) .dream-overview .goal .talisman{width:78px;height:calc(78px * var(--object-aspect,.666667));top:70px;right:10px}
+html[data-edition] .dream-overview .goal h2{font-size:21px;line-height:1.2;max-width:calc(100% - 75px);min-height:0;margin:12px 0 8px}
+html[data-edition] .dream-overview .goal .goal-meta{font-size:12px;max-width:calc(100% - 75px);margin:0;justify-content:flex-start}
+html[data-edition] .dream-overview .goal .deadline{font-size:12px;margin:8px 0;max-width:calc(100% - 75px)}
+html[data-edition] .dream-overview .goal .countdown{min-height:44px;margin:12px 0 10px;max-width:calc(100% - 75px);justify-content:flex-start;gap:7px}
+html[data-edition] .dream-overview .goal .countdown strong{font-size:36px;letter-spacing:-1px}
+html[data-edition] .dream-overview .goal .countdown span{font-size:12px;max-width:110px}
+html[data-edition] .dream-overview .goal .progress{margin-top:10px}
+html[data-edition] .dream-overview .goal .progress-label{margin:7px 0 12px;font-size:12px;gap:8px}
+html[data-edition] .dream-overview .goal .reward{min-height:0;padding-top:12px;gap:8px;margin-top:8px}
+html[data-edition] .dream-overview .goal .reward-label{font-size:10px;letter-spacing:.8px}
+html[data-edition] .dream-overview .goal .reward-name{font-size:12px;line-height:1.4}
+html[data-edition] .dream-overview .goal .quick-outcomes{margin-top:12px;gap:8px}
+html[data-edition] .dream-overview .goal .quick-outcomes .check-button{font-size:12px;min-height:44px;padding:8px 6px;margin:0}
+html[data-edition] .dream-overview .goal .daily-summary{font-size:12px;margin:8px 0}
+html[data-edition] .dream-overview .goal .plan-open,html[data-edition] .dream-overview .goal .history-open{display:flex;width:100%;min-height:44px;margin:10px 0 0;padding:8px 10px}
+@media(max-width:1000px){html[data-edition] .dream-overview .goal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.overview-tools{align-items:flex-start;gap:12px;margin-bottom:24px}.overview-tools h2{font-size:24px}.overview-tools>button{flex-shrink:0;padding-inline:12px}.group-heading h2{font-size:23px}.group-heading{gap:12px}.group-heading>button{padding-inline:12px}html[data-edition] .dream-overview .goal-grid{grid-template-columns:1fr;gap:14px}html[data-edition] .dream-overview .goal-grid>.goal{padding:16px}.dream-group{margin-bottom:28px}}
+
+/* Mobile Big Dreams read like a gallery: swipe, snap, and a glimpse of the next card. */
+@media(max-width:560px){
+ html[data-edition] .dream-overview .goal-grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc(100% - 24px);align-items:stretch;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-inline:0;padding:4px 0 12px;gap:12px;scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior-x:contain}
+ html[data-edition] .dream-overview .goal-grid::-webkit-scrollbar{display:none}
+ html[data-edition] .dream-overview .goal-grid>.goal{scroll-snap-align:start;scroll-snap-stop:normal;align-self:stretch}
+ html[data-edition] .dream-overview .goal-grid:has(>.goal:only-child){grid-auto-columns:100%}
+}

@@ -383,3 +383,8 @@ A daily completion panel is nonmodal and dismisses after six seconds. A final ch
 
 ## Latest interaction preferences
 Monthly editions are surprises: Preferences has no edition picker, preview/apply button, or preview banner. Calendar-based automatic selection and the internal QA presentation hook remain. This supersedes the earlier user-facing preview description. Secondary action buttons use a theme-derived background, visible 1px boundary, rounded corners, 44px minimum height, explicit hover/focus/disabled states, and no underline; this includes shelf/history/edit/remove and demo return actions.
+
+## Big Dreams home and mobile galleries
+Big Dreams are named project/category groupings, each with its own section heading, active/completed count, and Organizar button. Creation and editing use one dialog with a name and labeled member checkboxes; selecting a member from elsewhere moves it, and removing a Big Dream preserves all dreams. The dream form has an optional Big Dream selector. Membership is persisted per owner and unrelated to reward eligibility.
+
+Home cards use 16–18px padding, 21px titles, 36px countdowns, smaller live edition amulets, and 44px daily/history controls. Desktop has a three-column compact grid, two columns below 1000px. At 560px and below each grouping becomes a swipe gallery: horizontal overflow inside the section, start-aligned scroll snapping, hidden scrollbar and a 24px next-card affordance. One card fills its row. The region is keyboard focusable and named for its Big Dream. These rules apply across all monthly editions and override their former oversized card placement, not their illustration or motion.

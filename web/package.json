@@ -5,7 +5,7 @@
   "scripts": {
     "build": "bash scripts/build.sh",
     "dev": "npm run build && node scripts/dev.mjs",
-    "test": "node scripts/test.mjs && node scripts/test-planner.mjs && node scripts/test-outcomes.mjs && node scripts/test-d1-adapter.mjs && node scripts/test-editions.mjs",
+    "test": "node scripts/test.mjs && node scripts/test-planner.mjs && node scripts/test-outcomes.mjs && node scripts/test-d1-adapter.mjs && node scripts/test-editions.mjs && node scripts/test-groups.mjs",
     "validate": "node scripts/validate-artifact.mjs",
     "dev:offline": "npm run build && TINY_DREAMS_DB=sqlite node scripts/dev.mjs",
     "db:migrate": "wrangler d1 migrations apply DB --remote",
