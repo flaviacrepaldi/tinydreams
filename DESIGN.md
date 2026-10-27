@@ -421,3 +421,5 @@ Distinguish one-time and repeating lists in Como acompanhar. Lista diária expos
 ### Prateleira e álbum literário
 
 A coleção é uma superfície de experiência dentro do app: mantém ameixa, cobre e papel marfim em todas as edições. A estante tem duas fileiras de quatro lombadas; recortes contíguos do mesmo retrato ilustrado formam uma imagem vertical. Lugares vazios são lombadas encadernadas sem pistas da identidade. O álbum aberto coloca retrato e biografia em páginas opostas no desktop, empilhadas no celular. Dez capas abaixo mostram os lugares disponíveis; somente escritores conquistados exibem nome e arte. Retratos são ilustrações interpretativas, não fotografias históricas.
+
+A celebração ilustrada de outubro segue o conceito aprovado de aquarela lilás, vidro com contornos em cobre, lua e luz dourada. O atlas transparente contém 4 × 4 poses e substitui o símbolo vetorial apenas dentro das celebrações de outubro. O layout, os cards e os amuletos persistidos permanecem como antes. A intensidade cresce de item para dia e conclusão integral, com quadros discretos de desenho animado e brilho suave; nenhum ciclo infinito ou rotação do fantasma.

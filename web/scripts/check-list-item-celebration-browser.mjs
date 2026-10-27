@@ -27,7 +27,7 @@ for(const edition of ['2026-10','2026-11','2027-04','2027-09']){
  }
  await js("changeEntry('daily-list-magic',{key:today()+':item1',day:today(),done:false})");
 }
-await js("changeEntry('daily-list-magic',{key:today()+':item1',day:today(),done:true})");await new Promise(r=>setTimeout(r,3000));await assert("!document.querySelector('#itemMilestone')",'Item feedback did not clear');
+await js("changeEntry('daily-list-magic',{key:today()+':item1',day:today(),done:true})");await new Promise(r=>setTimeout(r,4700));await assert("!document.querySelector('#itemMilestone')",'Item feedback did not clear');
 await js("document.querySelector('#progressDialog').close()");await wait("!document.querySelector('#milestone').hidden");
 await assert("document.querySelector('#milestone h2').textContent.includes('concluído')",'Day completion was lost');
 await cdp('Page.close');ws.close();console.log('PASS: individual item feedback, accurate daily count, final-item celebration, undo, theme effects, responsive positioning, automatic cleanup, and preserved daily milestone.');

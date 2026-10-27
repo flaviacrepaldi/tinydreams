@@ -17,10 +17,10 @@ for(const edition of editions){
   await js("milestoneQueue.set(state.goals[0].id,{id:state.goals[0].id,kind:'day',day:today()});state.goals[0].days.push(today());flushMilestones();clearTimeout(milestoneTimer)");
   await assert("!document.querySelector('#milestone').hidden",'Missing celebration');
   await assert(`document.querySelector('#milestone').dataset.edition==='${edition}'`,'Wrong theme');
-  await assert("(()=>{const d=document.createElement('div');d.innerHTML=icon(DreamThemes.current.progressSymbol);return d.innerHTML===document.querySelector('.milestone-sigil').innerHTML})()",'Wrong motif');
+  await assert("DreamThemes.current.id==='2026-10'?!!document.querySelector('.potion-sprite'):(()=>{const d=document.createElement('div');d.innerHTML=icon(DreamThemes.current.progressSymbol);return d.innerHTML===document.querySelector('.milestone-sigil').innerHTML})()",'Wrong motif');
   await new Promise(r=>setTimeout(r,700));
   await assert("(()=>{const r=document.querySelector('#milestone').getBoundingClientRect();return Math.abs(r.x+r.width/2-document.documentElement.clientWidth/2)<2&&Math.abs(r.y+r.height/2-innerHeight/2)<3&&r.x>=0&&r.right<=innerWidth})()",'Off-center or overflow '+edition+' '+width);
-  await assert("document.querySelectorAll('.milestone-sparks>span').length===12",'Particle count');
+  await assert("DreamThemes.current.id==='2026-10'?document.querySelectorAll('.painted-glints>span').length===6:document.querySelectorAll('.milestone-sparks>span').length===12",'Particle count');
   await assert("document.querySelector('.milestone-copy button').getBoundingClientRect().height>=44",'Small target');
   if(width===390){await new Promise(r=>setTimeout(r,750));await writeFile('/tmp/tiny-magic-review/'+edition+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png'})).data,'base64'))}
   await click('[data-action=dismiss-milestone]');await assert("document.querySelector('#milestone').hidden",'Dismiss failed');

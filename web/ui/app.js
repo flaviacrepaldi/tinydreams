@@ -251,7 +251,7 @@ function renderRoutineChecks(){
 }
 let itemCelebrationTimer;
 function clearItemCelebration(){clearTimeout(itemCelebrationTimer);$('#itemMilestone')?.remove()}
-function magicalEmblem(motif){return `<div class="milestone-enchantment" aria-hidden="true"><div class="milestone-aura"></div><div class="milestone-sigil">${icon(motif)}</div><div class="milestone-sparks">${Array.from({length:12},(_,i)=>`<span style="--spark-x:${Math.round(Math.cos(i*Math.PI/6)*140)}px;--spark-y:${Math.round(Math.sin(i*Math.PI/6)*115)}px;--spark-delay:${i*45}ms;--spark-turn:${i%2?24:-24}deg">${icon(i%3===0?motif:'star')}</span>`).join('')}</div></div>`}
+function magicalEmblem(motif,kind='day'){if(window.DreamThemes?.current?.id==='2026-10')return `<div class="milestone-enchantment painted-enchantment" aria-hidden="true" data-scene="${kind}"><div class="milestone-aura"></div><div class="potion-sprite"></div><div class="painted-glints">${Array.from({length:6},(_,i)=>`<span style="--glint-delay:${i*180}ms;--glint-x:${[22,76,15,83,30,68][i]}%;--glint-y:${[32,24,60,57,80,78][i]}%">${icon('star')}</span>`).join('')}</div></div>`;return `<div class="milestone-enchantment" aria-hidden="true"><div class="milestone-aura"></div><div class="milestone-sigil">${icon(motif)}</div><div class="milestone-sparks">${Array.from({length:12},(_,i)=>`<span style="--spark-x:${Math.round(Math.cos(i*Math.PI/6)*140)}px;--spark-y:${Math.round(Math.sin(i*Math.PI/6)*115)}px;--spark-delay:${i*45}ms;--spark-turn:${i%2?24:-24}deg">${icon(i%3===0?motif:'star')}</span>`).join('')}</div></div>`}
 function celebrateDailyListItem(g,entry){
  const p=planOf(g);if(!p.dailyList||!$('#progressDialog').open)return false;
  const tasks=tasksOn(g,entry.day),item=tasks.find(t=>entry.key===`${entry.day}:${t.id}`);
@@ -259,9 +259,9 @@ function celebrateDailyListItem(g,entry){
  clearItemCelebration();
  const count=tasks.filter(t=>(g.entries||[]).some(e=>e.key===`${entry.day}:${t.id}`)).length,edition=window.DreamThemes?.current;
  const panel=document.createElement('section');panel.id='itemMilestone';panel.className='milestone item-milestone';panel.dataset.magic=edition?.atmosphere||'stars';panel.setAttribute('role','status');
- panel.innerHTML=`${magicalEmblem(edition?.progressSymbol||'star')}<div class="milestone-copy"><h2>${count===tasks.length?'Lista do dia concluída!':'Mais um cuidado cumprido!'}</h2><p>${esc(item.title)}</p><p class="item-completion-count">${count} de ${tasks.length} itens · ${entry.day===today()?'hoje':prettyDay(entry.day)}</p></div>`;
+ panel.innerHTML=`${magicalEmblem(edition?.progressSymbol||'star',count===tasks.length?'day':'item')}<div class="milestone-copy"><h2>${count===tasks.length?'Lista do dia concluída!':'Mais um cuidado cumprido!'}</h2><p>${esc(item.title)}</p><p class="item-completion-count">${count} de ${tasks.length} itens · ${entry.day===today()?'hoje':prettyDay(entry.day)}</p></div>`;
  $('#progressDialog').append(panel);$('#toast').hidden=true;clearTimeout(toastTimer);
- itemCelebrationTimer=setTimeout(clearItemCelebration,2800);return true;
+ itemCelebrationTimer=setTimeout(clearItemCelebration,count===tasks.length?4500:3400);return true;
 }
 $('#progressDialog').addEventListener('close',clearItemCelebration);
 async function changeEntry(id,body){if(state.busy)return;const g=state.goals.find(g=>g.id===id),previous=progress(g),newItem=body.done&&!(g.entries||[]).some(e=>e.key===body.key);state.busy=true;$('#progressContent').querySelectorAll('button').forEach(b=>b.disabled=true);try{if(state.demo){g.entries=(g.entries||[]).filter(e=>e.key!==body.key);if(body.done)g.entries.push({key:body.key,day:body.day,value:body.value||1,note:body.note||''});if(planOf(g).kind==='habit'&&!planOf(g).impulse){g.days=g.days.filter(d=>d!==body.day);if(planOf(g).dailyTarget?dailyTotal(g,body.day)>=planOf(g).dailyTarget:tasksOn(g,body.day).every(t=>g.entries.some(e=>e.key===`${body.day}:${t.id}`)))g.days.push(body.day);if(g.days.includes(body.day))g.failures=(g.failures||[]).filter(d=>d!==body.day)}g.redeemed=0}else Object.assign(g,await api('/'+id+'/entry','POST',body));render();openDetails(id);if($('#routineDay')){$('#routineDay').value=body.day;renderRoutineChecks()}animateProgress(g,previous);const itemCelebrated=newItem&&celebrateDailyListItem(g,body);if(!itemCelebrated&&(!body.done||$('#milestone').hidden))toast(body.done?'Mais um passo registrado.':'Registro desfeito.')}catch(e){toast(e.message);openDetails(id)}finally{state.busy=false}}
@@ -370,7 +370,7 @@ function flushMilestones(){
  const edition=window.DreamThemes?.current;
  const motif=edition?.progressSymbol||'star',atmosphere=edition?.atmosphere||'stars';
  const panel=$('#milestone');panel.dataset.goal=g.id;panel.dataset.magic=atmosphere;panel.dataset.edition=edition?.id||'';panel.classList.toggle('final-chapter',m.kind==='dream');
- const enchantment=magicalEmblem(motif);
+ const enchantment=magicalEmblem(motif,m.kind);
  panel.innerHTML=`<button class="icon-button milestone-close" data-action="dismiss-milestone" aria-label="Fechar celebração">×</button>${enchantment}${m.kind==='dream'?bookMarkup(g):''}<div class="milestone-copy"><h2>${m.kind==='dream'?'Seu tydream virou uma história realizada.':wholeDay?'Tudo de hoje concluído.':'Dia concluído.'}</h2><p>${m.kind==='dream'?esc(g.title):wholeDay?`${habits.length} hábitos de hoje concluídos.`:`${esc(g.title)} · ${fmt(progress(g))} de ${fmt(targetOf(g))} ${esc(unit(g))}`}</p>${m.kind==='dream'&&g.reward?`<p>Recompensa liberada: ${esc(g.reward)}</p>`:''}<button class="secondary" data-action="${m.kind==='dream'?'open-shelf':'dismiss-milestone'}">${m.kind==='dream'?'Ver na minha prateleira':'Continuar'}</button></div>`;
  $('#toast').hidden=true;clearTimeout(toastTimer);panel.hidden=false;clearTimeout(milestoneTimer);if(m.kind!=='dream')milestoneTimer=setTimeout(()=>panel.hidden=true,10000);
 }
@@ -387,3 +387,7 @@ document.addEventListener('click',event=>{const info=$('#durationInfo');if(info.
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('#durationInfo').open){$('#durationInfo').open=false;$('#durationInfo summary').focus();event.preventDefault()}});
 
 document.addEventListener('click',event=>{if(event.target.closest('[data-action="not-started"]'))toast('Ainda não começou');});
+
+let celebrationArtWarmed=false;
+function warmCelebrationArt(){if(!celebrationArtWarmed&&window.DreamThemes?.current?.id==='2026-10'){celebrationArtWarmed=true;const art=new Image();art.src='/potion-celebration-v1.png'}}
+document.addEventListener('dreameditionchange',warmCelebrationArt);warmCelebrationArt();
