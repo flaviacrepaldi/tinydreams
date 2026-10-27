@@ -402,3 +402,6 @@ The ghost's latest motion direction is counterclockwise: a head-first turn aroun
 
 ## Current ghost direction: stationary
 The user stopped the rotating ghost animation. Remove both the ambient orbit and the success-time ghost turn. Keep the layered illustration in a fixed resting pose; progress and reward feedback continue. This supersedes all earlier ghost dive/orbit directions.
+
+## Monthly progress symbols
+Replace the progress fill's circular endpoint with a 22px outline SVG marker selected by the active edition's progressSymbol. All 12 authored editions have distinct symbols, with October's friendly ghost visible now and future symbols remaining unrevealed. Use the goal color for strokes and theme surface for fill; keep the numeric label and progressbar ARIA values. Markers follow the existing width transition and remain static under reduced motion. Apply the same marker to daily quantity progress; retain personal dream symbols on cards and calendar.

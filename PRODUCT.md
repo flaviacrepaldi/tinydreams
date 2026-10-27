@@ -106,3 +106,6 @@ Named Big Dreams have editorial book-cover headers: a binding edge, inset foil-l
 
 ## Ghost motion stopped
 The user explicitly requested stopping the ghost rotation. Keep the ghost in a fixed resting pose inside the glass, including during success feedback. Do not restore diving, orbiting or tumbling without a new request. Other amulets and existing progress/reward feedback remain.
+
+## Edition-specific progress markers
+The leading edge of a dream's progress bar uses the current monthly edition's own thin-stroke SVG symbol instead of a plain circle. Each of the 12 prepared editions declares a distinct progressSymbol. October uses a friendly ghost; later symbols remain surprises. Markers move with earned progress, also appear in daily quantity details, inherit theme colors, and preserve text/ARIA progress values and reduced-motion behavior. This is independent of each dream's personal symbol and its calendar stamps. No new image requests or data changes.

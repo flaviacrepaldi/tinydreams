@@ -138,3 +138,13 @@ html[data-layout="archive"] .big-dream-volume>.group-heading::after{border-style
  .big-dream-volume>.group-heading p{margin-top:10px;font-size:12px}
  .big-dream-volume>.group-heading::after{inset:10px 10px 10px 17px}
 }
+/* Read the countdown in one left-aligned column, including its longer label. */
+html[data-edition] .dream-overview .goal .countdown{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;justify-items:start;gap:5px}
+html[data-edition] .dream-overview .goal .countdown span{max-width:none;line-height:1.45;text-align:left}
+html[data-edition] .dream-overview .goal .countdown-lead{margin:0}
+/* The current edition travels at the leading edge of earned progress. */
+.goal .progress>span::after,#routineChecks .progress>span::after{content:none}
+.progress-token{position:absolute;right:-11px;top:50%;transform:translateY(-50%);display:block;width:22px;height:22px;line-height:0;color:var(--goal,var(--accent));pointer-events:none}
+.progress-token svg{display:block;width:100%;height:100%;fill:var(--surface);stroke:currentColor;stroke-width:1.6;filter:drop-shadow(0 2px 2px #0003)}
+#routineChecks .progress{overflow:visible}#routineChecks .progress>span{position:relative}
+html[data-edition] .dream-overview .goal .progress-label{margin-top:13px}

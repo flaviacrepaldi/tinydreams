@@ -25,7 +25,8 @@
       "--goal-lavender": "#d8c0ec",
       "--goal-peach": "#ebbd9c",
       "--goal-sage": "#bbcfb6"
-    }
+    },
+    "progressSymbol": "ghost"
   },
   {
     "id": "2026-11",
@@ -61,7 +62,8 @@
       "objectAspect": 0.787109375,
       "objectSheetHeight": 254.09429280397023,
       "sceneRatio": 2.489465153970827
-    }
+    },
+    "progressSymbol": "shell"
   },
   {
     "id": "2026-12",
@@ -97,7 +99,8 @@
       "objectAspect": 0.73828125,
       "objectSheetHeight": 270.8994708994709,
       "sceneRatio": 2.392523364485981
-    }
+    },
+    "progressSymbol": "gift"
   },
   {
     "id": "2027-01",
@@ -133,7 +136,8 @@
       "objectAspect": 0.81640625,
       "objectSheetHeight": 244.97607655502392,
       "sceneRatio": 2.5514950166112955
-    }
+    },
+    "progressSymbol": "compass"
   },
   {
     "id": "2027-02",
@@ -169,7 +173,8 @@
       "objectAspect": 0.806640625,
       "objectSheetHeight": 247.94188861985472,
       "sceneRatio": 2.530477759472817
-    }
+    },
+    "progressSymbol": "mask"
   },
   {
     "id": "2027-03",
@@ -205,7 +210,8 @@
       "objectAspect": 0.83984375,
       "objectSheetHeight": 238.13953488372093,
       "sceneRatio": 2.6033898305084744
-    }
+    },
+    "progressSymbol": "coffee"
   },
   {
     "id": "2027-04",
@@ -241,7 +247,8 @@
       "objectAspect": 0.7890625,
       "objectSheetHeight": 253.46534653465346,
       "sceneRatio": 2.4935064935064934
-    }
+    },
+    "progressSymbol": "leaf"
   },
   {
     "id": "2027-05",
@@ -277,7 +284,8 @@
       "objectAspect": 0.765625,
       "objectSheetHeight": 261.2244897959184,
       "sceneRatio": 2.445859872611465
-    }
+    },
+    "progressSymbol": "envelope"
   },
   {
     "id": "2027-06",
@@ -313,7 +321,8 @@
       "objectAspect": 0.841796875,
       "objectSheetHeight": 237.58700696055683,
       "sceneRatio": 2.607809847198642
-    }
+    },
+    "progressSymbol": "lamp"
   },
   {
     "id": "2027-07",
@@ -349,7 +358,8 @@
       "objectAspect": 0.7890625,
       "objectSheetHeight": 253.46534653465346,
       "sceneRatio": 2.4935064935064934
-    }
+    },
+    "progressSymbol": "train"
   },
   {
     "id": "2027-08",
@@ -385,7 +395,8 @@
       "objectAspect": 0.802734375,
       "objectSheetHeight": 249.1484184914842,
       "sceneRatio": 2.522167487684729
-    }
+    },
+    "progressSymbol": "key"
   },
   {
     "id": "2027-09",
@@ -421,6 +432,7 @@
       "objectAspect": 0.744140625,
       "objectSheetHeight": 268.76640419947506,
       "sceneRatio": 2.403755868544601
-    }
+    },
+    "progressSymbol": "needle"
   }
 ]
