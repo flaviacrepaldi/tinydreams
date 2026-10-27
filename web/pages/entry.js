@@ -9,8 +9,14 @@ export default {
     if (!['tinydreams.pages.dev', 'localhost'].includes(url.hostname)) return new Response('Not found', {status:404});
     const path = url.pathname;
     // Installation metadata must work even when iOS fetches it without a session.
-    const publicAssets = ['/fraunces.ttf','/dm-sans.ttf','/icon.svg','/apple-touch-icon.png','/icon-192.png','/icon-512.png','/manifest.webmanifest'];
-    if (publicAssets.includes(path) && ['GET','HEAD'].includes(request.method)) return env.ASSETS.fetch(request);
+    const publicAssets = ['/fraunces.ttf','/dm-sans.ttf','/icon.svg','/apple-touch-icon.png','/icon-192.png','/icon-512.png','/manifest.webmanifest','/version.json','/updates.js'];
+    if (publicAssets.includes(path) && ['GET','HEAD'].includes(request.method)) {
+      const asset=await env.ASSETS.fetch(request);
+      const result=new Response(asset.body,asset);
+      result.headers.set('Cache-Control','no-store');
+      result.headers.set('X-Content-Type-Options','nosniff');
+      return result;
+    }
     const session = await authSession(request, env);
     const login = await authRoute(request, env, session);
     if (login) return login;

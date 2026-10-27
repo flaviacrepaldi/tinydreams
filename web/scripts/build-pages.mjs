@@ -1,5 +1,6 @@
 import {readFile, writeFile, mkdir, rm, cp} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
+import {releaseHTML} from './release.mjs';
 const root = new URL('../', import.meta.url);
 execFileSync(process.execPath, [new URL('scripts/compile.mjs', root).pathname], {stdio:'inherit'});
 const output = new URL('dist-pages/', root);
@@ -19,8 +20,9 @@ for (const [route, asset] of Object.entries(assets)) {
 }
 const app = (source.slice(0, start) + 'const assets={}' + source.slice(end)).replace('export default', 'const app =');
 const auth = await readFile(new URL('pages/auth.js', root), 'utf8');
-const loginTemplate = await readFile(new URL('pages/login.html', root), 'utf8');
-const login = 'function loginPage(message = "") { return ' + JSON.stringify(loginTemplate) + '.replace("{{MESSAGE}}", message.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")); }';
+const releaseVersion = JSON.parse(Buffer.from(assets['/version.json'].data,'base64').toString('utf8')).version;
+const loginTemplate = releaseHTML(await readFile(new URL('pages/login.html', root), 'utf8'), releaseVersion);
+const login = 'function loginPage(message = "") { return ' + JSON.stringify(loginTemplate) + '.replace("{{MESSAGE}}", message.toLocaleLowerCase("pt-BR").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")); }';
 const entry = (await readFile(new URL('pages/entry.js', root), 'utf8')).replace(/^import .*;\n/gm, '');
 await writeFile(new URL('_worker.js', output), app + '\n' + login + '\n' + auth + '\n' + entry);
 for (const directory of ['editions', 'writers', 'celebrations']) {

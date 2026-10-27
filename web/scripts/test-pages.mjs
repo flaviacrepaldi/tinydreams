@@ -71,7 +71,7 @@ try {
   const html=await readFile(new URL('../dist-pages/index.html',import.meta.url),'utf8');
   assert.ok(html.includes('action="/auth/logout"'));
   assert.ok(!html.includes(env.OWNER_PASSWORD));
-  assert.ok(html.includes('rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"'));
+  assert.match(html,/rel="apple-touch-icon" sizes="180x180" href="\/apple-touch-icon\.png\?v=[a-f0-9]{20}"/);
   const loginHTML=await (await call('/login')).text();
   assert.ok(loginHTML.includes('rel="apple-touch-icon"'));
   assert.ok((await call('/login')).headers.get('Content-Security-Policy').includes("manifest-src 'self'"));
@@ -81,7 +81,7 @@ try {
   }}};
   for(const [path,size] of [['/apple-touch-icon.png',180],['/icon-192.png',192],['/icon-512.png',512]]) {
     const response=await call(path,{},metadataEnv);
-    assert.equal(response.status,200);assert.equal(response.headers.get('Content-Type'),'image/png');
+    assert.equal(response.status,200);assert.equal(response.headers.get('Cache-Control'),'no-store');assert.equal(response.headers.get('Content-Type'),'image/png');
     const png=Buffer.from(await response.arrayBuffer());
     assert.equal(png.readUInt32BE(0),0x89504e47);
     assert.equal(png.readUInt32BE(16),size);assert.equal(png.readUInt32BE(20),size);
@@ -90,12 +90,13 @@ try {
     assert.equal((await call(path,{method:'POST'})).status,303);
   }
   assert.equal((await call('/icon.svg',{},metadataEnv)).status,200);
+  for(const path of ['/version.json','/updates.js']){const response=await call(path,{},metadataEnv);assert.equal(response.status,200);assert.equal(response.headers.get('Cache-Control'),'no-store');}
   const manifestResponse=await call('/manifest.webmanifest',{},metadataEnv);
   assert.equal(manifestResponse.status,200);
   const manifest=await manifestResponse.json();
   assert.equal(manifest.start_url,'/');
-  assert.ok(manifest.icons.some(icon=>icon.src==='/icon-192.png'&&icon.sizes==='192x192'));
-  assert.ok(manifest.icons.some(icon=>icon.src==='/icon-512.png'&&icon.sizes==='512x512'));
+  assert.ok(manifest.icons.some(icon=>/^\/icon-192\.png\?v=[a-f0-9]{20}$/.test(icon.src)&&icon.sizes==='192x192'));
+  assert.ok(manifest.icons.some(icon=>/^\/icon-512\.png\?v=[a-f0-9]{20}$/.test(icon.src)&&icon.sizes==='512x512'));
   for(const name of ['index.html','_routes.json','editions','writers','celebrations'])await stat(new URL('../dist-pages/'+name,import.meta.url));
   assert.deepEqual(JSON.parse(await readFile(new URL('../dist-pages/_routes.json',import.meta.url))),{version:1,include:['/*'],exclude:[]});
   console.log('PASS: private password login, secret/configuration errors, cookie protection, CSRF, forged identities, owner records, session expiry/rotation/logout, concurrent rate limiting, oversized bodies, unavailable D1 and upload package.');

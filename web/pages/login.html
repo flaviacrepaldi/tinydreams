@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#211b31">
-  <title>Entrar · Tiny Dreams</title>
+  <title>entrar · tiny dreams</title>
   <meta name="apple-mobile-web-app-title" content="Tiny Dreams">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.webmanifest">
+  <script src="/updates.js" defer></script>
   <style>
     @font-face{font-family:Fraunces;src:url('/fraunces.ttf') format('truetype');font-display:swap}
     @font-face{font-family:'DM Sans';src:url('/dm-sans.ttf') format('truetype');font-display:swap}
@@ -33,15 +34,15 @@
   </style>
 </head>
 <body>
-  <header><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 4a12 12 0 1 0 6 20A12 12 0 0 1 22 4Z"/></svg>Tiny Dreams</header>
+  <header><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 4a12 12 0 1 0 6 20A12 12 0 0 1 22 4Z"/></svg>tiny dreams</header>
   <main>
-    <h1>Seu mundo de pequenos sonhos.</h1>
-    <p>Entre com sua senha para cuidar dos seus sonhos.</p>
+    <h1>seu mundo de pequenos sonhos.</h1>
+    <p>entre com sua senha para cuidar dos seus sonhos.</p>
     <form method="post" action="/auth/login">
-      <label for="password">Sua senha</label>
+      <label for="password">sua senha</label>
       <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="256" aria-describedby="message">
       <p id="message" class="message" role="alert">{{MESSAGE}}</p>
-      <button type="submit">Entrar</button>
+      <button type="submit">entrar</button>
     </form>
   </main>
 </body>

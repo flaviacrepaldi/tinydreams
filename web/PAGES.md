@@ -43,3 +43,13 @@ References: https://developers.cloudflare.com/pages/get-started/direct-upload/ a
 ## Home Screen icon
 
 The app and login page declare a 180px Apple touch PNG. The manifest also includes 192px and 512px PNGs. Icons are opaque rasterizations of the existing `assets/icon.svg`, not a new logo. Installation metadata is available without a session so iOS can fetch it independently; personal artwork and APIs remain protected. After deploying this update, remove the old Home Screen shortcut and add the site again from Safari to refresh the cached icon.
+
+## Automatic updates
+
+Each build computes a stable content fingerprint from app code, styles, artwork and Pages authentication/entry code. HTML, CSS resource URLs and manifest icons include this version. Rebuilding identical contents preserves the version. `/version.json` and `/updates.js` are public installation metadata with `Cache-Control: no-store`; all authenticated app responses are also private/no-store. No service worker or offline cache is installed, and no user storage/cookies are cleared.
+
+An open app checks the current release every minute while visible and when returning, restoring a page or reconnecting. A changed version triggers a single reload after a short idle interval, deferred while a dialog, editable field or app write is active. Network failures keep the current working page. A changed deployment cannot update an OS-suspended web app until it resumes and has network access.
+
+Publish this release and open/reload it once to install the checker in the running page; older already-open pages do not have that code. Subsequent releases update automatically. Browser UI/installed Home Screen icon caches are managed separately by iOS, so a deliberately changed app icon may still require recreating the shortcut.
+
+`npm test` includes update lifecycle tests. `node scripts/check-updates-browser.mjs` uses offline QA/CDP and a simulated release, without production writes, to check draft preservation and idle reload.
