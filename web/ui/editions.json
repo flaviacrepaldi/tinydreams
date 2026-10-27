@@ -26,7 +26,8 @@
       "--goal-peach": "#ebbd9c",
       "--goal-sage": "#bbcfb6"
     },
-    "progressSymbol": "ghost"
+    "progressSymbol": "ghost",
+    "celebrationAsset": "/potion-celebration-v1.png"
   },
   {
     "id": "2026-11",
@@ -63,7 +64,8 @@
       "objectSheetHeight": 254.09429280397023,
       "sceneRatio": 2.489465153970827
     },
-    "progressSymbol": "shell"
+    "progressSymbol": "shell",
+    "celebrationAsset": "/celebrations/2026-11-v1.png"
   },
   {
     "id": "2026-12",
@@ -100,7 +102,8 @@
       "objectSheetHeight": 270.8994708994709,
       "sceneRatio": 2.392523364485981
     },
-    "progressSymbol": "gift"
+    "progressSymbol": "gift",
+    "celebrationAsset": "/celebrations/2026-12-v1.png"
   },
   {
     "id": "2027-01",
@@ -137,7 +140,8 @@
       "objectSheetHeight": 244.97607655502392,
       "sceneRatio": 2.5514950166112955
     },
-    "progressSymbol": "compass"
+    "progressSymbol": "compass",
+    "celebrationAsset": "/celebrations/2027-01-v1.png"
   },
   {
     "id": "2027-02",
@@ -174,7 +178,8 @@
       "objectSheetHeight": 247.94188861985472,
       "sceneRatio": 2.530477759472817
     },
-    "progressSymbol": "mask"
+    "progressSymbol": "mask",
+    "celebrationAsset": "/celebrations/2027-02-v1.png"
   },
   {
     "id": "2027-03",
@@ -211,7 +216,8 @@
       "objectSheetHeight": 238.13953488372093,
       "sceneRatio": 2.6033898305084744
     },
-    "progressSymbol": "coffee"
+    "progressSymbol": "coffee",
+    "celebrationAsset": "/celebrations/2027-03-v1.png"
   },
   {
     "id": "2027-04",
@@ -248,7 +254,8 @@
       "objectSheetHeight": 253.46534653465346,
       "sceneRatio": 2.4935064935064934
     },
-    "progressSymbol": "leaf"
+    "progressSymbol": "leaf",
+    "celebrationAsset": "/celebrations/2027-04-v1.png"
   },
   {
     "id": "2027-05",
@@ -285,7 +292,8 @@
       "objectSheetHeight": 261.2244897959184,
       "sceneRatio": 2.445859872611465
     },
-    "progressSymbol": "envelope"
+    "progressSymbol": "envelope",
+    "celebrationAsset": "/celebrations/2027-05-v1.png"
   },
   {
     "id": "2027-06",
@@ -322,7 +330,9 @@
       "objectSheetHeight": 237.58700696055683,
       "sceneRatio": 2.607809847198642
     },
-    "progressSymbol": "lamp"
+    "progressSymbol": "lamp",
+    "celebrationAsset": "/celebrations/2027-06-v1.png",
+    "celebrationFinalRow": 96
   },
   {
     "id": "2027-07",
@@ -359,7 +369,8 @@
       "objectSheetHeight": 253.46534653465346,
       "sceneRatio": 2.4935064935064934
     },
-    "progressSymbol": "train"
+    "progressSymbol": "train",
+    "celebrationAsset": "/celebrations/2027-07-v1.png"
   },
   {
     "id": "2027-08",
@@ -396,7 +407,8 @@
       "objectSheetHeight": 249.1484184914842,
       "sceneRatio": 2.522167487684729
     },
-    "progressSymbol": "key"
+    "progressSymbol": "key",
+    "celebrationAsset": "/celebrations/2027-08-v1.png"
   },
   {
     "id": "2027-09",
@@ -433,6 +445,7 @@
       "objectSheetHeight": 268.76640419947506,
       "sceneRatio": 2.403755868544601
     },
-    "progressSymbol": "needle"
+    "progressSymbol": "needle",
+    "celebrationAsset": "/celebrations/2027-09-v1.png"
   }
 ]

@@ -13,6 +13,14 @@ for(let index=0;index<editions.length;index++){
   if(index>0)assert.equal(e.asset,`/editions/${e.id}.png`);
 }
 assert.equal(new Set(editions.map(e=>e.layout)).size,12,'Every edition has its own composition');
+assert.equal(new Set(editions.map(e=>e.celebrationAsset)).size,12,'Every edition has a distinct celebration atlas');
+for(const e of editions){
+ const data=await readFile(new URL('../assets'+e.celebrationAsset,import.meta.url));
+ assert.equal(data.readUInt32BE(0),0x89504e47,e.id+' real PNG atlas');
+ assert.equal(data.readUInt32BE(16),data.readUInt32BE(20),e.id+' square 4 by 4 atlas');
+ assert.equal(data[25],6,e.id+' transparent RGBA atlas');
+}
+console.log('PASS: twelve distinct transparent square celebration atlases.');
 assert.equal(calendarParts(new Date('2027-01-12T02:59:59.999Z')).birthday,false);
 assert.equal(calendarParts(new Date('2027-01-12T03:00:00Z')).birthday,true);
 assert.equal(calendarParts(new Date('2027-01-13T03:00:00Z')).birthday,false);

@@ -71,3 +71,6 @@ Não enviar imagens futuras no chat. Não carregar artes futuras antecipadamente
 
 ## Atualização: temas somente como surpresa
 Por pedido da usuária, as prévias e os controles de aplicar edições foram removidos das Preferências. Os temas aparecem automaticamente no mês correspondente, no horário de São Paulo. Não oferecer um seletor de layouts nem carregar artes futuras antecipadamente. Esta decisão substitui a política anterior de prévias por ação explícita.
+
+## Celebrações ilustradas
+As 12 edições têm uma cena própria em aquarela, selecionada pelo campo `celebrationAsset` do catálogo. Cada atlas transparente tem 16 quadros em grade 4 × 4: quadros 0–3 para item, 4–11 para dia e 4–15 para tydream completo. As sequências são finitas, respeitam a pausa e a redução de movimento, e mantêm a pose final legível. Apenas o atlas do mês ativo é pré-carregado; as cenas futuras continuam surpresa, sem controles de prévia na interface. Artes e prompts ficam em `web/assets/celebrations/`, com o atlas de outubro mantido no caminho original.

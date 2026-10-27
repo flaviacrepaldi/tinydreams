@@ -32,3 +32,16 @@ for(const edition of editions){
   assert.equal(data.readUInt32BE(0),0x89504e47,edition.id+' must have real PNG artwork');
 }
 console.log('All twelve editions have their packaged artwork.');
+
+for(const edition of editions){
+ assert.ok(edition.celebrationAsset,edition.id+' celebration catalog entry');
+ const ASSETS={async fetch(request){
+  const path=new URL(request.url).pathname;
+  try{return new Response(await readFile(resolve(projectRoot,'dist/assets'+path)),{headers:{'Content-Type':'image/png'}})}
+  catch{return new Response('Not found',{status:404})}
+ }};
+ const response=await workerModule.default.fetch(new Request('https://test'+edition.celebrationAsset),{ASSETS});
+ assert.equal(response.status,200,edition.id+' packaged celebration route');
+ const image=Buffer.from(await response.arrayBuffer());assert.equal(image.readUInt32BE(0),0x89504e47,edition.id+' real celebration PNG');
+}
+console.log('All twelve celebration atlases are available through the built worker.');

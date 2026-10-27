@@ -19,3 +19,6 @@ cp "$project_root"/assets/editions/*.png "$dist_root/assets/editions/"
 
 mkdir -p "$dist_root/assets/writers"
 cp "$project_root"/assets/writers/*.png "$dist_root/assets/writers/"
+
+mkdir -p "$dist_root/assets/celebrations"
+cp "$project_root"/assets/celebrations/*.png "$dist_root/assets/celebrations/"

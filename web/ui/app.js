@@ -251,7 +251,7 @@ function renderRoutineChecks(){
 }
 let itemCelebrationTimer;
 function clearItemCelebration(){clearTimeout(itemCelebrationTimer);$('#itemMilestone')?.remove()}
-function magicalEmblem(motif,kind='day'){if(window.DreamThemes?.current?.id==='2026-10')return `<div class="milestone-enchantment painted-enchantment" aria-hidden="true" data-scene="${kind}"><div class="milestone-aura"></div><div class="potion-sprite"></div><div class="painted-glints">${Array.from({length:6},(_,i)=>`<span style="--glint-delay:${i*180}ms;--glint-x:${[22,76,15,83,30,68][i]}%;--glint-y:${[32,24,60,57,80,78][i]}%">${icon('star')}</span>`).join('')}</div></div>`;return `<div class="milestone-enchantment" aria-hidden="true"><div class="milestone-aura"></div><div class="milestone-sigil">${icon(motif)}</div><div class="milestone-sparks">${Array.from({length:12},(_,i)=>`<span style="--spark-x:${Math.round(Math.cos(i*Math.PI/6)*140)}px;--spark-y:${Math.round(Math.sin(i*Math.PI/6)*115)}px;--spark-delay:${i*45}ms;--spark-turn:${i%2?24:-24}deg">${icon(i%3===0?motif:'star')}</span>`).join('')}</div></div>`}
+function magicalEmblem(motif,kind='day'){const edition=window.DreamThemes?.current,art=edition?.celebrationAsset;if(art)return `<div class="milestone-enchantment painted-enchantment" aria-hidden="true" data-scene="${kind}" style="--celebration-art:url('${esc(art)}');--atlas-final-y:${edition.celebrationFinalRow??100}%"><div class="milestone-aura"></div><div class="potion-sprite"></div><div class="painted-glints">${Array.from({length:6},(_,i)=>`<span style="--glint-delay:${i*180}ms;--glint-x:${[22,76,15,83,30,68][i]}%;--glint-y:${[32,24,60,57,80,78][i]}%">${icon('star')}</span>`).join('')}</div></div>`;return `<div class="milestone-enchantment" aria-hidden="true"><div class="milestone-aura"></div><div class="milestone-sigil">${icon(motif)}</div><div class="milestone-sparks">${Array.from({length:12},(_,i)=>`<span style="--spark-x:${Math.round(Math.cos(i*Math.PI/6)*140)}px;--spark-y:${Math.round(Math.sin(i*Math.PI/6)*115)}px;--spark-delay:${i*45}ms;--spark-turn:${i%2?24:-24}deg">${icon(i%3===0?motif:'star')}</span>`).join('')}</div></div>`}
 function celebrateDailyListItem(g,entry){
  const p=planOf(g);if(!p.dailyList||!$('#progressDialog').open)return false;
  const tasks=tasksOn(g,entry.day),item=tasks.find(t=>entry.key===`${entry.day}:${t.id}`);
@@ -388,6 +388,6 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('#duratio
 
 document.addEventListener('click',event=>{if(event.target.closest('[data-action="not-started"]'))toast('Ainda não começou');});
 
-let celebrationArtWarmed=false;
-function warmCelebrationArt(){if(!celebrationArtWarmed&&window.DreamThemes?.current?.id==='2026-10'){celebrationArtWarmed=true;const art=new Image();art.src='/potion-celebration-v1.png'}}
+const celebrationArtWarmed=new Set();
+function warmCelebrationArt(){const asset=window.DreamThemes?.current?.celebrationAsset;if(asset&&!celebrationArtWarmed.has(asset)){celebrationArtWarmed.add(asset);const art=new Image();art.src=asset}}
 document.addEventListener('dreameditionchange',warmCelebrationArt);warmCelebrationArt();
