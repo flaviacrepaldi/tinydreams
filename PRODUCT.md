@@ -109,3 +109,6 @@ The user explicitly requested stopping the ghost rotation. Keep the ghost in a f
 
 ## Edition-specific progress markers
 The leading edge of a dream's progress bar uses the current monthly edition's own thin-stroke SVG symbol instead of a plain circle. Each of the 12 prepared editions declares a distinct progressSymbol. October uses a friendly ghost; later symbols remain surprises. Markers move with earned progress, also appear in daily quantity details, inherit theme colors, and preserve text/ARIA progress values and reduced-motion behavior. This is independent of each dream's personal symbol and its calendar stamps. No new image requests or data changes.
+
+## Random amulet assignment
+New tydreams randomly receive one of the three persistent amulet slots with equal probability, independently of their title. Save the selected slot with the dream; editing and reloading preserve it. Existing dreams retain their current amulets. Each monthly edition maps the same three slots to its own three illustrated objects.

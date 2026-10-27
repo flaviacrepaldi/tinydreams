@@ -44,7 +44,7 @@ export function validEmoji(value){
  if(typeof value!=='string'||!value||value.length>32)return false;
  return [...new Intl.Segmenter('pt-BR',{granularity:'grapheme'}).segment(value)].length===1&&/[\p{Extended_Pictographic}\p{Regional_Indicator}\u20E3]/u.test(value);
 }
-export const automaticAmulet = title => ['lavender','peach','sage'][[...title].reduce((sum,c)=>sum+c.codePointAt(0),0)%3];
+export const automaticAmulet = () => ['lavender','peach','sage'][Math.floor(Math.random()*3)];
 
 // Inclusive calendar range; UTC avoids daylight-saving and device-timezone drift.
 export function practiceDays(start,end,weekdays){
