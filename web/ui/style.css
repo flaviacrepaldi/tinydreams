@@ -155,3 +155,5 @@ html[data-motion=active] .milestone[data-magic=rain] .milestone-sparks>span,html
 @media(max-width:560px){.milestone{padding:30px 20px 24px}.milestone-enchantment{height:190px}.milestone-sparks{transform:scale(.85)}.milestone.final-chapter .milestone-enchantment{height:95px}}
 @media(prefers-reduced-motion:reduce){.milestone,.milestone *{animation:none!important;transition:none!important}.milestone-sparks>span{opacity:.4}}
 html[data-motion=paused] .milestone,html[data-motion=paused] .milestone *{animation:none!important}
+/* Item feedback lives in the open diary's top layer and leaves the checklist usable. */
+.item-milestone{z-index:4;pointer-events:none;width:min(350px,calc(100% - 40px));padding:18px 22px 24px;max-height:calc(100dvh - 40px)}.item-milestone .milestone-enchantment{height:145px}.item-milestone .milestone-sparks{transform:scale(.75)}.item-milestone .milestone-sigil>svg{width:58px;height:58px}.item-milestone h2{font-size:26px}.item-milestone p{margin-bottom:10px}.item-milestone .item-completion-count{font-size:12px;margin-bottom:0}
