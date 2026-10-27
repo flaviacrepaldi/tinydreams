@@ -124,3 +124,6 @@ The user wants each tydream to keep its original amulet across monthly theme cha
 
 ## Impulse diary action
 Impulse habits open their existing impulse/history details from a thin-stroke diary icon beside Edit in the card's top action row. Remove the duplicate bottom text button for impulse habits. The icon remains keyboard/touch accessible with a 44px target and an explicit accessible name; other habit types keep their existing detail controls.
+
+## Repeating daily lists
+Creation offers “Lista diária · repetir os itens da rotina” separately from one-time lists, plus a repeat action within the one-time list form that carries over unsaved items. Daily lists reuse the habit/task mechanism with plan.dailyList=true, chosen weekdays and an explicit practice-day target or computed dated period. Each date has its own checks; all scheduled items complete one practice day, and only reaching the day target completes the tydream. Cards say “Marcar itens de hoje” and “Abrir lista diária”. One-time lists retain their existing completion semantics. Editing preserves daily-list identity and history. Do not infer daily success or recreate deleted personal goals. The user explicitly requested deleting the completed one-time “fruta, legume e salada”; only that mistaken goal was deleted.

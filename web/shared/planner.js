@@ -8,6 +8,8 @@ export function validatePlan(p){
  if(!Array.isArray(p.weekdays)||!p.weekdays.length||p.weekdays.some(d=>!Number.isInteger(d)||d<0||d>6))throw Error('Escolha pelo menos um dia da semana.');
  if(typeof p.notes!=='string'||p.notes.length>2000||typeof p.unit!=='string'||p.unit.length>30)throw Error('As observações devem ter até 2000 caracteres e a unidade até 30.');
  if(!Array.isArray(p.tasks)||p.tasks.length>30||!Array.isArray(p.items)||p.items.length>120)throw Error('Use até 30 tarefas de rotina ou 120 etapas.');
+ if(p.dailyList!=null&&typeof p.dailyList!=='boolean')throw Error('Escolha uma repetição válida para a lista.');
+ if(p.dailyList&&(p.kind!=='habit'||p.impulse||p.dailyTarget||!p.tasks.length))throw Error('Adicione os itens da lista diária e uma meta de dias.');
  if(p.impulse!=null&&typeof p.impulse!=='boolean')throw Error('Escolha um modo de hábito válido.');
  if(p.support!=null&&(typeof p.support!=='string'||p.support.length>500))throw Error('Use até 500 caracteres para seu combinado.');
  if(p.impulse&&(p.kind!=='habit'||p.tasks.length||p.dailyTarget))throw Error('O hábito de resistir ao impulso tem seu próprio registro diário.');
