@@ -74,3 +74,8 @@ The user explicitly wants today's date included in the card countdown. Count bot
 
 ## Daily actions on the front
 The user wants failure recording directly on the dream card, beside success, rather than behind the history link. Show both daily outcomes on the overview and Today. Impulse habits use “Resisti hoje” and “Cedi ao impulso”; ordinary habits use “Fiz hoje” and “Falha hoje”. Repeating the selected result clears it; switching results corrects the day. Quick actions must not open the history dialog. Quantity/task success still opens the required recording controls, and a failure cannot contradict already-complete measurements/tasks.
+
+## Ghost dive and success motion
+The user asked for more animation, specifically the small ghost diving inside its glass jar. October's sage amulet now composites a stationary illustrated jar, an independently animated spirit, and a foreground plant layer. The ghost dives behind the plants and resurfaces on a gentle loop; the glass stays still. New raster layers are non-destructive siblings documented in web/assets/ghost-animation.md. Other editions retain their artwork and behavior.
+
+Successful progress from the current quick-outcome buttons, task/quantity/list entries, and historical corrections triggers a brief talisman/progress celebration. Feedback recorded inside a dialog waits until that dialog closes; undo or regression cancels it. Failure does not trigger a celebration. Manual motion pause, reduced motion, hidden-page pauses, and offscreen art pauses remain effective. No habit data, targets, or eligibility rules change.

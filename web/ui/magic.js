@@ -8,6 +8,7 @@
   const hint=document.querySelector('#motionHint');
   let atmosphere=document.documentElement.dataset.atmosphere||'stars';
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const pendingCelebrations=new Map(),celebrationTimers=new Map();
   let enabled=true;
   try{enabled=localStorage.getItem('tiny-dreams-motion')!=='off';}catch{}
   let inView=true,frame=0,lastFrame=0,width=0,height=0,shootingStar=null,nextStar=0;
@@ -32,11 +33,40 @@
     context?.setTransform(ratio,0,0,ratio,0,0);
   }
   function active(){return enabled&&!reduced.matches&&!document.hidden&&!document.querySelector('dialog[open]');}
+  function celebrate(detail){
+    const card=document.querySelector(`[data-goal="${CSS.escape(detail.id)}"]`);
+    if(!card)return;
+    const art=card.querySelector('.talisman'),fill=card.querySelector('.progress>span');
+    const from=Math.max(0,Math.min(1,detail.from)),to=Math.max(0,Math.min(1,detail.to));
+    card.classList.remove('celebrate');
+    art?.style.setProperty('--charge',String(from));if(fill)fill.style.width=`${from*100}%`;
+    // One layout read per user action, never in the ambient drawing loop.
+    void card.offsetWidth;
+    requestAnimationFrame(()=>{
+      art?.style.setProperty('--charge',String(to));if(fill)fill.style.width=`${to*100}%`;
+      if(!active()||!card.isConnected)return;
+      card.classList.add('celebrate');
+      clearTimeout(celebrationTimers.get(detail.id));
+      celebrationTimers.set(detail.id,setTimeout(()=>{card.classList.remove('celebrate');celebrationTimers.delete(detail.id)},1500));
+    });
+  }
+  document.addEventListener('dreamprogress',event=>{
+    const detail=event.detail;
+    if(!detail||!Number.isFinite(detail.from)||!Number.isFinite(detail.to))return;
+    if(detail.to<=detail.from){pendingCelebrations.delete(detail.id);return}
+    if(!enabled||reduced.matches||document.hidden)return;
+    if(!active()){
+      const pending=pendingCelebrations.get(detail.id);
+      pendingCelebrations.set(detail.id,{...detail,from:pending?.from??detail.from});
+    }else celebrate(detail);
+  });
   function update(){
     root.dataset.motion=active()?'active':'paused';
     toggle.checked=enabled&&!reduced.matches;
     toggle.disabled=reduced.matches;
     hint.textContent=reduced.matches?'Os movimentos estão pausados pela preferência de reduzir movimento do seu dispositivo.':'Você pode pausar os movimentos quando quiser.';
+    if(!enabled||reduced.matches||document.hidden){pendingCelebrations.clear();document.querySelectorAll('.goal.celebrate').forEach(card=>card.classList.remove('celebrate'))}
+    if(active()&&pendingCelebrations.size){for(const detail of pendingCelebrations.values())celebrate(detail);pendingCelebrations.clear()}
     cancelAnimationFrame(frame);frame=0;
     if(active()&&inView&&context){nextStar=performance.now()+2000+Math.random()*3000;lastFrame=0;frame=requestAnimationFrame(draw);}
     else{shootingStar=null;context?.clearRect(0,0,width,height);}
@@ -91,7 +121,3 @@
   window.addEventListener('resize',resize,{passive:true});
   resize();update();
 })();
-// Return to the quiet ambient motion after the check-in's one-off celebration.
-document.addEventListener('animationend',event=>{
-  if(event.animationName==='bloom')event.target.closest('.goal')?.classList.remove('celebrate');
-});
