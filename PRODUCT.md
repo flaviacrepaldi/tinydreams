@@ -103,3 +103,6 @@ Completed calendar dates show the chosen outline symbol of each tydream instead 
 
 ## Big Dream book-cover presentation
 Named Big Dreams have editorial book-cover headers: a binding edge, inset foil-like rule, book emblem, large name (including an optional emoji typed from the mobile keyboard), and a truthful total/completed tydream summary. Use a subtle crop of the current edition's already-loaded illustration for material and light; never load future artwork. The header connects directly to the mobile page gallery and compact desktop grid. Unassigned dreams retain a simpler heading. No data model change is needed for name emojis.
+
+## Ghost motion stopped
+The user explicitly requested stopping the ghost rotation. Keep the ghost in a fixed resting pose inside the glass, including during success feedback. Do not restore diving, orbiting or tumbling without a new request. Other amulets and existing progress/reward feedback remain.

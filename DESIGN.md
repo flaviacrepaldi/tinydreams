@@ -399,3 +399,6 @@ Use each dream's existing thin-stroke SVG symbol for completed dates, replacing 
 Named groupings use a 148px editorial cover on desktop, with a narrow binding, inset fine rule, book emblem, 32px literary title, and total/completed count. Mobile places the emblem and Organizar button on the first row and the 28px name and summary below, preserving space for emoji and long names. The cover uses active edition surfaces and a low-opacity crop of its current artwork; paper editions soften the crop further. The existing swipe gallery follows immediately. Unassigned groups keep their plain heading. Group name hints explain mobile-keyboard emoji support.
 
 The ghost's latest motion direction is counterclockwise: a head-first turn around the illustrated torso at 58% 48%, with independent translation along a small closed path. This supersedes the earlier clockwise radial transform, which looked anchored to its tail.
+
+## Current ghost direction: stationary
+The user stopped the rotating ghost animation. Remove both the ambient orbit and the success-time ghost turn. Keep the layered illustration in a fixed resting pose; progress and reward feedback continue. This supersedes all earlier ghost dive/orbit directions.

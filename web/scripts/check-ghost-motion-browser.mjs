@@ -14,10 +14,8 @@ await js("state.demo=true;state.goals=[{id:'ghost-demo',title:'Um pequeno sonho'
 await wait("document.documentElement.dataset.motion==='active'&&document.querySelector('[data-goal=ghost-demo] .talisman').classList.contains('magic-visible')");
 await js("Promise.all(['/ghost-jar-v2.png','/ghost-spirit-v2.png'].map(url=>new Promise((resolve,reject)=>{const img=new Image();img.onload=resolve;img.onerror=reject;img.src=url})))");
 const art='[data-goal=ghost-demo] .talisman',spirit=art+' .ghost-spirit';
-if(!await js(`getComputedStyle(document.querySelector('${art}')).animationName==='none' && getComputedStyle(document.querySelector('${spirit}')).animationName==='ghost-orbit'`))throw Error('Jar and spirit are not independently animated');
-await js(`window.ghostAnimation=document.querySelector('${spirit}').getAnimations()[0];ghostAnimation.pause();ghostAnimation.currentTime=0`);const surface=await js(`getComputedStyle(document.querySelector('${spirit}')).transform`);
-await capture('surface');await js('ghostAnimation.currentTime=4500');await capture('dive');const turn=await js(`getComputedStyle(document.querySelector('${spirit}')).transform`);if(surface===turn)throw Error('Ghost does not turn inside the glass');
-await capture('desktop',1440);await js('ghostAnimation.play()');
+if(!await js(`getComputedStyle(document.querySelector('${art}')).animationName==='none' && getComputedStyle(document.querySelector('${spirit}')).animationName==='none'`))throw Error('Ghost or jar unexpectedly animated');
+await capture('surface');await capture('desktop',1440);
 await click('#settingsButton');await wait("document.documentElement.dataset.motion==='paused'");
 if(!await js(`getComputedStyle(document.querySelector('${spirit}')).animationPlayState.split(',').every(v=>v.trim()==='paused')`))throw Error('Dialog did not pause the ghost');
 await click('[data-close=settingsDialog]');await wait("document.documentElement.dataset.motion==='active'");
@@ -28,7 +26,7 @@ await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:900,deviceScale
 if(!await js(`getComputedStyle(document.querySelector('${spirit}')).animationPlayState==='paused'`))throw Error('Offscreen ghost kept moving');
 await js("document.querySelector('#content').style.marginBottom='';document.querySelector('[data-goal=ghost-demo]').scrollIntoView({block:'center'})");await wait(`document.querySelector('${art}').classList.contains('magic-visible')`);
 await click('[data-action=quick-outcome][data-status=success][data-id=ghost-demo]');await wait("document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')");
-if(!await js(`getComputedStyle(document.querySelector('${spirit}')).animationName.includes('ghost-cheer') && document.querySelector('${art}').style.getPropertyValue('--charge')==='0.75'`))throw Error('Success feedback missing');
+if(!await js(`getComputedStyle(document.querySelector('${spirit}')).animationName==='none' && document.querySelector('${art}').style.getPropertyValue('--charge')==='0.75'`))throw Error('Success feedback missing');
 await wait("!document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')");
 await click('[data-action=quick-outcome][data-status=failure][data-id=ghost-demo]');if(await js("document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')"))throw Error('Failure celebrated');
 await cdp('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});await wait("document.documentElement.dataset.motion==='paused'");
@@ -41,4 +39,4 @@ await wait("!document.querySelector('[data-goal=ghost-demo]').classList.contains
 await js("state.goals[0].reward='';render();document.querySelector('[data-goal=ghost-demo]').scrollIntoView({block:'center'})");
 await click('[data-action=quick-outcome][data-status=success][data-id=ghost-demo]');await click('[data-action=quick-outcome][data-status=success][data-id=ghost-demo]');await wait("document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')");await wait("!document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')");
 await js("document.documentElement.dataset.edition='2026-11'");if(!await js("getComputedStyle(document.querySelector('.ghost-scene')).display==='none'"))throw Error('October ghost leaked into another edition');await js("document.documentElement.dataset.edition='2026-10'");
-console.log('PASS: independent circular tumble, stationary glass, real PNG layers, progress color and success feedback, cleanup, failure/undo, dialog/manual/offscreen/reduced-motion pause, deferred dialog celebration, mobile/desktop, and edition isolation.');ws.close();
+console.log('PASS: stationary ghost, stationary glass, real PNG layers, progress color and success feedback, cleanup, failure/undo, dialog/manual/offscreen/reduced-motion pause, deferred dialog celebration, mobile/desktop, and edition isolation.');ws.close();
