@@ -388,3 +388,9 @@ Monthly editions are surprises: Preferences has no edition picker, preview/apply
 Big Dreams are named project/category groupings, each with its own section heading, active/completed count, and Organizar button. Creation and editing use one dialog with a name and labeled member checkboxes; selecting a member from elsewhere moves it, and removing a Big Dream preserves all dreams. The dream form has an optional Big Dream selector. Membership is persisted per owner and unrelated to reward eligibility.
 
 Home cards use 16–18px padding, 21px titles, 36px countdowns, smaller live edition amulets, and 44px daily/history controls. Desktop has a three-column compact grid, two columns below 1000px. At 560px and below each grouping becomes a swipe gallery: horizontal overflow inside the section, start-aligned scroll snapping, hidden scrollbar and a 24px next-card affordance. One card fills its row. The region is keyboard focusable and named for its Big Dream. These rules apply across all monthly editions and override their former oversized card placement, not their illustration or motion.
+
+## Amulet size and ghost motion refinement
+Compact home amulets now use 170px artwork height for October, a 100px-wide ghost cloche, and 100px-wide seasonal objects. Text reserves 110px at the right. The October spirit follows a closed circular tumble over nine seconds (one full turn plus radial translation), with no opacity animation; the jar stays still. This replaces the earlier ghost dive. Shared visibility/manual/reduced-motion controls still apply.
+
+## Calendar completion stamps
+Use each dream's existing thin-stroke SVG symbol for completed dates, replacing the generic filled dot. Multiple completions wrap within the same cell (18px symbols, 16px on phones); use the active edition accent and include the dream names in the date's accessible label. Keep the hollow failure square and partial-record dot distinct. The calendar legend describes these states.

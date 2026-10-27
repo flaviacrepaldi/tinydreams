@@ -1,5 +1,5 @@
 import {writeFile,mkdir} from 'node:fs/promises';
-const target=await (await fetch('http://127.0.0.1:9223/json/new?http://localhost:4177',{method:'PUT'})).json();
+const target=await (await fetch('http://127.0.0.1:9223/json/new?http://localhost:4181',{method:'PUT'})).json();
 const ws=new WebSocket(target.webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));let rpcId=0;const pending=new Map();ws.addEventListener('message',e=>{const r=JSON.parse(e.data);if(r.id){const p=pending.get(r.id);pending.delete(r.id);if(r.error)p.reject(Error(r.error.message));else p.resolve(r.result)}});
 function cdp(method,params={}){return new Promise((resolve,reject)=>{const n=++rpcId;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}))})}
 async function js(expression){const r=await cdp('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text+': '+r.exceptionDetails.exception?.description);return r.result.value}
@@ -8,15 +8,15 @@ async function click(selector){await js(`document.querySelector(${JSON.stringify
 async function capture(name,width=390){await cdp('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600});await js('document.fonts.ready');await js("document.querySelector('[data-goal=ghost-demo]').scrollIntoView({block:'center'})");await new Promise(r=>setTimeout(r,100));const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/tiny-dreams-ghost-review/'+name+'.png',Buffer.from(png.data,'base64'));if(await js('document.documentElement.scrollWidth>innerWidth'))throw Error('Horizontal overflow')}
 
 await mkdir('/tmp/tiny-dreams-ghost-review',{recursive:true});await cdp('Page.enable');await cdp('Page.bringToFront');await cdp('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
-await cdp('Page.navigate',{url:'http://localhost:4177'});await wait("typeof state!=='undefined'&&!state.busy");
+await cdp('Page.navigate',{url:'http://localhost:4181'});await wait("typeof state!=='undefined'&&!state.busy");
 await js("localStorage.setItem('tiny-dreams-motion','on')");await cdp('Page.reload');await wait("typeof state!=='undefined'&&!state.busy");
 await js("state.demo=true;state.goals=[{id:'ghost-demo',title:'Um pequeno sonho',target:4,color:'sage',reward:'Uma leitura especial',days:[dayBefore(1),dayBefore(2)],entries:[],failures:[]},{id:'potion-demo',title:'Outro capítulo',target:10,color:'lavender',reward:'',days:[],entries:[],failures:[]},{id:'lantern-demo',title:'Minha pequena luz',target:10,color:'peach',reward:'',days:[],entries:[],failures:[]}];render();document.querySelector('[data-goal=ghost-demo]').scrollIntoView({block:'center'})");
 await wait("document.documentElement.dataset.motion==='active'&&document.querySelector('[data-goal=ghost-demo] .talisman').classList.contains('magic-visible')");
 await js("Promise.all(['/ghost-jar-v2.png','/ghost-spirit-v2.png'].map(url=>new Promise((resolve,reject)=>{const img=new Image();img.onload=resolve;img.onerror=reject;img.src=url})))");
 const art='[data-goal=ghost-demo] .talisman',spirit=art+' .ghost-spirit';
-if(!await js(`getComputedStyle(document.querySelector('${art}')).animationName==='none' && getComputedStyle(document.querySelector('${spirit}')).animationName==='ghost-dive'`))throw Error('Jar and spirit are not independently animated');
+if(!await js(`getComputedStyle(document.querySelector('${art}')).animationName==='none' && getComputedStyle(document.querySelector('${spirit}')).animationName==='ghost-orbit'`))throw Error('Jar and spirit are not independently animated');
 await js(`window.ghostAnimation=document.querySelector('${spirit}').getAnimations()[0];ghostAnimation.pause();ghostAnimation.currentTime=0`);const surface=await js(`getComputedStyle(document.querySelector('${spirit}')).transform`);
-await capture('surface');await js('ghostAnimation.currentTime=5000');await capture('dive');const dive=await js(`getComputedStyle(document.querySelector('${spirit}')).transform`);if(surface===dive)throw Error('Ghost does not dive');
+await capture('surface');await js('ghostAnimation.currentTime=4500');await capture('dive');const turn=await js(`getComputedStyle(document.querySelector('${spirit}')).transform`);if(surface===turn)throw Error('Ghost does not turn inside the glass');
 await capture('desktop',1440);await js('ghostAnimation.play()');
 await click('#settingsButton');await wait("document.documentElement.dataset.motion==='paused'");
 if(!await js(`getComputedStyle(document.querySelector('${spirit}')).animationPlayState.split(',').every(v=>v.trim()==='paused')`))throw Error('Dialog did not pause the ghost');
@@ -24,9 +24,9 @@ await click('[data-close=settingsDialog]');await wait("document.documentElement.
 await click('#settingsButton');await js("document.querySelector('#motionToggle').checked=false;document.querySelector('#motionToggle').dispatchEvent(new Event('change'))");await click('[data-close=settingsDialog]');
 if(!await js(`document.documentElement.dataset.motion==='paused'&&getComputedStyle(document.querySelector('${spirit}')).animationPlayState==='paused'`))throw Error('Manual pause ignored');
 await click('#settingsButton');await js("document.querySelector('#motionToggle').checked=true;document.querySelector('#motionToggle').dispatchEvent(new Event('change'))");await click('[data-close=settingsDialog]');await wait("document.documentElement.dataset.motion==='active'");
-await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:900,deviceScaleFactor:1,mobile:true});await js('scrollTo(0,document.body.scrollHeight)');await wait(`!document.querySelector('${art}').classList.contains('magic-visible')`);
+await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:900,deviceScaleFactor:1,mobile:true});await js("document.querySelector('#content').style.marginBottom='1200px';scrollTo(0,document.body.scrollHeight)");await wait(`!document.querySelector('${art}').classList.contains('magic-visible')`);
 if(!await js(`getComputedStyle(document.querySelector('${spirit}')).animationPlayState==='paused'`))throw Error('Offscreen ghost kept moving');
-await js("document.querySelector('[data-goal=ghost-demo]').scrollIntoView({block:'center'})");await wait(`document.querySelector('${art}').classList.contains('magic-visible')`);
+await js("document.querySelector('#content').style.marginBottom='';document.querySelector('[data-goal=ghost-demo]').scrollIntoView({block:'center'})");await wait(`document.querySelector('${art}').classList.contains('magic-visible')`);
 await click('[data-action=quick-outcome][data-status=success][data-id=ghost-demo]');await wait("document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')");
 if(!await js(`getComputedStyle(document.querySelector('${spirit}')).animationName.includes('ghost-cheer') && document.querySelector('${art}').style.getPropertyValue('--charge')==='0.75'`))throw Error('Success feedback missing');
 await wait("!document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')");
@@ -41,4 +41,4 @@ await wait("!document.querySelector('[data-goal=ghost-demo]').classList.contains
 await js("state.goals[0].reward='';render();document.querySelector('[data-goal=ghost-demo]').scrollIntoView({block:'center'})");
 await click('[data-action=quick-outcome][data-status=success][data-id=ghost-demo]');await click('[data-action=quick-outcome][data-status=success][data-id=ghost-demo]');await wait("document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')");await wait("!document.querySelector('[data-goal=ghost-demo]').classList.contains('celebrate')");
 await js("document.documentElement.dataset.edition='2026-11'");if(!await js("getComputedStyle(document.querySelector('.ghost-scene')).display==='none'"))throw Error('October ghost leaked into another edition');await js("document.documentElement.dataset.edition='2026-10'");
-console.log('PASS: independent dive, stationary glass, real PNG layers, progress color and success feedback, cleanup, failure/undo, dialog/manual/offscreen/reduced-motion pause, deferred dialog celebration, mobile/desktop, and edition isolation.');ws.close();
+console.log('PASS: independent circular tumble, stationary glass, real PNG layers, progress color and success feedback, cleanup, failure/undo, dialog/manual/offscreen/reduced-motion pause, deferred dialog celebration, mobile/desktop, and edition isolation.');ws.close();
