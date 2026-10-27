@@ -1,4 +1,5 @@
 import {validDay,planOf,validatePlan,scheduled,tasksOn,progress,targetOf,complete,dailyTotal} from '../shared/planner.js';
+import {writerAlbum} from '../shared/writers.js';
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
 const saoPauloDay=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 async function goals(db,owner,id){
@@ -24,6 +25,19 @@ export async function api(request,env){
   const raw=await request.text();if(raw.length>48000)return json({error:'Texto grande demais.'},413);
   try{body=raw?JSON.parse(raw):{}}catch{return json({error:'Dados inválidos.'},400)}
   if(!body||Array.isArray(body)||typeof body!=='object')return json({error:'Dados inválidos.'},400);
+ }
+ if(id==='album'){
+  if(request.method!=='GET'||action)return json({error:'Ação não permitida.'},405);
+  return json(writerAlbum(url.searchParams.get('demo')==='1'?[]:await goals(env.DB,owner),{demo:url.searchParams.get('demo')==='1'}));
+ }
+ if(id==='portraits'){
+  if(request.method!=='GET')return json({error:'Ação não permitida.'},405);
+  const demo=action==='demo',index=Number(action)-1;
+  if(!demo&&(!/^(0[1-9]|10)$/.test(action||'')||(await goals(env.DB,owner)).filter(complete).length<=index*8))return json({error:'Retrato ainda não revelado.'},404);
+  if(!env.ASSETS)return json({error:'Retrato temporariamente indisponível.'},503);
+  const image=await env.ASSETS.fetch(new Request(new URL('/writers/'+(demo?'01':action)+'.png',request.url)));
+  const headers=new Headers(image.headers);headers.set('Cache-Control','private, no-store');headers.set('X-Content-Type-Options','nosniff');
+  return new Response(image.body,{status:image.status,headers});
  }
  if(id==='groups'){
   const groupId=action;

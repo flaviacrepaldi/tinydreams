@@ -417,3 +417,7 @@ Each card now carries data-amulet-edition resolved from the dream's immutable cr
 
 ## Daily list creation and checks
 Distinguish one-time and repeating lists in Como acompanhar. Lista diária exposes weekday scheduling, editable repeated items and a goal in days; hide the redundant completion-mode selector and explain that checking all items completes one day. The one-time list form offers a repeat action that transfers draft items to this mode. Use the established routine history with a selected practice date and independent checked states for each item/date. Checked daily-list actions show the check icon and “Feito”; cards offer Marcar itens de hoje. Lists with recorded history retain the existing type-change guard.
+
+### Prateleira e álbum literário
+
+A coleção é uma superfície de experiência dentro do app: mantém ameixa, cobre e papel marfim em todas as edições. A estante tem duas fileiras de quatro lombadas; recortes contíguos do mesmo retrato ilustrado formam uma imagem vertical. Lugares vazios são lombadas encadernadas sem pistas da identidade. O álbum aberto coloca retrato e biografia em páginas opostas no desktop, empilhadas no celular. Dez capas abaixo mostram os lugares disponíveis; somente escritores conquistados exibem nome e arte. Retratos são ilustrações interpretativas, não fotografias históricas.

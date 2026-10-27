@@ -127,3 +127,9 @@ Impulse habits open their existing impulse/history details from a thin-stroke di
 
 ## Repeating daily lists
 Creation offers “Lista diária · repetir os itens da rotina” separately from one-time lists, plus a repeat action within the one-time list form that carries over unsaved items. Daily lists reuse the habit/task mechanism with plan.dailyList=true, chosen weekdays and an explicit practice-day target or computed dated period. Each date has its own checks; all scheduled items complete one practice day, and only reaching the day target completes the tydream. Cards say “Marcar itens de hoje” and “Abrir lista diária”. One-time lists retain their existing completion semantics. Editing preserves daily-list identity and history. Do not infer daily success or recreate deleted personal goals. The user explicitly requested deleting the completed one-time “fruta, legume e salada”; only that mistaken goal was deleted.
+
+### Coleção de escritores
+
+A Prateleira reúne tydreams realizados em conjuntos de oito livros, quatro acima e quatro abaixo. Cada livro revela uma parte de um único retrato vertical. Ao completar o conjunto, o escritor entra no Álbum com país, pequena biografia, obras conhecidas e uma fonte para leitura. São dez escritores de diferentes nacionalidades, com nomes e imagens futuros ocultos. A coleção mantém sua identidade literária e independe das edições mensais.
+
+O progresso vem dos tydreams salvos e concluídos, inclusive os anteriores à coleção, e persiste ao recarregar. Corrigir ou excluir uma conclusão recalcula os livros e os desbloqueios. Depois dos 80 livros, as conquistas continuam em novas prateleiras. A seleção de um livro permite consultar histórico, editar e resgatar sua recompensa. Exemplos de 3 e 8 livros ficam separados dos registros reais e podem ser encerrados pelo banner de demonstração.

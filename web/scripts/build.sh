@@ -16,3 +16,6 @@ cp -R "$project_root/drizzle" "$dist_root/.openai/drizzle"
 
 mkdir -p "$dist_root/assets/editions"
 cp "$project_root"/assets/editions/*.png "$dist_root/assets/editions/"
+
+mkdir -p "$dist_root/assets/writers"
+cp "$project_root"/assets/writers/*.png "$dist_root/assets/writers/"

@@ -28,7 +28,7 @@ const editionCatalog=JSON.parse(await readFile(new URL('../ui/editions.json',imp
 const editionPaths=new Set(editionCatalog.map(e=>e.asset).filter(Boolean));
 const staticAssets={async fetch(request){
   const path=new URL(request.url).pathname;
-  if(!editionPaths.has(path))return new Response('Not found',{status:404});
+  if(!editionPaths.has(path)&&!/^\/writers\/(0[1-9]|10)\.png$/.test(path))return new Response('Not found',{status:404});
   try{
     const bytes=await readFile(new URL('../assets'+path,import.meta.url));
     return new Response(request.method==='HEAD'?null:bytes,{headers:{'Content-Type':'image/png','Cache-Control':'private, max-age=0, must-revalidate','X-Content-Type-Options':'nosniff'}});
