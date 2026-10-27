@@ -74,3 +74,6 @@ Por pedido da usuária, as prévias e os controles de aplicar edições foram re
 
 ## Celebrações ilustradas
 As 12 edições têm uma cena própria em aquarela, selecionada pelo campo `celebrationAsset` do catálogo. Cada atlas transparente tem 16 quadros em grade 4 × 4: quadros 0–3 para item, 4–11 para dia e 4–15 para tydream completo. As sequências são finitas, respeitam a pausa e a redução de movimento, e mantêm a pose final legível. Apenas o atlas do mês ativo é pré-carregado; as cenas futuras continuam surpresa, sem controles de prévia na interface. Artes e prompts ficam em `web/assets/celebrations/`, com o atlas de outubro mantido no caminho original.
+
+## Amuletos acompanham o mês
+Por decisão da usuária, todos os tydreams passam a exibir os amuletos da edição atual, inclusive os criados em meses anteriores. A posição sorteada entre os três amuletos fica salva; o objeto ilustrado muda com o tema. Essa regra substitui a retenção do amuleto do mês de criação e não altera os registros dos sonhos.
