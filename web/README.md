@@ -110,4 +110,6 @@ October's sage amulet uses a stationary transparent jar and an independent trans
 
 ## Release freshness
 
+Publish prepared updates directly with `npm run deploy` from the workspace root or `web`; it builds, checks and deploys to `tinydreams` / `main` through Wrangler. Authenticate with `npm run deploy:login` at the workspace root when requested. This command publishes; ordinary builds do not. No commits are created.
+
 Builds fingerprint deployed content and version HTML/CSS/manifest resource URLs. `ui/updates.js` checks the uncached release metadata on resume/online and once a minute while visible; it defers reloading during dialogs, focused fields and writes. It never clears cookies, localStorage or D1. See PAGES.md for rollout constraints. `scripts/test-updates.mjs` and `scripts/check-updates-browser.mjs` verify the update lifecycle.

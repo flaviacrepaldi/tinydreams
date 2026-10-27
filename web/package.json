@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "deploy": "node scripts/deploy-pages.mjs",
     "build:pages": "node scripts/build-pages.mjs",
     "build": "bash scripts/build.sh",
     "dev": "npm run build && node scripts/dev.mjs",

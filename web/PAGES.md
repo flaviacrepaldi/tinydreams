@@ -4,6 +4,10 @@ The Pages version has a single-owner password login. Cloudflare Access, a Zero T
 
 ## Build and upload
 
+For routine updates, run `npm run deploy` from the repository root (or `web`). It builds the current source, checks the Pages artifact, and uploads it directly to the existing `tinydreams` project's production branch `main`. No manual folder upload or Git commit is needed. If Wrangler asks for authentication, run `npm run deploy:login` from the repository root, authorize Cloudflare in the browser, then rerun deploy. Existing dashboard bindings and secrets remain dashboard-managed: the command intentionally runs outside `web` so it does not load the local Worker configuration. `npm run deploy -- --help` shows CLI help without building or publishing.
+
+Manual upload remains an alternative:
+
 Use Node 24:
 
 ```sh

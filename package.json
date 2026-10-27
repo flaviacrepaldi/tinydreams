@@ -2,6 +2,8 @@
   "name": "tiny-dreams-workspace",
   "private": true,
   "scripts": {
+    "deploy": "node web/scripts/deploy-pages.mjs",
+    "deploy:login": "node web/node_modules/wrangler/bin/wrangler.js login",
     "dev": "npm --prefix web run dev",
     "build": "npm --prefix web run build",
     "test": "npm --prefix web test",
