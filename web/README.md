@@ -23,6 +23,8 @@ Apply future D1 migrations with `npm run db:migrate`. The initial migration has 
 
 ## Optional future hosting
 
+For the now-requested owner-only Cloudflare Pages deployment, follow [PAGES.md](PAGES.md). `npm run build:pages` generates `dist-pages` with a private password login and the existing D1 owner mapping. This supersedes the earlier local-only hosting preference below; no deployment is performed by building.
+
 The project is registered as an owner-private Site. `.openai/hosting.json` retains its exact project ID and `DB` binding. Sites can handle private account access and provision its own D1, but that would be a separate database from the user-account D1 now configured in `wrangler.jsonc`. Do not assume a future Sites deployment shares these records; plan access and data migration explicitly before publishing. There is no shared access key in the browser or source. Private Sites authentication replaces the originally suggested secret URL; this choice should be explained at handoff.
 
 Build: `npm run build`, then `npm run validate`. The compiled Worker embeds the authored HTML, CSS, JS, artwork, fonts, and manifest. The build copies migrations into `dist/.openai/drizzle` for deployment. Do not edit the compiled Worker by hand.

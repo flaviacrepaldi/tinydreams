@@ -1,5 +1,6 @@
 .local/
 dist/
+dist-pages/
 outputs/
 node_modules/
 .env*

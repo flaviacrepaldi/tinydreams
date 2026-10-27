@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#211b31">
+  <title>Entrar · Tiny Dreams</title>
+  <style>
+    @font-face{font-family:Fraunces;src:url('/fraunces.ttf') format('truetype');font-display:swap}
+    @font-face{font-family:'DM Sans';src:url('/dm-sans.ttf') format('truetype');font-display:swap}
+    :root{color-scheme:dark;--bg:#211b31;--text:#f7eee7;--muted:#c4b3cc;--accent:#eec4a0;--line:#786681}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 'DM Sans',sans-serif;min-height:100svh;display:grid;grid-template-rows:auto 1fr}
+    header{padding:28px clamp(24px,5vw,72px);font:26px/1.2 Fraunces,Georgia,serif;display:flex;align-items:center;gap:12px}
+    header svg{width:27px;height:27px;color:var(--accent)}
+    main{width:min(100% - 48px,400px);margin:auto;padding:40px 0 100px}
+    h1{font:400 clamp(36px,7vw,48px)/1.15 Fraunces,Georgia,serif;letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}
+    p{color:var(--muted);margin:0 0 32px}
+    label{display:block;font-size:14px;margin-bottom:8px}
+    input{width:100%;min-height:52px;border:1px solid var(--line);background:#30263e;border-radius:8px;padding:12px;color:var(--text);font:inherit;caret-color:var(--accent)}
+    button{width:100%;min-height:52px;border:0;border-radius:8px;background:var(--accent);color:var(--bg);font:600 16px/1.4 'DM Sans',sans-serif;padding:12px 20px;cursor:pointer;margin-top:24px}
+    button:hover{background:#f6d6ba}button:active{background:#d8ac88}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    .message{color:#ffd0d8;font-size:14px;margin:16px 0 0;min-height:23px}
+    .message:empty{display:none}
+    ::selection{background:var(--accent);color:var(--bg)}
+    @media(max-width:420px){header{padding-top:24px}main{padding-bottom:64px}}
+  </style>
+</head>
+<body>
+  <header><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 4a12 12 0 1 0 6 20A12 12 0 0 1 22 4Z"/></svg>Tiny Dreams</header>
+  <main>
+    <h1>Seu mundo de pequenos sonhos.</h1>
+    <p>Entre com sua senha para cuidar dos seus sonhos.</p>
+    <form method="post" action="/auth/login">
+      <label for="password">Sua senha</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="256" aria-describedby="message">
+      <p id="message" class="message" role="alert">{{MESSAGE}}</p>
+      <button type="submit">Entrar</button>
+    </form>
+  </main>
+</body>
+</html>
