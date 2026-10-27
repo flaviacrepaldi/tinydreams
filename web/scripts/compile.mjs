@@ -1,13 +1,13 @@
 import {readFile,writeFile,mkdir,copyFile} from 'node:fs/promises';
 const root=new URL('../',import.meta.url);
 const files=[['/potion-celebration-v1.png','assets/potion-celebration-v1.png','image/png'],['/','ui/index.html','text/html; charset=utf-8'],['/style.css','ui/style.css','text/css; charset=utf-8'],['/app.js','ui/app.js','text/javascript; charset=utf-8'],['/magic.js','ui/magic.js','text/javascript; charset=utf-8'],['/editions.css','ui/editions.css','text/css; charset=utf-8'],['/garden.png','assets/garden.png','image/png'],['/talismans.png','assets/talismans.png','image/png'],['/ghost-jar-v2.png','assets/ghost-jar-v2.png','image/png'],['/ghost-spirit-v2.png','assets/ghost-spirit-v2.png','image/png'],['/fraunces.ttf','assets/fraunces.ttf','font/ttf'],['/dm-sans.ttf','assets/dm-sans.ttf','font/ttf']];
+files.push(['/apple-touch-icon.png','assets/apple-touch-icon.png','image/png'],['/icon-192.png','assets/icon-192.png','image/png'],['/icon-512.png','assets/icon-512.png','image/png'],['/icon.svg','assets/icon.svg','image/svg+xml']);
 const assets={};for(const [route,file,type]of files){try{const bytes=await readFile(new URL(file,root));assets[route]={type,data:bytes.toString('base64')}}catch(e){if(route!=='/talismans.png')throw e}}
 const editions=JSON.parse(await readFile(new URL('ui/editions.json',root),'utf8'));
 const clock=(await readFile(new URL('ui/theme-clock.mjs',root),'utf8')).replaceAll('export ','');
 const themes=await readFile(new URL('ui/themes.js',root),'utf8');
 assets['/themes.js']={type:'text/javascript; charset=utf-8',data:Buffer.from(`(()=>{'use strict';const editions=${JSON.stringify(editions)};${clock}\n${themes}\n})();`).toString('base64')};
-assets['/manifest.webmanifest']={type:'application/manifest+json',data:Buffer.from(JSON.stringify({name:'Tiny Dreams',short_name:'Tiny Dreams',start_url:'/',display:'standalone',background_color:'#211b31',theme_color:'#211b31',icons:[{src:'/icon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]})).toString('base64')};
-assets['/icon.svg']={type:'image/svg+xml',data:Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#30263e"/><path d="M42 12A22 22 0 1 0 49 48 22 22 0 0 1 42 12Z" fill="#eec4a0"/><path d="m48 12 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#eec4a0"/></svg>').toString('base64')};
+assets['/manifest.webmanifest']={type:'application/manifest+json',data:Buffer.from(JSON.stringify({name:'Tiny Dreams',short_name:'Tiny Dreams',start_url:'/',display:'standalone',background_color:'#211b31',theme_color:'#211b31',id:'/',scope:'/',icons:[{src:'/icon-192.png',sizes:'192x192',type:'image/png',purpose:'any'},{src:'/icon-512.png',sizes:'512x512',type:'image/png',purpose:'any'},{src:'/icon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]})).toString('base64')};
 const planner=(await readFile(new URL('shared/planner.js',root),'utf8')).replaceAll('export ','');
 assets['/planner.js']={type:'text/javascript; charset=utf-8',data:Buffer.from(planner).toString('base64')};
 const writers=(await readFile(new URL('shared/writers.js',root),'utf8')).replace(/^import .*;\n/gm,'').replaceAll('export ','');

@@ -45,7 +45,7 @@ async function authSession(request, env) {
   } catch { return null; }
 }
 function authResponse(body, status = 200, headers = {}) {
-  return new Response(body, {status, headers:{'Cache-Control':'private, no-store','Content-Type':'text/html; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; font-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",...headers}});
+  return new Response(body, {status, headers:{'Cache-Control':'private, no-store','Content-Type':'text/html; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; font-src 'self'; img-src 'self'; manifest-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",...headers}});
 }
 function authRedirect(path, cookie) {
   return authResponse(null, 303, {Location:path,...(cookie ? {'Set-Cookie':cookie} : {})});

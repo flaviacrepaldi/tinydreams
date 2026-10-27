@@ -13,7 +13,7 @@ npm run build:pages
 node scripts/test-pages.mjs
 ```
 
-Upload **only `web/dist-pages`** using the Pages dashboard folder upload. For the existing project, use Deployments / Create a new deployment, choose **Production**, and upload the newly generated folder. It includes a single module `_worker.js`, static files and `_routes.json`. Every route invokes the guard; only the login page and its two font files are available anonymously. Source, database migrations, credentials and image provenance files are not published as static assets.
+Upload **only `web/dist-pages`** using the Pages dashboard folder upload. For the existing project, use Deployments / Create a new deployment, choose **Production**, and upload the newly generated folder. It includes a single module `_worker.js`, static files and `_routes.json`. Every route invokes the guard; only the login page, its two font files, and installation icons/manifest are available anonymously. Source, database migrations, credentials and image provenance files are not published as static assets.
 
 ## Dashboard setup
 
@@ -39,3 +39,7 @@ The app creates only two additive authentication tables (`td_auth_sessions` and 
 Future multi-user invitations require a separate identity model; do not share this owner password or broaden the `local-preview` mapping.
 
 References: https://developers.cloudflare.com/pages/get-started/direct-upload/ and https://developers.cloudflare.com/pages/functions/bindings/#secrets
+
+## Home Screen icon
+
+The app and login page declare a 180px Apple touch PNG. The manifest also includes 192px and 512px PNGs. Icons are opaque rasterizations of the existing `assets/icon.svg`, not a new logo. Installation metadata is available without a session so iOS can fetch it independently; personal artwork and APIs remain protected. After deploying this update, remove the old Home Screen shortcut and add the site again from Safari to refresh the cached icon.

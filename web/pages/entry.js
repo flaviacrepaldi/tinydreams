@@ -8,8 +8,9 @@ export default {
     // localhost is reserved for isolated browser QA, never a hosted Pages alias.
     if (!['tinydreams.pages.dev', 'localhost'].includes(url.hostname)) return new Response('Not found', {status:404});
     const path = url.pathname;
-    // The login page shares only the app's self-hosted fonts with anonymous visitors.
-    if (['/fraunces.ttf','/dm-sans.ttf'].includes(path) && ['GET','HEAD'].includes(request.method)) return env.ASSETS.fetch(request);
+    // Installation metadata must work even when iOS fetches it without a session.
+    const publicAssets = ['/fraunces.ttf','/dm-sans.ttf','/icon.svg','/apple-touch-icon.png','/icon-192.png','/icon-512.png','/manifest.webmanifest'];
+    if (publicAssets.includes(path) && ['GET','HEAD'].includes(request.method)) return env.ASSETS.fetch(request);
     const session = await authSession(request, env);
     const login = await authRoute(request, env, session);
     if (login) return login;

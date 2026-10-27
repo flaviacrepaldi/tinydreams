@@ -71,6 +71,31 @@ try {
   const html=await readFile(new URL('../dist-pages/index.html',import.meta.url),'utf8');
   assert.ok(html.includes('action="/auth/logout"'));
   assert.ok(!html.includes(env.OWNER_PASSWORD));
+  assert.ok(html.includes('rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"'));
+  const loginHTML=await (await call('/login')).text();
+  assert.ok(loginHTML.includes('rel="apple-touch-icon"'));
+  assert.ok((await call('/login')).headers.get('Content-Security-Policy').includes("manifest-src 'self'"));
+  const metadataEnv={ASSETS:{async fetch(request){
+    const path=new URL(request.url).pathname.slice(1);
+    return new Response(request.method==='HEAD'?null:await readFile(new URL('../dist-pages/'+path,import.meta.url)),{headers:{'Content-Type':path.endsWith('.png')?'image/png':path.endsWith('.svg')?'image/svg+xml':'application/manifest+json'}});
+  }}};
+  for(const [path,size] of [['/apple-touch-icon.png',180],['/icon-192.png',192],['/icon-512.png',512]]) {
+    const response=await call(path,{},metadataEnv);
+    assert.equal(response.status,200);assert.equal(response.headers.get('Content-Type'),'image/png');
+    const png=Buffer.from(await response.arrayBuffer());
+    assert.equal(png.readUInt32BE(0),0x89504e47);
+    assert.equal(png.readUInt32BE(16),size);assert.equal(png.readUInt32BE(20),size);
+    const head=await entry.fetch(new Request(origin+path,{method:'HEAD'}),metadataEnv);
+    assert.equal(head.status,200);assert.equal(await head.text(),'');
+    assert.equal((await call(path,{method:'POST'})).status,303);
+  }
+  assert.equal((await call('/icon.svg',{},metadataEnv)).status,200);
+  const manifestResponse=await call('/manifest.webmanifest',{},metadataEnv);
+  assert.equal(manifestResponse.status,200);
+  const manifest=await manifestResponse.json();
+  assert.equal(manifest.start_url,'/');
+  assert.ok(manifest.icons.some(icon=>icon.src==='/icon-192.png'&&icon.sizes==='192x192'));
+  assert.ok(manifest.icons.some(icon=>icon.src==='/icon-512.png'&&icon.sizes==='512x512'));
   for(const name of ['index.html','_routes.json','editions','writers','celebrations'])await stat(new URL('../dist-pages/'+name,import.meta.url));
   assert.deepEqual(JSON.parse(await readFile(new URL('../dist-pages/_routes.json',import.meta.url))),{version:1,include:['/*'],exclude:[]});
   console.log('PASS: private password login, secret/configuration errors, cookie protection, CSRF, forged identities, owner records, session expiry/rotation/logout, concurrent rate limiting, oversized bodies, unavailable D1 and upload package.');
