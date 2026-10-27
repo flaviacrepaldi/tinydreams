@@ -61,3 +61,16 @@ html[data-paper="true"] .welcome .date{color:var(--muted)}html[data-paper="true"
  html:not([data-edition="2026-10"]) .goal-grid .goal h2{max-width:none;min-height:0;margin:16px 0 9px;font-size:25px}
  html:not([data-edition="2026-10"]) .goal-grid .goal .goal-meta{max-width:none;margin:0}
 }
+/* Shared completion language; all colors come from the active edition. */
+html:not([data-edition="2026-10"]) .dream-book{--book-ink:var(--goal-lavender,var(--lavender))}html:not([data-edition="2026-10"]) .dream-book.peach{--book-ink:var(--goal-peach,var(--peach))}html:not([data-edition="2026-10"]) .dream-book.sage{--book-ink:var(--goal-sage,var(--sage))}
+html[data-motion="paused"] .milestone,html[data-motion="paused"] .milestone *{animation:none!important}
+@media(prefers-reduced-motion:reduce){.milestone,.milestone *{animation:none!important}}
+/* A short, material response for every seasonal object; no new art is loaded. */
+html:not([data-edition="2026-10"])[data-motion="active"][data-atmosphere="bubbles"] .goal.celebrate .talisman{animation:tidal-success 1.2s cubic-bezier(.16,1,.3,1)}
+html:not([data-edition="2026-10"])[data-motion="active"][data-atmosphere="embers"] .goal.celebrate .talisman{animation:lamplight-success 1.2s ease-out}
+html:not([data-edition="2026-10"])[data-motion="active"][data-atmosphere="motes"] .goal.celebrate .talisman{animation:paper-success 1.2s cubic-bezier(.16,1,.3,1)}
+html:not([data-edition="2026-10"])[data-motion="active"][data-atmosphere="rain"] .goal.celebrate .talisman{animation:lamplight-success 1.2s ease-out}
+@keyframes tidal-success{0%,100%{transform:none;filter:none}35%{transform:translateY(-8px) rotate(-3deg);filter:brightness(1.2)}}
+@keyframes lamplight-success{0%,100%{filter:none}35%{filter:brightness(1.5) saturate(1.15)}}
+@keyframes paper-success{0%,100%{transform:none}35%{transform:rotate(-4deg) translateY(-4px)}65%{transform:rotate(2deg)}}
+@media(prefers-reduced-motion:reduce){html .goal.celebrate .talisman{animation:none!important}}
