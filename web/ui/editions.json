@@ -26,7 +26,7 @@
       "--goal-peach": "#ebbd9c",
       "--goal-sage": "#bbcfb6"
     },
-    "progressSymbol": "ghost",
+    "progressSymbol": "potion",
     "celebrationAsset": "/potion-celebration-v1.png"
   },
   {
