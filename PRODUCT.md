@@ -153,3 +153,7 @@ Calendar symbols are small outlined stickers: faint/dashed on planned dates, col
 ## Automatic release refresh
 
 The user wants published updates to appear automatically in the installed web app, avoiding stale cached code. Use stable content versions in resource URLs, no-store app/version responses, and a visible/resume/online release check. Reload automatically only after idle and when no dialog/editable field/write is active. Preserve sessions, user storage, preferences and D1 records; do not implement a destructive blanket cache/storage purge. Offline or suspended clients update when connectivity and activity resume. The first release containing this feature must be opened once before its checker can apply future updates.
+
+## Adaptive tiny dream creation
+
+The shared create action is named “novo tiny dream”, matching “novo big dream”. It lives in the header beside preferences; phones show a compact plus with an accessible name. The home introduction uses content-driven height and reduced spacing before the dreams. Creation and editing use steps for identity/type, routine or list items, period/target, and optional personalization. Amount goals skip the routine step. Back preserves draft values, dependent fields follow the chosen type, and validation happens before advancing or saving. Existing records and history guards remain intact.

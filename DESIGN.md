@@ -435,3 +435,7 @@ Calendar cells are whole-day touch targets. Decorative 28px stickers inside them
 ### Header safe area and preferences
 
 The mobile topbar adds 16px breathing room after `env(safe-area-inset-top)` and honors horizontal safe insets. The brand uses a 30px symbol and 26px lettering on phones. Preferences uses a toothed SVG gear at 24px in a 44px target on mobile and desktop. The shared create control uses 14px text with a 20px plus and 44px minimum height; leave at least 12px before the toolbar divider (16px mobile lower padding). These are refinements within the existing system; bottom navigation is unchanged. Verify the standalone header using simulated top/bottom safe areas as well as browser layouts.
+
+## Compact header creation and adaptive form
+
+Place “novo tiny dream” in the topbar as a restrained outlined action beside preferences, with a 44px plus-only target on phones. Keep its accessible name and title. The welcome uses natural height with 24–28px separation rather than a tall minimum-height spacer. Retain the four bottom destinations. The dream dialog shows one step at a time with a live step count, contextual heading, Back/Continue actions and the final create/save action. Routine and list details adapt to the selected type; amount goals have three steps. Preserve entered values while moving backward, report validation in the relevant step, and keep optional personalization on the final step.

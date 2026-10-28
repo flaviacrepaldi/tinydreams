@@ -1,4 +1,22 @@
 /* One navigation vocabulary across the monthly worlds. */
+html[data-edition] .welcome{min-height:0;padding-block:24px 28px}
+html[data-edition] .welcome .intro{margin-bottom:0}
+.topbar{gap:16px}
+.topbar .edition{margin-inline:auto}
+.header-create{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;white-space:nowrap;background:transparent;border:1px solid var(--line);font-size:13px}
+.header-create svg{width:20px;height:20px;flex-shrink:0}
+.goal-step-status{color:var(--muted);font-size:12px;margin:24px 0 6px}
+#goalStepTitle{font:24px/1.3 var(--serif);margin:0 0 20px;overflow-wrap:anywhere}
+#goalForm [data-goal-step]{min-width:0}
+#goalForm .habit-setup{border:0;padding:0;margin:0}
+.goal-step-actions{display:flex;justify-content:space-between;gap:12px;margin-top:24px}
+.goal-step-actions .primary{margin:0;width:auto;margin-left:auto}
+@media(max-width:700px){
+ .topbar .header-create{width:44px;padding:10px;margin-left:auto;flex-shrink:0}
+ .header-create span{display:none}
+ html[data-edition] .welcome{padding-block:12px 24px}
+ body .workspace-top{min-height:0;padding:0;margin:0;border:0}
+}
 .date,.edition span,.tab,.reward-label,.section-label,.book-seal,.milestone-kicker{text-transform:none}
 .workspace-top{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .tabs{display:flex;align-items:center;gap:24px;min-width:0}
