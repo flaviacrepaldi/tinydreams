@@ -271,4 +271,18 @@ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .d
  html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .talisman{grid-column:2;grid-row:2;width:100%;max-width:112px;margin-top:0}
  html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"]:is(.lavender,.peach,.sage) .dream-summary .talisman{height:auto;aspect-ratio:2/3}
  html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .ghost-scene{top:0}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .dream-summary .talisman{grid-row:1/span 2}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .dream-summary>.dream-summary-title{grid-column:1}
+}
+/* Keep desktop summaries content-sized too; the cloche starts beside the title. */
+@media(min-width:561px){
+ html[data-edition] .dream-overview .goal .dream-summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,40%);grid-template-rows:auto auto;column-gap:12px;row-gap:6px;min-height:0;padding-bottom:4px;align-items:start}
+ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary>.dream-summary-title{grid-column:1/-1;grid-row:1;max-width:100%;margin:12px 0 0}
+ html[data-edition] .dream-overview .goal .dream-summary-copy{grid-column:1;grid-row:2;min-width:0;align-self:center}
+ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .talisman{position:relative;grid-column:2;grid-row:2;top:auto;right:auto;margin:0;width:100%;max-width:128px;justify-self:end}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"]:is(.lavender,.peach,.sage) .dream-summary .talisman{height:auto;aspect-ratio:2/3}
+ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary-copy :is(.goal-meta,.countdown){max-width:100%}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .dream-summary .talisman{grid-row:1/span 2}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .dream-summary>.dream-summary-title{grid-column:1}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .ghost-scene{top:0}
 }
