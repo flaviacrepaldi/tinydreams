@@ -31,44 +31,28 @@ function renderOverview(){
  $('#content').innerHTML=`<div class="dream-overview"><div class="overview-tools"><h2>Big Dreams</h2><button class="icon-button new-group-button" data-action="new-group" aria-label="novo big dream" title="novo big dream"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>${!state.goals.length&&!state.groups.length?`<div class="empty"><h2>Seu próximo capítulo começa aqui.</h2><p>Crie seu primeiro tydream ou um Big Dream para reunir seus sonhos.</p><div class="empty-actions"><button class="primary" data-action="new">criar meu primeiro tiny dream</button><button class="text-button" data-action="demo">Explorar um exemplo</button></div></div>`:`${state.groups.map(group=>section(group.name,active.filter(g=>g.group_id===group.id),group)).join('')}${ungrouped.length?section(state.groups.length?'sem big dream':'meus tydreams',ungrouped):''}${!active.length&&state.goals.length&&!state.groups.length?'<p class="muted">nenhum tydream pendente. consulte seus registros em hoje ou calendário.</p>':''}<button class="secondary overview-add" data-action="new">novo tiny dream</button>`}</div>`;
  fitDreamGalleries();
 }
-let galleryResizeObserver;
-const galleryUpdates=new Set();
 function fitDreamGalleries(){
- galleryResizeObserver?.disconnect();galleryUpdates.clear();
  const mobile=window.matchMedia('(max-width:560px)');
  document.querySelectorAll('.dream-overview .goal-grid').forEach(grid=>{
   const cards=[...grid.querySelectorAll(':scope > .goal')];if(!cards.length)return;
-  let scrolling=false,touching=false,settleTimer;
-  const update=()=>{
-   if(!mobile.matches){grid.style.removeProperty('height');return}
-   if(scrolling||touching)return;
-   const left=grid.getBoundingClientRect().left;
-   const active=cards.reduce((nearest,card)=>Math.abs(card.getBoundingClientRect().left-left)<Math.abs(nearest.getBoundingClientRect().left-left)?card:nearest,cards[0]);
-   const css=getComputedStyle(grid),height=active.getBoundingClientRect().height+parseFloat(css.paddingTop)+parseFloat(css.paddingBottom);
-   if(Math.abs(grid.getBoundingClientRect().height-height)>.5)grid.style.height=`${Math.ceil(height)}px`;
-  };
+  grid.style.removeProperty('height');
+  let touching=false,settleTimer;
   const settle=()=>{
    clearTimeout(settleTimer);if(touching||!grid.isConnected)return;
-   scrolling=false;
    if(mobile.matches){
     const left=grid.getBoundingClientRect().left+parseFloat(getComputedStyle(grid).paddingLeft);
     const nearest=cards.reduce((best,card)=>Math.abs(card.getBoundingClientRect().left-left)<Math.abs(best.getBoundingClientRect().left-left)?card:best,cards[0]);
     const target=Math.max(0,Math.min(grid.scrollWidth-grid.clientWidth,grid.scrollLeft+nearest.getBoundingClientRect().left-left));
     if(Math.abs(grid.scrollLeft-target)>1)grid.scrollTo({left:target,behavior:'instant'});
    }
-   update();
   };
   const scheduleSettle=()=>{clearTimeout(settleTimer);settleTimer=setTimeout(settle,180)};
-  grid.addEventListener('scroll',()=>{scrolling=true;scheduleSettle()},{passive:true});
+  grid.addEventListener('scroll',scheduleSettle,{passive:true});
   grid.addEventListener('scrollend',settle,{passive:true});
   grid.addEventListener('touchstart',()=>{touching=true;clearTimeout(settleTimer)},{passive:true});
   for(const event of ['touchend','touchcancel'])grid.addEventListener(event,()=>{touching=false;scheduleSettle()},{passive:true});
-  galleryUpdates.add(update);update();
  });
- galleryResizeObserver=new ResizeObserver(()=>galleryUpdates.forEach(update=>update()));
- document.querySelectorAll('.dream-overview .goal-grid,.dream-overview .goal-grid>.goal').forEach(element=>galleryResizeObserver.observe(element));
 }
-window.addEventListener('resize',()=>galleryUpdates.forEach(update=>update()),{passive:true});
 function openGroup(id){
  const group=state.groups.find(g=>g.id===id);
  $('#groupId').value=group?.id||'';$('#groupName').value=group?.name||'';$('#groupFormTitle').textContent=group?'renomear big dream':'Criar um Big Dream';$('#groupError').textContent='';
