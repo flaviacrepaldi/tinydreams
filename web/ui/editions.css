@@ -168,11 +168,11 @@ html[data-edition] .big-dream-volume>.group-heading{margin:0;border-radius:0;bor
 html[data-edition] .big-dream-volume>.group-heading::before,html[data-edition] .big-dream-volume>.group-heading::after{content:none}
 html[data-paper="true"] .big-dream-volume::before{opacity:.12}
 html[data-edition] .dream-overview .big-dream-volume>.goal-grid>.goal{background:color-mix(in srgb,var(--surface) 82%,transparent)}
-html[data-edition] .dream-overview .big-dream-volume>.goal-grid{padding:18px 18px 20px}
+html[data-edition] .dream-overview .big-dream-volume>.goal-grid{margin:0 22px 0 32px;padding:18px 0 24px;min-width:0}
 .big-dream-volume>.group-empty{margin:0;padding:22px 24px 26px}
 @media(max-width:560px){
  .big-dream-volume{padding:0;margin-bottom:28px}
- html[data-edition] .dream-overview .big-dream-volume>.goal-grid{padding:12px 10px 16px;scroll-padding-inline:10px;grid-auto-columns:calc(100% - 24px)}
+ html[data-edition] .dream-overview .big-dream-volume>.goal-grid{padding:12px 0 24px;scroll-padding-inline:0;grid-auto-columns:calc(100% - 24px)}
  html[data-edition] .dream-overview .big-dream-volume>.goal-grid:has(>.goal:only-child){grid-auto-columns:100%}
  .big-dream-volume>.group-empty{padding:18px 20px 22px}
 }
