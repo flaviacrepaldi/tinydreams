@@ -267,7 +267,7 @@ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .d
 @media(max-width:560px){
  html[data-edition] .dream-overview .goal .dream-summary{grid-template-columns:minmax(0,1fr) minmax(0,40%);grid-template-rows:auto auto;column-gap:10px;row-gap:6px}
  html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary>.dream-summary-title{grid-column:1/-1;grid-row:1;max-width:100%;margin:8px 0 0}
- html[data-edition] .dream-overview .goal .dream-summary-copy{grid-column:1;grid-row:2;align-self:start}
+ html[data-edition] .dream-overview .goal .dream-summary-copy{grid-column:1;grid-row:2;align-self:center}
  html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .talisman{grid-column:2;grid-row:2;width:100%;max-width:112px;margin-top:0}
  html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"]:is(.lavender,.peach,.sage) .dream-summary .talisman{height:auto;aspect-ratio:2/3}
  html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .ghost-scene{top:0}
