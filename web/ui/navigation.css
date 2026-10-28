@@ -1,4 +1,6 @@
 /* One navigation vocabulary across the monthly worlds. */
+.big-dream-volume>.group-heading>.rename-group-button{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:10px}
+.rename-group-button svg{width:18px;height:18px}
 .dream-overview .overview-tools{justify-content:flex-start;align-items:center;gap:10px}
 .dream-overview .overview-tools .new-group-button{width:44px;height:44px;padding:10px;flex-shrink:0;border-radius:8px}
 html[data-edition] .welcome{min-height:0;padding-block:24px 28px}
