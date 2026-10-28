@@ -1,4 +1,14 @@
 /* One navigation vocabulary across the monthly worlds. */
+.dream-kind-options{border:0;padding:0;margin:24px 0 12px;min-width:0}
+.dream-kind-options legend{font-size:14px;margin-bottom:8px}
+#goalForm .dream-kind-option{display:flex;align-items:flex-start;gap:12px;margin:0;padding:16px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.dream-kind-option input{width:18px;height:18px;min-height:18px;flex-shrink:0;margin:3px 0 0;accent-color:var(--accent)}
+.dream-kind-option>span{display:block;min-width:0}
+.dream-kind-option strong{display:block;font-size:15px;font-weight:650}
+.dream-kind-option span span{display:block;margin-top:4px;font-size:14px;color:var(--muted)}
+.dream-kind-option small{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
+.dream-kind-option:has(input:checked) strong{color:var(--accent)}
+.dream-kind-option:has(input:disabled){cursor:default;opacity:.65}
 .big-dream-volume>.group-heading>.rename-group-button{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:10px}
 .rename-group-button svg{width:18px;height:18px}
 .dream-overview .overview-tools{justify-content:flex-start;align-items:center;gap:10px}

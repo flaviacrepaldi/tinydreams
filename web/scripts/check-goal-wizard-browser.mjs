@@ -3,7 +3,7 @@ const t=await(await fetch('http://127.0.0.1:9223/json/new?http://localhost:4181'
 await call('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await new Promise(r=>setTimeout(r,800));
 await js('showDemo();openForm()');await js('nextGoalStep()');await check('goalStep===0','Empty title allowed');
 for(const kind of ['habit','daily-list','list','amount']){
- await js(`document.querySelector('#goalDialog').close();openForm();document.querySelector('#goalTitle').value='QA ${kind}';document.querySelector('#goalKind').value='${kind}';document.querySelector('#goalKind').dispatchEvent(new Event('change'));nextGoalStep()`);
+ await js(`document.querySelector('#goalDialog').close();openForm();document.querySelector('#goalTitle').value='QA ${kind}';document.querySelector('[name=goalKindChoice][value=\"${kind}\"]').click();nextGoalStep()`);
  await check(`goalStep===${kind==='amount'?2:1}`,'Wrong branch '+kind);
  if(kind==='daily-list')await js(`addRoutineRow({id:'qa',title:'fruta',weekdays:[0,1,2,3,4,5,6]})`);
  if(kind==='list')await js(`addItemRow({id:'qa',title:'ler',date:''})`);
@@ -14,7 +14,7 @@ for(const kind of ['habit','daily-list','list','amount']){
  await js(`document.querySelector('#goalForm').requestSubmit()`);await new Promise(r=>setTimeout(r,120));
  await check(`!document.querySelector('#goalDialog').open&&state.goals.some(g=>g.title==='QA ${kind}')`,'Failed save '+kind);
 }
-await js(`openForm(state.goals.find(g=>g.title==='QA daily-list').id)`);await check("document.querySelector('#goalKind').value==='daily-list'&&document.querySelector('#routineRows .row-title').value==='fruta'",'Edit lost list');
+await js(`openForm(state.goals.find(g=>g.title==='QA daily-list').id)`);await check("document.querySelector('[name=goalKindChoice][value=daily-list]').checked&&document.querySelector('#goalKind').value==='daily-list'&&document.querySelector('#routineRows .row-title').value==='fruta'",'Edit lost list');
 await js(`document.querySelector('#goalDialog').close();openForm()`);
 await check("document.querySelectorAll('[data-goal-step]:not([hidden])').length===1",'Multiple steps visible');
 writeFileSync('/tmp/tiny-wizard-mobile.png',Buffer.from((await call('Page.captureScreenshot')).data,'base64'));
