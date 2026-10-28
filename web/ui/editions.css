@@ -161,9 +161,13 @@ html[data-edition] .dream-overview .goal .dream-summary h2,html[data-edition] .d
  html[data-edition] .dream-overview .goal .dream-summary h2,html[data-edition] .dream-overview .goal .dream-summary .goal-meta,html[data-edition] .dream-overview .goal .dream-summary .deadline,html[data-edition] .dream-overview .goal .dream-summary .countdown{max-width:calc(100% - 120px)}
 }
 /* One bound Big Dream contains its cover and all its tydream pages. */
-.big-dream-volume{padding:0;border:1px solid var(--line);border-radius:5px 16px 16px 5px;background:var(--bg);overflow:hidden}
-html[data-edition] .big-dream-volume>.group-heading{margin:0;border-radius:0;border-bottom:1px solid var(--line)}
-.big-dream-volume>.group-heading::after{bottom:0;border-bottom:0;border-radius:2px 9px 0 0}
+.big-dream-volume{padding:0;border:1px solid var(--line);border-radius:5px 16px 16px 5px;background:linear-gradient(90deg,var(--bg) 7px,var(--surface) 7px,var(--surface) 12px,var(--line) 12px,var(--line) 13px,var(--surface) 13px);overflow:hidden;isolation:isolate}
+.big-dream-volume::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--cover-art) center 62%/cover no-repeat;opacity:.2;mask-image:linear-gradient(to bottom,#000 0%,#000 35%,transparent 100%);pointer-events:none}
+.big-dream-volume::after{content:'';position:absolute;inset:12px 12px 12px 22px;border:1px solid var(--line);border-radius:2px 9px 9px 2px;pointer-events:none;z-index:-1}
+html[data-edition] .big-dream-volume>.group-heading{margin:0;border-radius:0;border:0;background:transparent;isolation:auto}
+html[data-edition] .big-dream-volume>.group-heading::before,html[data-edition] .big-dream-volume>.group-heading::after{content:none}
+html[data-paper="true"] .big-dream-volume::before{opacity:.12}
+html[data-edition] .dream-overview .big-dream-volume>.goal-grid>.goal{background:color-mix(in srgb,var(--surface) 82%,transparent)}
 html[data-edition] .dream-overview .big-dream-volume>.goal-grid{padding:18px 18px 20px}
 .big-dream-volume>.group-empty{margin:0;padding:22px 24px 26px}
 @media(max-width:560px){
