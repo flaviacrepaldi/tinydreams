@@ -175,7 +175,7 @@ body:not([data-view="dreams"]) .topbar .brand,body:not([data-view="dreams"]) #se
 }
 /* Two distinct rhythms: today's checked steps and the dream's earned progress. */
 .dream-progress{margin-top:12px}
-.card-progress-deadline{font-size:12px;line-height:1.4;color:var(--muted);text-align:left;margin:0 0 14px}
+.card-progress-deadline{font-size:12px;line-height:1.4;color:var(--muted);text-align:right;margin:0 0 14px}
 .card-progress-deadline.overdue{color:var(--text)}
 html[data-edition] .dream-overview .goal .dream-progress>.progress{height:10px;margin-top:0;border-radius:8px;background:color-mix(in srgb,var(--goal) 14%,var(--surface));overflow:visible;position:relative}
 .dream-progress>.progress::before{content:'';position:absolute;inset:0;border-radius:inherit;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(25% - 1px),var(--surface) calc(25% - 1px),var(--surface) 25%);opacity:.7;pointer-events:none}
