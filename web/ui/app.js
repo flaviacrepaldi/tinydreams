@@ -352,6 +352,22 @@ document.addEventListener('click',event=>{
  if(action==='shelf-prev'||action==='shelf-next'){shelfPage+=action==='shelf-next'?1:-1;selectedShelfBook=null;renderShelf()}
 });
 const milestoneQueue=new Map(),milestoneMemory=new Set();
+const tydreamCongratulations=[
+ 'parabéns! mais um passo para o seu sonho.',
+ 'seu esforço merece ser celebrado!',
+ 'um pequeno passo, uma conquista sua.',
+ 'mais uma página bonita na sua história.',
+ 'você cuidou do seu sonho. celebre!',
+ 'essa conquista é sua. aproveite o momento!',
+ 'seu próximo capítulo está mais perto.',
+ 'um pouquinho de magia, um tanto de dedicação.'
+];
+let lastCongratulations=-1;
+function randomCongratulations(){
+ const next=Math.floor(Math.random()*(tydreamCongratulations.length-(lastCongratulations<0?0:1)));
+ lastCongratulations=next>=lastCongratulations&&lastCongratulations>=0?next+1:next;
+ return tydreamCongratulations[lastCongratulations];
+}
 let milestoneTimer;
 function resetMilestonePanel(){milestoneQueue.clear();clearTimeout(milestoneTimer);$('#milestone').hidden=true}
 function milestoneKey(key){return `${state.demo?'demo':'real'}:${key}`}
@@ -377,7 +393,7 @@ function flushMilestones(){
  const motif=edition?.progressSymbol||'star',atmosphere=edition?.atmosphere||'stars';
  const panel=$('#milestone');panel.dataset.goal=g.id;panel.dataset.magic=atmosphere;panel.dataset.edition=edition?.id||'';panel.classList.toggle('final-chapter',m.kind==='dream');
  const enchantment=magicalEmblem(motif,m.kind);
- panel.innerHTML=`<button class="icon-button milestone-close" data-action="dismiss-milestone" aria-label="Fechar celebração">×</button>${enchantment}${m.kind==='dream'?bookMarkup(g):''}<div class="milestone-copy"><h2>${m.kind==='dream'?'Seu tydream virou uma história realizada.':wholeDay?'Tudo de hoje concluído.':'Dia concluído.'}</h2><p>${m.kind==='dream'?esc(g.title):wholeDay?`${habits.length} hábitos de hoje concluídos.`:`${esc(g.title)} · ${fmt(progress(g))} de ${fmt(targetOf(g))} <span data-user-content>${esc(unit(g))}</span>`}</p>${m.kind==='dream'&&g.reward?`<p>Recompensa liberada: <span data-user-content>${esc(g.reward)}</span></p>`:''}<button class="secondary" data-action="${m.kind==='dream'?'open-shelf':'dismiss-milestone'}">${m.kind==='dream'?'Ver na minha prateleira':'Continuar'}</button></div>`;
+ panel.innerHTML=`<button class="icon-button milestone-close" data-action="dismiss-milestone" aria-label="Fechar celebração">×</button>${enchantment}${m.kind==='dream'?bookMarkup(g):''}<div class="milestone-copy"><h2>${m.kind==='dream'?'Seu tydream virou uma história realizada.':wholeDay?'Tudo de hoje concluído.':randomCongratulations()}</h2><p>${m.kind==='dream'?esc(g.title):wholeDay?`${habits.length} hábitos de hoje concluídos.`:`${esc(g.title)} · ${fmt(progress(g))} de ${fmt(targetOf(g))} <span data-user-content>${esc(unit(g))}</span>`}</p>${m.kind==='dream'&&g.reward?`<p>Recompensa liberada: <span data-user-content>${esc(g.reward)}</span></p>`:''}<button class="secondary" data-action="${m.kind==='dream'?'open-shelf':'dismiss-milestone'}">${m.kind==='dream'?'Ver na minha prateleira':'Continuar'}</button></div>`;
  $('#toast').hidden=true;clearTimeout(toastTimer);panel.hidden=false;clearTimeout(milestoneTimer);if(m.kind!=='dream')milestoneTimer=setTimeout(()=>panel.hidden=true,10000);
 }
 document.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(action==='dismiss-milestone')$('#milestone').hidden=true;if(action==='open-shelf'||action==='back-dreams'){$('#milestone').hidden=true;state.view=action==='open-shelf'?'shelf':'dreams';render();$('#content').scrollIntoView({block:'start'});document.querySelector(`[data-view="${state.view}"]`).focus()}});
