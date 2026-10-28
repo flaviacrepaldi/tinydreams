@@ -17,8 +17,7 @@ function demoGoals(){return [{id:'demo-read',title:'Ler antes de dormir',reward:
 function showDemo(){resetMilestonePanel();state.demo=true;state.goals=demoGoals();state.groups=[];seedMilestones();render()}
 function render(){
  const gs=state.goals;document.body.dataset.view=state.view;
- $('#demoBanner').hidden=!state.demo;$('#goalsCount').textContent=gs.length;
- $('#todayDot').hidden=!gs.some(g=>planOf(g).kind==='habit'&&scheduled(g,today())&&!complete(g)&&!g.days.includes(today()));
+ $('#demoBanner').hidden=!state.demo;$('#goalsCount').textContent=gs.filter(g=>!complete(g)&&!dayDone(g,today())).length;
  document.querySelectorAll('.tab').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);if(b.dataset.view===state.view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  if(state.view==='shelf')renderShelf();else if(state.view==='today')renderToday();else if(state.view==='calendar')renderCalendar();else renderOverview();
 }
