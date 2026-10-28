@@ -198,16 +198,19 @@ html[data-motion=active] .daily-item-step.just-completed{animation:daily-step-po
 .welcome-quote-source{display:block;font-size:12px;line-height:1.6;margin-top:8px;color:inherit;text-decoration:none;opacity:.85;overflow-wrap:anywhere}
 .welcome-quote-source:hover{text-decoration:underline;text-underline-offset:3px;opacity:1}
 .welcome-quote-source cite{font-style:italic}
-.amount-trend{position:absolute;left:0;bottom:6px;width:calc(60% - 12px);height:54px;color:var(--goal,var(--accent));pointer-events:none}
-.amount-trend svg{display:block;width:100%;height:38px;overflow:visible;fill:currentColor}
+/* The amount chart uses the existing space between the summary and total progress. */
+.amount-trend{position:absolute;color:var(--goal,var(--accent));pointer-events:none;display:flex;flex-direction:column}
+.amount-trend svg{display:block;width:100%;height:calc(100% - 14px);min-height:0;overflow:visible;fill:currentColor}
 .amount-trend-area{opacity:.18}
-.amount-trend-line{fill:none;stroke:currentColor;stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
-.amount-trend span{display:block;font-size:10px;line-height:1.4;color:var(--muted);margin-top:2px}
+.amount-trend-line,.amount-trend-projection,.amount-trend-target{fill:none;stroke:currentColor;stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.amount-trend-projection{stroke-dasharray:4 4;opacity:.8}
+.amount-trend-target{stroke-dasharray:2 5;opacity:.35;stroke-width:1}
+.amount-trend text{font:9px var(--sans);fill:currentColor}
+.amount-trend span{display:block;font-size:10px;line-height:1.3;color:var(--muted);margin-top:3px}
+.amount-trend:not(.expanded-trend) text,.amount-trend:not(.expanded-trend) .amount-trend-target{display:none}
+.amount-trend.expanded-trend svg{height:calc(100% - 28px)}
 html[data-edition] .dream-overview .goal .has-amount-trend .dream-summary-copy{align-self:start}
 html[data-edition] .dream-overview .goal .has-amount-trend{grid-template-rows:min-content minmax(0,1fr)}
 html[data-edition] .dream-overview .goal .has-amount-trend .countdown{margin:6px 0 0;gap:3px}
-.amount-trend{height:40px;bottom:0}
-.amount-trend svg{height:26px}
 html[data-edition] .dream-overview .goal .has-amount-trend .countdown strong{display:block;width:100%;max-width:100%;white-space:nowrap;font-size:clamp(20px,2vw,26px);letter-spacing:-.04em}
 .trend-replaces-countdown .countdown{visibility:hidden}
-.trend-replaces-countdown .amount-trend{top:var(--trend-top);bottom:auto}
