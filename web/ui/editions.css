@@ -171,8 +171,10 @@ html[data-edition] .dream-overview .big-dream-volume>.goal-grid>.goal{background
 html[data-edition] .dream-overview .big-dream-volume>.goal-grid{margin:0 22px 0 32px;padding:18px 0 24px;min-width:0}
 .big-dream-volume>.group-empty{margin:0;padding:22px 24px 26px}
 @media(max-width:560px){
+ body[data-view="dreams"] main{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
  .big-dream-volume{padding:0;margin-bottom:28px}
- html[data-edition] .dream-overview .big-dream-volume>.goal-grid{padding:12px 0 24px;scroll-padding-inline:0;grid-auto-columns:calc(100% - 24px)}
+ .big-dream-volume::after{left:16px;right:8px}
+ html[data-edition] .dream-overview .big-dream-volume>.goal-grid{margin-inline:24px 16px;padding:12px 0 24px;scroll-padding-inline:0;grid-auto-columns:100%}
  html[data-edition] .dream-overview .big-dream-volume>.goal-grid:has(>.goal:only-child){grid-auto-columns:100%}
  .big-dream-volume>.group-empty{padding:18px 20px 22px}
 }
@@ -209,3 +211,17 @@ html[data-edition][data-motion="active"] .dream-overview .goal[data-amulet-editi
 html[data-edition] .dream-overview .goal .goal-menu{align-items:center}
 html[data-edition] .dream-overview .goal .goal-menu .diary-button{width:44px;height:44px;color:var(--accent)}
 html[data-edition] .dream-overview .goal .goal-menu .diary-button svg{width:20px;height:20px}
+/* On phones, give the dream's words more room than its amulet. */
+@media(max-width:560px){
+ html[data-edition] .dream-overview .goal .dream-summary{min-height:190px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition] .dream-summary .talisman{width:86px;height:calc(86px * var(--amulet-aspect,.666667));top:28px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"] .dream-summary .talisman{width:80px;height:176px;top:8px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].peach .dream-summary .talisman{width:90px;background-size:auto 115%}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .dream-summary .talisman{width:86px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary :is(h2,.goal-meta,.deadline,.countdown){max-width:calc(100% - 98px)}
+}
+@media(max-width:360px){
+ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .talisman{width:68px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"] .dream-summary .talisman{height:150px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary :is(h2,.goal-meta,.deadline,.countdown){max-width:calc(100% - 78px)}
+}
