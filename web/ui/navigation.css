@@ -214,3 +214,14 @@ html[data-edition] .dream-overview .goal .has-amount-trend{grid-template-rows:mi
 html[data-edition] .dream-overview .goal .has-amount-trend .countdown{margin:6px 0 0;gap:3px}
 html[data-edition] .dream-overview .goal .has-amount-trend .countdown strong{display:block;width:100%;max-width:100%;white-space:nowrap;font-size:clamp(20px,2vw,26px);letter-spacing:-.04em}
 .trend-replaces-countdown .countdown{visibility:hidden}
+.amount-trend{border:1px solid color-mix(in srgb,currentColor 30%,transparent);border-radius:8px;padding:7px 8px 18px 18px;background:color-mix(in srgb,var(--surface) 30%,transparent)}
+.amount-trend-heading{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-shrink:0;margin-bottom:4px}
+.amount-trend-heading strong{font-size:11px;font-weight:500;line-height:1.2}
+.amount-trend-heading span{font-size:10px;margin:0;color:var(--muted)}
+.amount-trend svg,.amount-trend.expanded-trend svg{height:auto;flex:1;min-height:0;overflow:hidden}
+.amount-trend-axes{fill:none;stroke:var(--muted);stroke-width:1;opacity:.5;vector-effect:non-scaling-stroke}
+.amount-trend .amount-axis-zero{position:absolute;left:7px;bottom:19px;font-size:9px;line-height:1;margin:0}
+.amount-trend-dates{position:absolute;left:20px;right:8px;bottom:4px;display:flex;justify-content:space-between;gap:6px}
+.amount-trend-dates span{font-size:9px;line-height:1;margin:0}
+.amount-trend:not(.expanded-trend){padding-top:5px;padding-bottom:14px}
+.amount-trend:not(.expanded-trend) .amount-trend-heading span,.amount-trend:not(.expanded-trend) .amount-trend-dates,.amount-trend:not(.expanded-trend) .amount-axis-zero{display:none}
