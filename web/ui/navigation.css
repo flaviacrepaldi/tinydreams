@@ -191,3 +191,6 @@ html[data-edition] .dream-overview .goal .dream-progress .progress-label{margin:
 html[data-motion=active] .daily-item-step.just-completed{animation:daily-step-pop .45s ease-out}
 @keyframes daily-step-pop{0%{transform:scale(.92)}55%{transform:scale(1.06)}100%{transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.daily-item-step,.dream-progress>.progress>span{transition:none}.daily-item-step.is-done{animation:none!important}}
+.dream-progress{margin-top:8px}
+.dream-progress .daily-item-progress{margin-bottom:16px}
+.card-progress-deadline{margin-bottom:12px}
