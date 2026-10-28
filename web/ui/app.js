@@ -483,6 +483,20 @@ document.addEventListener('click',e=>{const action=e.target.closest('[data-actio
 new MutationObserver(flushMilestones).observe(document.body,{subtree:true,attributes:true,attributeFilter:['open']});
 document.addEventListener('visibilitychange',flushMilestones);
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('#milestone').hidden){$('#milestone').hidden=true;clearTimeout(milestoneTimer)}});
+// A curated selection: change the list only when the user requests new quotations.
+const welcomePhrases=[
+ {id:'reis-inteiro',text:'Põe quanto és no mínimo que fazes.',author:'Ricardo Reis (Fernando Pessoa)',work:'Odes · “Para ser grande, sê inteiro”',source:'https://pt.wikisource.org/wiki/Para_ser_grande,_sê_inteiro'},
+ {id:'pessoa-mensagem',text:'Tudo vale a pena se a alma não é pequena.',author:'Fernando Pessoa',work:'Mensagem · “Mar Português”',source:'https://pt.wikiquote.org/wiki/Fernando_Pessoa'},
+ {id:'campos-tabacaria',text:'À parte isso, tenho em mim todos os sonhos do mundo.',author:'Álvaro de Campos (Fernando Pessoa)',work:'“Tabacaria”',source:'https://ministeriodeeducacion.gob.do/docs/biblioteca-virtual/Lrqg-pessoa-fernando-poemaspdf.pdf'},
+ {id:'camoes-tempos',text:'Mudam-se os tempos, mudam-se as vontades.',author:'Luís de Camões',work:'Sonetos · “Mudam-se os tempos, mudam-se as vontades”',source:'https://www.up.pt/casacomum/na-poesia-cabem-todas-as-cores/122-mudam-se-os-tempos-mudam-se-as-vontades-luis-de-camoes/'},
+ {id:'machado-amar',text:'Cada qual sabe amar a seu modo; o modo, pouco importa; o essencial é que saiba amar.',author:'Machado de Assis',work:'Ressurreição',source:'https://www.correiobraziliense.com.br/cbradar/frase-de-machado-de-assis-do-dia-cada-qual-sabe-amar-a-seu-modo-e-a-reflexao-sobre-como-sentimentos-verdadeiros-nem-sempre-sao-demonstrados-da-maneira-que-esperamos/'}
+];
+function showDailyWelcome(){
+ const dayIndex=Math.floor(Date.parse(today()+'T00:00:00Z')/86400000),phrase=welcomePhrases[dayIndex%welcomePhrases.length];
+ $('.welcome .intro').innerHTML=`<span class="welcome-quote">“${esc(phrase.text)}”</span><a class="welcome-quote-source" href="${esc(phrase.source)}" target="_blank" rel="noopener noreferrer">${esc(phrase.author)} · <cite>${esc(phrase.work)}</cite></a>`;
+}
+showDailyWelcome();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)showDailyWelcome()});
 $('#dateLabel').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',timeZone:'America/Sao_Paulo'});load();
 
 document.addEventListener('dreameditionchange',()=>{if(!state.busy)render()});

@@ -194,3 +194,7 @@ html[data-motion=active] .daily-item-step.just-completed{animation:daily-step-po
 .dream-progress{margin-top:8px}
 .dream-progress .daily-item-progress{margin-bottom:16px}
 .card-progress-deadline{margin-bottom:12px}
+.welcome-quote{display:block;text-wrap:pretty}
+.welcome-quote-source{display:block;font-size:12px;line-height:1.6;margin-top:8px;color:inherit;text-decoration:none;opacity:.85;overflow-wrap:anywhere}
+.welcome-quote-source:hover{text-decoration:underline;text-underline-offset:3px;opacity:1}
+.welcome-quote-source cite{font-style:italic}
