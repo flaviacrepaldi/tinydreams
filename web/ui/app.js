@@ -38,15 +38,31 @@ function fitDreamGalleries(){
  const mobile=window.matchMedia('(max-width:560px)');
  document.querySelectorAll('.dream-overview .goal-grid').forEach(grid=>{
   const cards=[...grid.querySelectorAll(':scope > .goal')];if(!cards.length)return;
+  let scrolling=false,touching=false,settleTimer;
   const update=()=>{
    if(!mobile.matches){grid.style.removeProperty('height');return}
+   if(scrolling||touching)return;
    const left=grid.getBoundingClientRect().left;
    const active=cards.reduce((nearest,card)=>Math.abs(card.getBoundingClientRect().left-left)<Math.abs(nearest.getBoundingClientRect().left-left)?card:nearest,cards[0]);
    const css=getComputedStyle(grid),height=active.getBoundingClientRect().height+parseFloat(css.paddingTop)+parseFloat(css.paddingBottom);
    if(Math.abs(grid.getBoundingClientRect().height-height)>.5)grid.style.height=`${Math.ceil(height)}px`;
   };
-  let frame;
-  grid.addEventListener('scroll',()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(update)},{passive:true});
+  const settle=()=>{
+   clearTimeout(settleTimer);if(touching||!grid.isConnected)return;
+   scrolling=false;
+   if(mobile.matches){
+    const left=grid.getBoundingClientRect().left+parseFloat(getComputedStyle(grid).paddingLeft);
+    const nearest=cards.reduce((best,card)=>Math.abs(card.getBoundingClientRect().left-left)<Math.abs(best.getBoundingClientRect().left-left)?card:best,cards[0]);
+    const target=Math.max(0,Math.min(grid.scrollWidth-grid.clientWidth,grid.scrollLeft+nearest.getBoundingClientRect().left-left));
+    if(Math.abs(grid.scrollLeft-target)>1)grid.scrollTo({left:target,behavior:'instant'});
+   }
+   update();
+  };
+  const scheduleSettle=()=>{clearTimeout(settleTimer);settleTimer=setTimeout(settle,180)};
+  grid.addEventListener('scroll',()=>{scrolling=true;scheduleSettle()},{passive:true});
+  grid.addEventListener('scrollend',settle,{passive:true});
+  grid.addEventListener('touchstart',()=>{touching=true;clearTimeout(settleTimer)},{passive:true});
+  for(const event of ['touchend','touchcancel'])grid.addEventListener(event,()=>{touching=false;scheduleSettle()},{passive:true});
   galleryUpdates.add(update);update();
  });
  galleryResizeObserver=new ResizeObserver(()=>galleryUpdates.forEach(update=>update()));

@@ -258,3 +258,6 @@ html[data-edition] .dream-overview .goal .goal-menu .diary-button svg{width:20px
  html[data-edition] .dream-overview .goal .dream-summary-copy{grid-column:1;grid-row:1;min-width:0}
  html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .talisman{grid-row:1}
 }
+@media(max-width:560px){
+ html[data-edition] .dream-overview .goal-grid>.goal{scroll-snap-stop:always}
+}
