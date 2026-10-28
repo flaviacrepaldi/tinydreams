@@ -1,4 +1,8 @@
 /* One navigation vocabulary across the monthly worlds. */
+.daily-item-progress{margin:16px 0 12px;color:var(--goal,var(--accent))}
+.daily-item-progress p{font-size:12px;line-height:1.4;margin:0 0 8px;color:var(--muted)}
+.daily-item-track{height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.daily-item-track>span{display:block;height:100%;border-radius:inherit;background:currentColor;transition:width .2s ease}
 .milestone{bottom:auto;right:auto;z-index:30;overflow:visible;box-shadow:0 24px 80px #09051299,0 0 0 100vmax #090512b8}
 .milestone .painted-enchantment{height:clamp(120px,30dvh,260px)}
 .milestone .painted-enchantment .potion-sprite{width:clamp(120px,30dvh,260px);height:clamp(120px,30dvh,260px)}
