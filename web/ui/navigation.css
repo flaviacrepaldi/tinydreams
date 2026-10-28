@@ -208,3 +208,6 @@ html[data-edition] .dream-overview .goal .has-amount-trend{grid-template-rows:mi
 html[data-edition] .dream-overview .goal .has-amount-trend .countdown{margin:6px 0 0;gap:3px}
 .amount-trend{height:40px;bottom:0}
 .amount-trend svg{height:26px}
+html[data-edition] .dream-overview .goal .has-amount-trend .countdown strong{display:block;width:100%;max-width:100%;white-space:nowrap;font-size:clamp(20px,2vw,26px);letter-spacing:-.04em}
+.trend-replaces-countdown .countdown{visibility:hidden}
+.trend-replaces-countdown .amount-trend{top:var(--trend-top);bottom:auto}
