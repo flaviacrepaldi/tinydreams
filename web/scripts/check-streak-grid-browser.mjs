@@ -9,18 +9,21 @@ async function js(expression){const r=await cdp('Runtime.evaluate',{expression,a
 async function wait(expression){for(let n=0;n<100;n++){if(await js(expression))return;await new Promise(r=>setTimeout(r,100))}throw Error('Timed out: '+expression)}
 try{
  await cdp('Page.enable');await cdp('Page.navigate',{url:origin});await wait("typeof state!=='undefined'&&!state.busy");
- await js(`showDemo();const weekdays=[1,3,5],practice=[];for(let i=0;practice.length<14;i++){const d=dayBefore(i);if(weekdays.includes(weekday(d)))practice.push(d)};state.goals=[{id:'grid-test',title:'Aeróbico nos dias da rotina',color:'sage',target:30,reward:'',redeemed:0,days:practice.slice(0,7).filter((d,i)=>i!==2),failures:[practice[2]],entries:[],plan:{...planOf({}),completionMode:'total',start:dayBefore(40),weekdays}},{id:'amount-test',title:'Meu objetivo de valor',color:'peach',target:25000,reward:'',redeemed:0,days:[],failures:[],entries:[{key:'a',day:dayBefore(10),value:400},{key:'b',day:dayBefore(5),value:500},{key:'c',day:dayBefore(1),value:700}],plan:{...planOf({}),kind:'amount',unit:'R$'}}];render()`);
+ await js(`showDemo();const weekdays=[1,3,5],practice=[];for(let i=0;practice.length<14;i++){const d=dayBefore(i);if(weekdays.includes(weekday(d)))practice.push(d)};state.goals=[{id:'grid-test',title:'Aeróbico nos dias da rotina',color:'sage',target:30,reward:'',redeemed:0,days:practice.slice(0,7).filter((d,i)=>i!==2),failures:[practice[2]],entries:[],plan:{...planOf({}),completionMode:'period',start:dayBefore(40),end:dayBefore(-10),weekdays}},{id:'amount-test',title:'Meu objetivo de valor',color:'peach',target:25000,reward:'',redeemed:0,days:[],failures:[],entries:[{key:'a',day:dayBefore(10),value:400},{key:'b',day:dayBefore(5),value:500},{key:'c',day:dayBefore(1),value:700}],plan:{...planOf({}),kind:'amount',unit:'R$'}}];render()`);
  assert.equal(await js("document.querySelectorAll('.streak-square').length"),14);
  assert.equal(await js("document.querySelectorAll('.streak-square.success').length>0"),true);
  assert.equal(await js("document.querySelectorAll('.streak-square.failure').length"),1);
  assert.equal(await js("document.querySelectorAll('.streak-square.rest svg').length>0"),true);
- assert.equal(await js("document.querySelector('.habit-streak').parentElement.className"),'dream-progress');
+ assert.equal(await js("document.querySelector('.habit-streak').parentElement.className"),'dream-daily-slot');
 
  for(const width of [320,390,700,768,1440]){
   await cdp('Emulation.setDeviceMetricsOverride',{width,height:1050,deviceScaleFactor:1,mobile:width<=700});await js('document.fonts.ready');await js('fitAmountTrends();fitDreamGalleries()');
   assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false,'Page overflow at '+width);
   assert.equal(await js("[...document.querySelectorAll('.goal')].every(card=>card.querySelector('.dream-progress').getBoundingClientRect().bottom<=card.querySelector('.dream-card-footer').getBoundingClientRect().top+1)"),true,'Progress and actions must not overlap at '+width);
   assert.equal(await js("getComputedStyle(document.querySelector('.streak-grid')).gridTemplateColumns.split(' ').length"),7);
+  assert.equal(await js("(()=>{const grid=document.querySelector('.habit-streak').getBoundingClientRect(),card=document.querySelector('[data-goal=grid-test]').getBoundingClientRect();return Math.abs((grid.left+grid.right)-(card.left+card.right))<2})()"),true,'Centered grid at '+width);
+  assert.equal(await js("document.querySelector('.streak-square').getBoundingClientRect().width>25"),true,'Larger squares at '+width);
+  assert.equal(await js("document.querySelector('.habit-streak').getBoundingClientRect().bottom<=document.querySelector('[data-goal=grid-test] .dream-date-slot').getBoundingClientRect().top"),true,'Grid above deadline');
   assert.equal(await js("document.querySelectorAll('.streak-square')[7].getBoundingClientRect().top>document.querySelectorAll('.streak-square')[0].getBoundingClientRect().top"),true);
   assert.equal(await js("getComputedStyle(document.querySelector('.amount-trend')).display==='none'"),width<=700);
   if(width<=700)assert.equal(await js("getComputedStyle(document.querySelector('[data-goal=amount-test] .countdown')).visibility"),'visible');
