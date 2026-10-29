@@ -477,3 +477,15 @@ The fixed brand is a warm, rounded custom td ligature with an independent spark,
 The favicon, opaque 180/192/512px installation PNGs and compact login image contain the plain td-and-spark monogram on the same fixed plum background. Never put the seasonal hat in these smaller identities or change them on month boundaries. The wordmark remains lowercase and readable, with a descriptive accessible home link.
 
 Seasonal card consistency: overview cards use one full-width column with six shared rows, irrespective of the edition's earlier showcase layout. Edition-specific columns cannot place card sections. All editions' amulets gain saturation and brightness with earned progress and stay still. Incomplete archived dreams use their creation edition's artwork with the archive's grayscale treatment.
+
+## Halloween garden breeze and lamplight
+
+October's garden now uses a clean background plate plus independently swaying
+upper-right maple foliage, composited in the original 1536 × 1024 coordinate
+space. Five lanterns receive bounded warm light and flame overlays while their
+structures remain still. Match CSS cover scaling and background position at all
+breakpoints; retain the current gradient veils and mobile shooting-star canvas.
+The eleven-second foliage cycle is subtle; light cycles have independent phases.
+Pause with manual/reduced motion, dialogs, hidden pages and offscreen scenery.
+Keep the original image as the loading/error fallback and load only October's
+layers during that edition. Card amulets, ghost and later editions are unchanged.

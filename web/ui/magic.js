@@ -8,6 +8,45 @@
   const hint=document.querySelector('#motionHint');
   let atmosphere=document.documentElement.dataset.atmosphere||'stars';
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const sky=document.querySelector('.sky');
+  let garden=null;
+  // Coordinates are authored against garden.png's 1536 × 1024 canvas.
+  // Scale the complete stage with the CSS background, including its mobile crop.
+  function placeGarden(){
+    if(!garden)return;
+    const style=getComputedStyle(sky),box=sky.getBoundingClientRect();
+    const scale=Math.max(box.width/1536,box.height/1024);
+    const positions=style.backgroundPosition.split(',').at(-1).trim().split(/\s+/);
+    const x=(box.width-1536*scale)*(parseFloat(positions[0])/100);
+    const y=(box.height-1024*scale)*(parseFloat(positions[1])/100);
+    garden.stage.style.transform=`translate(${x}px,${y}px) scale(${scale})`;
+    garden.shade.style.backgroundImage=style.backgroundImage.replace(/,\s*url\([^)]*\)\s*$/,'');
+  }
+  function prepareGarden(){
+    if(root.dataset.edition!=='2026-10'){
+      garden?.layer.remove();garden=null;return;
+    }
+    if(garden)return;
+    const layer=document.createElement('div');layer.className='garden-life';
+    const stage=document.createElement('div');stage.className='garden-stage';
+    const plate=new Image(),leaves=new Image();
+    plate.alt='';leaves.alt='';plate.className='garden-plate';leaves.className='garden-leaves';
+    plate.decoding='async';leaves.decoding='async';
+    stage.append(plate,leaves);
+    // Each light remains inside its painted lantern; the metal and glass stay still.
+    for(const [i,[x,y,w,h]]of [[82,690,70,100],[1202,544,34,62],[1357,410,40,62],[1483,453,32,52],[1444,775,66,98]].entries()){
+      const lamp=document.createElement('span');lamp.className='garden-lamplight';
+      lamp.style.cssText=`left:${x}px;top:${y}px;width:${w}px;height:${h}px;--lamp-delay:${-i*1.73}s;--lamp-duration:${3.7+i*.47}s`;
+      lamp.append(document.createElement('i'));stage.append(lamp);
+    }
+    const shade=document.createElement('div');shade.className='garden-shade';
+    layer.append(stage,shade);sky.append(layer);
+    garden={layer,stage,shade};placeGarden();
+    plate.src='/garden-wind-base-v1.png';leaves.src='/garden-leaves-v1.png';
+    Promise.all([plate.decode(),leaves.decode()]).then(()=>{
+      if(garden?.layer===layer)layer.classList.add('is-ready');
+    }).catch(()=>{if(garden?.layer===layer){layer.remove();garden=null}});
+  }
   const pendingCelebrations=new Map(),celebrationTimers=new Map();
   let enabled=true;
   try{enabled=localStorage.getItem('tiny-dreams-motion')!=='off';}catch{}
@@ -62,6 +101,7 @@
   });
   function update(){
     root.dataset.motion=active()?'active':'paused';
+    root.dataset.sceneMotion=active()&&inView?'active':'paused';
     toggle.checked=enabled&&!reduced.matches;
     toggle.disabled=reduced.matches;
     hint.textContent=reduced.matches?'Os movimentos estão pausados pela preferência de reduzir movimento do seu dispositivo.':'Você pode pausar os movimentos quando quiser.';
@@ -111,7 +151,7 @@
       context.fillStyle=`rgba(255,250,231,${alpha})`;context.beginPath();context.arc(x,y,1.4,0,Math.PI*2);context.fill();
     }
   }
-  document.addEventListener('dreameditionchange',()=>{atmosphere=root.dataset.atmosphere||'stars';shootingStar=null;update();});
+  document.addEventListener('dreameditionchange',()=>{atmosphere=root.dataset.atmosphere||'stars';shootingStar=null;prepareGarden();update();});
   toggle.addEventListener('change',()=>{enabled=toggle.checked;try{localStorage.setItem('tiny-dreams-motion',enabled?'on':'off');}catch{}update();});
   reduced.addEventListener('change',update);
   document.addEventListener('visibilitychange',update);
@@ -119,5 +159,7 @@
   document.querySelectorAll('dialog').forEach(dialog=>dialogObserver.observe(dialog,{attributes:true,attributeFilter:['open']}));
   new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;update();}).observe(canvas);
   window.addEventListener('resize',resize,{passive:true});
+  new ResizeObserver(placeGarden).observe(sky);
+  prepareGarden();
   resize();update();
 })();

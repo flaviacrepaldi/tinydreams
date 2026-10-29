@@ -201,3 +201,12 @@ Creation retains the existing step wizard. Editing displays all applicable secti
 The user selected the custom lowercase td monogram and approved the witch-hat variation. Preserve the spark and base letter geometry. Only the main site header adds a small hat on the t, selected by the current monthly edition. Twelve prepared hat silhouettes follow the existing edition layouts without new raster assets, theme selectors or future-art preloading. The current October hat is a witch hat. All other hat details remain monthly surprises.
 
 The favicon, installed Home Screen/PWA icons and compact login identity use the same fixed standard td-and-spark mark without any hat. Raster installation assets are opaque and have fixed appearance independent of monthly themes. Updating from the former moon icon is a one-time branding change; subsequent theme switches do not change the icon. Brand changes never affect dream symbols, amulets, records or navigation.
+
+## Living Halloween scenery
+
+The user authorized gentle movement within October's garden illustration: hanging
+foliage sways and painted lantern flames/light flicker locally. Preserve the
+existing shooting stars on mobile. Separate background and transparent foliage
+assets retain the original scene as fallback. Scale effects with the illustration's
+actual responsive crop; preserve all existing motion pause/reduced-motion rules.
+This scenery request does not restore animation to card amulets or the ghost.
