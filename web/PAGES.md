@@ -4,6 +4,16 @@ The Pages version has a single-owner password login. Cloudflare Access, a Zero T
 
 ## Build and upload
 
+### Automatic deployment on push
+
+The GitHub Actions workflow `.github/workflows/deploy.yml` runs on pushes to `main` and can also be started manually from the Actions tab on `main`. It installs the locked web dependencies with Node 24, runs `npm test`, then runs the existing `npm run deploy` command, which builds and validates the Pages artifact before uploading. Production deploys are serialized so simultaneous pushes do not publish concurrently. Other branches do not publish production.
+
+One-time setup: create a Cloudflare API token with **Account → Cloudflare Pages → Edit**, restricted to the account that owns `tinydreams`. In the GitHub repository, open **Settings → Secrets and variables → Actions → New repository secret** and save it as **`CLOUDFLARE_API_TOKEN`**. The deploy script already reads the account ID from `web/wrangler.jsonc`; an additional account-ID secret is unnecessary. Keep the token in GitHub secrets, not in source or chat. Production `DB` and `OWNER_PASSWORD` stay configured in the Pages dashboard.
+
+Commit and push the workflow to `main` after adding the secret. Subsequent pushes deploy automatically after tests pass. The Actions tab contains run status and logs. Local validation does not publish anything; the first real Actions deployment remains unverified until the workflow and token are present in GitHub.
+
+### Local deployment
+
 For routine updates, run `npm run deploy` from the repository root (or `web`). It builds the current source, checks the Pages artifact, and uploads it directly to the existing `tinydreams` project's production branch `main`. No manual folder upload or Git commit is needed. If Wrangler asks for authentication, run `npm run deploy:login` from the repository root, authorize Cloudflare in the browser, then rerun deploy. Existing dashboard bindings and secrets remain dashboard-managed: the command intentionally runs outside `web` so it does not load the local Worker configuration. `npm run deploy -- --help` shows CLI help without building or publishing.
 
 Manual upload remains an alternative:
