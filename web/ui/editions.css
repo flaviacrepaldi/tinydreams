@@ -291,7 +291,7 @@ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peac
 html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary>.dream-summary-title{grid-column:1}
 /* Shared content-sized rows align the title area, progress and actions in each gallery. */
 html[data-edition] .dream-overview .goal-grid{grid-template-rows:repeat(6,max-content);grid-auto-rows:max-content;align-items:stretch}
-html[data-edition] .dream-overview .goal-grid>.goal{display:grid;grid-template-rows:subgrid;grid-row:span 6;row-gap:0;align-self:stretch}
+html[data-edition] .dream-overview .goal-grid>.goal{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:subgrid;grid-row:span 6;row-gap:0;align-self:stretch}
 .dream-daily-slot,.dream-date-slot,.dream-card-footer{min-width:0}
 .dream-card-footer{display:flex;flex-direction:column;justify-content:flex-end}
 .dream-date-slot .card-progress-deadline{margin:0 0 12px}
@@ -304,3 +304,11 @@ html[data-edition] .dream-overview .goal-grid{row-gap:0}
 @media(min-width:561px){
  html[data-edition] .dream-overview .goal-grid>.goal{margin-bottom:16px}
 }
+
+/* Edition-specific legacy columns must not place the shared card sections. */
+html[data-edition] .dream-overview .goal-grid>.goal>div{grid-column:1;grid-row:auto;min-width:0}
+/* Every edition gains color with earned progress, while the amulet stays still. */
+html[data-edition] .dream-overview .goal[data-amulet-edition]:not([data-amulet-edition="2026-10"]) .dream-summary .talisman{filter:grayscale(calc(1 - var(--charge))) brightness(calc(.72 + var(--charge)*.28))}
+html[data-paper="true"] .dream-overview .goal .goal-menu .diary-button{color:var(--goal)}
+html[data-edition] .dream-overview .goal .dream-progress>.progress{align-self:stretch}
+html[data-edition] .dream-overview .goal .quick-outcomes>.check-button{grid-column:auto;grid-row:auto}

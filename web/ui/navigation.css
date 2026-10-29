@@ -337,3 +337,9 @@ html[data-edition] .incomplete-collection .goal-grid>.goal{display:flex;flex-dir
 .editing-goal .dream-kind-option{margin:0;padding:10px;min-height:44px;min-width:0;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px}
 .editing-goal .dream-kind-option>span>span,.editing-goal .dream-kind-option small,.editing-goal .dream-kind-options+.form-hint{display:none}
 .editing-goal .dream-kind-option strong{font-size:12px;line-height:1.4}
+
+/* The hat is decorative and seasonal; the monogram and spark stay recognizable. */
+.topbar .brand>svg.brand-monogram{width:46px;height:49px;flex-shrink:0;color:var(--text);overflow:visible}
+.brand-hat{fill:var(--accent);color:var(--accent)}
+.brand-hat .hat-band{fill:var(--bg);opacity:.75}
+@media(max-width:700px){.topbar .brand>svg.brand-monogram{width:38px;height:41px}.topbar .brand{gap:8px}}

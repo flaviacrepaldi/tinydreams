@@ -56,7 +56,7 @@ References: https://developers.cloudflare.com/pages/get-started/direct-upload/ a
 
 ## Home Screen icon
 
-The app and login page declare a 180px Apple touch PNG. The manifest also includes 192px and 512px PNGs. Icons are opaque rasterizations of the existing `assets/icon.svg`, not a new logo. Installation metadata is available without a session so iOS can fetch it independently; personal artwork and APIs remain protected. After deploying this update, remove the old Home Screen shortcut and add the site again from Safari to refresh the cached icon.
+The app and login page declare a 180px Apple touch PNG. The manifest also includes 192px and 512px PNGs. Icons are opaque rasterizations of the fixed td-and-spark monogram in `assets/icon.svg`. They never include the seasonal hat shown only on the site header. Installation metadata is available without a session so iOS can fetch it independently; personal artwork and APIs remain protected. After deploying this update, remove the old Home Screen shortcut and add the site again from Safari to refresh the cached icon.
 
 ## Automatic updates
 

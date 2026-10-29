@@ -10,6 +10,8 @@ function applyEdition(){
   const dateKey=calendarParts(date).edition+'-'+calendarParts(date).day;
   const changed=current?.id!==selected.id||lastDate!==dateKey;
   current=selected;lastDate=dateKey;
+  const brand=document.querySelector('.brand-monogram');
+  if(brand)brand.innerHTML=brandMonogram+brandHat(selected.layout);
   root.dataset.edition=selected.id;root.dataset.layout=selected.layout;root.dataset.atmosphere=selected.atmosphere;root.dataset.paper=String(selected.light);
   for(const [token,value]of Object.entries(selected.tokens))root.style.setProperty(token,value);
   if(selected.geometry){root.style.setProperty('--object-aspect',String(selected.geometry.objectAspect));root.style.setProperty('--object-sheet-height',selected.geometry.objectSheetHeight+'%');root.style.setProperty('--scene-ratio',String(selected.geometry.sceneRatio));}

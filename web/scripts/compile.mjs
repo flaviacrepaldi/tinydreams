@@ -8,8 +8,9 @@ files.push(['/navigation.css','ui/navigation.css','text/css; charset=utf-8'],['/
 const assets={};for(const [route,file,type]of files){try{const bytes=await readFile(new URL(file,root));assets[route]={type,data:bytes.toString('base64')}}catch(e){if(route!=='/talismans.png')throw e}}
 const editions=JSON.parse(await readFile(new URL('ui/editions.json',root),'utf8'));
 const clock=(await readFile(new URL('ui/theme-clock.mjs',root),'utf8')).replaceAll('export ','');
+const brand=(await readFile(new URL('shared/brand.js',root),'utf8')).replaceAll('export ','');
 const themes=await readFile(new URL('ui/themes.js',root),'utf8');
-assets['/themes.js']={type:'text/javascript; charset=utf-8',data:Buffer.from(`(()=>{'use strict';const editions=${JSON.stringify(editions)};${clock}\n${themes}\n})();`).toString('base64')};
+assets['/themes.js']={type:'text/javascript; charset=utf-8',data:Buffer.from(`(()=>{'use strict';const editions=${JSON.stringify(editions)};${clock}\n${brand}\n${themes}\n})();`).toString('base64')};
 assets['/manifest.webmanifest']={type:'application/manifest+json',data:Buffer.from(JSON.stringify({name:'tiny dreams',short_name:'tiny dreams',start_url:'/',display:'standalone',background_color:'#211b31',theme_color:'#211b31',id:'/',scope:'/',icons:[{src:'/icon-192.png',sizes:'192x192',type:'image/png',purpose:'any'},{src:'/icon-512.png',sizes:'512x512',type:'image/png',purpose:'any'},{src:'/icon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]})).toString('base64')};
 const planner=(await readFile(new URL('shared/planner.js',root),'utf8')).replaceAll('export ','');
 const calendar=(await readFile(new URL('shared/calendar.js',root),'utf8')).replace(/^import .*;\n/gm,'').replaceAll('export ','');

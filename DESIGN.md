@@ -469,3 +469,11 @@ Amulet objects are stationary across editions and states, including after a succ
 Use the established modal, field and button styling for a single expired-dream decision on app open. Show the dream title, recorded progress, expired deadline and a practical suggestion; provide retry, explicit acceptance and a way to inspect history before deciding. The preferences entry opens a scrollable collection of accepted incomplete cards. Only this collection desaturates/darkens the original amulet; active and daily-complete cards retain earned color. The archive grid ends on the original deadline. Include an empty state and an action to resume deferred reviews.
 
 Editing has a clear “editar tiny dream” title, all applicable field sections stacked, compact two-column type controls without creation examples, open personalization and a sticky save action. Hide wizard headings/step counts/Next/Back while editing; retain the wizard unchanged for creation. Failed validation keeps the continuous layout and focuses the relevant field. Keep history and amulet identity through retries.
+
+## TD monogram and seasonal hat
+
+The fixed brand is a warm, rounded custom td ligature with an independent spark, authored in `web/shared/brand.js`. In the site header it inherits theme text/accent colors and gains one edition-specific hat perched on the t; keep its base geometry and spark unchanged. The SVG is 46 × 49px on desktop and 38 × 41px on mobile, with no logo animation. Hat silhouettes are presentation-only and follow the existing monthly edition lifecycle. Do not reveal future hat/edition artwork in user-facing previews.
+
+The favicon, opaque 180/192/512px installation PNGs and compact login image contain the plain td-and-spark monogram on the same fixed plum background. Never put the seasonal hat in these smaller identities or change them on month boundaries. The wordmark remains lowercase and readable, with a descriptive accessible home link.
+
+Seasonal card consistency: overview cards use one full-width column with six shared rows, irrespective of the edition's earlier showcase layout. Edition-specific columns cannot place card sections. All editions' amulets gain saturation and brightness with earned progress and stay still. Incomplete archived dreams use their creation edition's artwork with the archive's grayscale treatment.

@@ -13,3 +13,7 @@ Use case: stylized-concept. Asset type: transparent website illustration sprite 
 ## Layered October ghost
 
 The ghost dive uses non-destructive generated siblings `ghost-jar-v2.png` and `ghost-spirit-v2.png`. See [ghost-animation.md](ghost-animation.md) for their provenance, exact built-in image-generation prompts, dimensions, and compositing. The original talisman sprite strip remains unchanged.
+
+## TD identity and fixed installation icons · 2026-10-29
+
+The user selected the td monogram from built-in image-generation concept boards and approved a witch hat for the current site theme, retaining the spark. Production geometry was authored as editable SVG paths in `web/shared/brand.js`; the application does not serve the generated brainstorming rasters. `icon.svg` uses the plain monogram and spark, with no hat. `apple-touch-icon.png`, `icon-192.png` and `icon-512.png` are opaque rasterizations of that SVG, rendered with the locally available Sharp package and flattened onto #30263e. All seasonal hats are authored SVG paths confined to the large site identity; small installation icons remain invariant.
