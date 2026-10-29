@@ -457,3 +457,9 @@ Habit and daily-list cards place a compact 2 × 7 chronological calendar strip b
 At <=560px, gallery cards share an equal outer height for stable horizontal swipes, using flex content instead of shared subgrid rows. Center the day-grid section in the available middle space, with progress/actions below, so extra space is balanced instead of concentrated below the grid. Keep the desktop subgrid alignment. Mobile cards show the configured weekdays below the streak key, and empty deadline slots collapse.
 
 The mobile carousel returns to its first card after an additional leftward swipe at the end, preserving equal card height and leaving the last card readable. Do not clone cards or duplicate their IDs/actions. Ignore predominantly vertical gestures; support ArrowRight when the gallery itself has focus and respect reduced motion.
+
+## Daily priority and completion frame
+
+Active overview cards remain visible after daily success. Stable sorting places pending actions before completed-today habits, then rest-day habits. A compact status badge in the summary identifies pending/done/rest; a completed card gains an inset line in its existing goal color. Never desaturate, recolor or dim the amulet to indicate daily state. Group headers retain project totals and add today's completed/scheduled habit count. On mobile preserve the viewed dream through reordering; the next forward action from a newly completed card goes to pending work, without changing carousel height.
+
+Amulet objects are stationary across editions and states, including after a successful check. Disable object transforms/animations and their ambient bubble motion while preserving progress charge colors and brightness. This supersedes earlier potion stirring and lantern rocking; independent completion scenes remain unchanged.

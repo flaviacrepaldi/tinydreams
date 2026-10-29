@@ -16,7 +16,10 @@ try{
  assert.equal(await js("document.querySelectorAll('.streak-square.rest svg').length>0"),true);
  assert.equal(await js("document.querySelector('.habit-streak').parentElement.className"),'dream-daily-slot');
 
- await js("state.goals.push({...state.goals[0],id:'tall-test',title:'Uma lista diária com um título mais longo para conferir o espaço',reward:'Uma recompensa escolhida para celebrar',plan:{...planOf({}),completionMode:'total',dailyList:true,start:dayBefore(40),tasks:Array.from({length:8},(_,i)=>({id:'t'+i,title:'Item '+i,weekdays:[0,1,2,3,4,5,6]}))}});render()");
+ await js("state.goals.push({...state.goals[0],id:'tall-test',color:'lavender',title:'Uma lista diária com um título mais longo para conferir o espaço',reward:'Uma recompensa escolhida para celebrar',plan:{...planOf({}),completionMode:'total',dailyList:true,start:dayBefore(40),tasks:Array.from({length:8},(_,i)=>({id:'t'+i,title:'Item '+i,weekdays:[0,1,2,3,4,5,6]}))}});render()");
+ await js("document.documentElement.dataset.motion='active';document.querySelectorAll('.goal').forEach(card=>{card.classList.add('celebrate');card.querySelector('.talisman').classList.add('magic-visible')})");
+ assert.equal(await js("[...document.querySelectorAll('.goal .talisman')].every(amulet=>{const style=getComputedStyle(amulet);return style.animationName==='none'&&style.transform==='none'})"),true,'All three amulet slots remain still during active motion and success feedback');
+ await js("document.querySelectorAll('.goal').forEach(card=>card.classList.remove('celebrate'))");
  for(const width of [320,390,700,768,1440]){
   await cdp('Emulation.setDeviceMetricsOverride',{width,height:1050,deviceScaleFactor:1,mobile:width<=700});await js('document.fonts.ready');await js('fitAmountTrends();fitDreamGalleries()');
   assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false,'Page overflow at '+width);
@@ -28,9 +31,9 @@ try{
 
   assert.equal(await js("[...document.querySelectorAll('.goal')].every(card=>card.querySelector('.dream-progress').getBoundingClientRect().bottom<=card.querySelector('.dream-card-footer').getBoundingClientRect().top+1)"),true,'Progress and actions must not overlap at '+width);
   assert.equal(await js("getComputedStyle(document.querySelector('.streak-grid')).gridTemplateColumns.split(' ').length"),7);
-  assert.equal(await js("(()=>{const grid=document.querySelector('.habit-streak').getBoundingClientRect(),card=document.querySelector('[data-goal=grid-test]').getBoundingClientRect();return Math.abs((grid.left+grid.right)-(card.left+card.right))<2})()"),true,'Centered grid at '+width);
+  assert.equal(await js("(()=>{const grid=document.querySelector('[data-goal=grid-test] .habit-streak').getBoundingClientRect(),card=document.querySelector('[data-goal=grid-test]').getBoundingClientRect();return Math.abs((grid.left+grid.right)-(card.left+card.right))<2})()"),true,'Centered grid at '+width);
   assert.equal(await js("document.querySelector('.streak-square').getBoundingClientRect().width>25"),true,'Larger squares at '+width);
-  assert.equal(await js("document.querySelector('.habit-streak').getBoundingClientRect().bottom<=document.querySelector('[data-goal=grid-test] .dream-date-slot').getBoundingClientRect().top"),true,'Grid above deadline');
+  assert.equal(await js("document.querySelector('[data-goal=grid-test] .habit-streak').getBoundingClientRect().bottom<=document.querySelector('[data-goal=grid-test] .dream-date-slot').getBoundingClientRect().top"),true,'Grid above deadline');
   assert.equal(await js("document.querySelectorAll('.streak-square')[7].getBoundingClientRect().top>document.querySelectorAll('.streak-square')[0].getBoundingClientRect().top"),true);
   assert.equal(await js("getComputedStyle(document.querySelector('.amount-trend')).display==='none'"),false);
   assert.equal(await js("document.querySelector('.amount-trend svg').getBoundingClientRect().height>=85"),true,'Readable plot at '+width);

@@ -179,3 +179,11 @@ Habit and daily-list cards show fourteen calendar days through today, in two row
 Mobile swipe cards keep the same outer height for stable carousel navigation, but distribute each card's content independently instead of matching internal rows. Balance available space around the day-grid section and retain progress/actions below it. Show actual routine weekdays below the day grid on mobile; do not add filler or change practice records to fill space. Desktop proportions and aligned rows remain unchanged.
 
 Mobile galleries wrap forward: while the last card is visible, another horizontal swipe toward the next card returns to the first. Merely reaching the last card does not dismiss it. Vertical gestures, canceled/multi-touch gestures, one-card galleries and desktop layouts do not wrap. ArrowRight on the focused gallery at its end also returns to the first; reduced-motion users get an instant transition.
+
+## Daily priority without hiding completed practice
+
+The home retains active dreams completed today, including their filled day grids. Within each group, show today's pending work first, today's completed habits next, and habits with no activity scheduled today last. Sort only the presentation; preserve stored order and all amulet slots, colors and charge behavior. Mark daily completion with a checked “feito hoje” badge and a quiet inset frame. The pending badge counts only currently actionable active goals; Big Dream headers additionally show completed/scheduled habit counts for today, excluding rest dates and older completed challenges.
+
+After marking a card done on mobile, keep the same dream in view while its status and square update, even though it moves into the completed section. Its next forward swipe or ArrowRight returns to the first pending card. Ordinary browsing, rest cards and carousel wrap remain available. Undo restores pending status, counters and sorting. Reaching the entire dream target still moves it to the shelf.
+
+All card amulets remain stationary, including ambient potion/lantern rocking and positional success motions. Preserve their progress-driven color, brightness, stored slots and artwork. Separate daily/item completion scenes and reward feedback remain available.
