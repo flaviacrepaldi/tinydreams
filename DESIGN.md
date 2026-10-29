@@ -449,3 +449,7 @@ The calendar now shares the home's active seasonal scene and ambient layer. Keep
 ## Habit completion choice
 
 The existing goal wizard's meta step includes one labeled native select for accumulated days, consecutive scheduled days, or a defined period. An adjacent live hint explains failures and corrections. Total/streak show an editable day target and optional start; period shows required start/end and a read-only computed practice-day target. Daily lists share these controls; amount and one-time list deadlines retain their existing form. Use the established field, hint, focus, and dialog styles without introducing another visual system.
+
+## Fourteen-day habit strip
+
+Habit and daily-list cards place a compact 2 × 7 chronological calendar strip immediately above the total-progress track, within its existing aligned card row. Use 18px squares with 5px gaps, the dream's goal color for successful checks, quiet small crosses for unscheduled days, dashed larger crosses for explicit failures, and an outline for today. Dates and status have accessible labels; a brief key explains rest crosses. Keep bars and footer actions aligned across mixed card types. Amount/quantity cards retain desktop projections and omit the strip; at <=700px hide their projection and restore the amount countdown when resizing from desktop.
