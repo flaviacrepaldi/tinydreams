@@ -1,4 +1,4 @@
-import {validDay,planOf,validatePlan,scheduled,tasksOn,progress,targetOf,complete,dailyTotal} from '../shared/planner.js';
+import {validDay,planOf,validatePlan,scheduled,tasksOn,progress,targetOf,complete,dailyTotal,needsIncompleteReview} from '../shared/planner.js';
 import {writerAlbum} from '../shared/writers.js';
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
 const saoPauloDay=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
@@ -66,6 +66,12 @@ export async function api(request,env){
  }
  if(request.method==='GET'&&!id)return json(await goals(env.DB,owner));
  const existing=id?await goals(env.DB,owner,id):null;if(id&&!existing)return json({error:'Este sonho não foi encontrado.'},404);
+ if(request.method==='POST'&&action==='incomplete'){
+  if(!needsIncompleteReview(existing,saoPauloDay()))return json({error:'Este sonho ainda não terminou ou já atingiu a meta.'},400);
+  const plan={...planOf(existing),incompleteAccepted:true};
+  await env.DB.prepare('UPDATE goals SET plan=? WHERE id=? AND owner=?').bind(JSON.stringify(plan),id,owner).run();
+  return json(await goals(env.DB,owner,id));
+ }
  if(request.method==='POST'&&action==='outcome'){
   const p=planOf(existing),day=body.day,status=body.status;
   if(p.kind!=='habit'||!validDay(day)||day>saoPauloDay()||!['success','failure',null].includes(status))return json({error:'Escolha um dia válido até hoje e seu resultado.'},400);
@@ -138,6 +144,12 @@ export async function api(request,env){
   if(existing?.entries.length&&planOf(existing).kind==='habit'&&(Boolean(planOf(existing).dailyTarget)!==Boolean(plan?.dailyTarget)||(planOf(existing).dailyTarget&&planOf(existing).unit!==plan.unit)))return json({error:'Crie outro hábito para mudar a unidade ou a forma de medir sem misturar registros.'},400);
   const groupId=body.groupId===undefined?(existing?.group_id??null):body.groupId;
   if(groupId!==null&&(typeof groupId!=='string'||!(await env.DB.prepare('SELECT id FROM dream_groups WHERE id=? AND owner=?').bind(groupId,owner).all()).results.length))return json({error:'Escolha um Big Dream válido.'},400);
+  if(plan){
+   plan={...plan};delete plan.incompleteAccepted;
+   const stillIncomplete=needsIncompleteReview({...existing,target:body.target,plan},saoPauloDay());
+   if(body.reopen===true&&stillIncomplete)return json({error:'Ajuste o prazo ou a meta para voltar a acompanhar este sonho.'},400);
+   if(existing?.plan?.incompleteAccepted&&stillIncomplete)plan.incompleteAccepted=true;
+  }
   const gid=id||crypto.randomUUID(),target=targetOf({target:body.target,plan});
   if(id)await env.DB.prepare('UPDATE goals SET title=?,reward=?,target=?,color=?,plan=?,group_id=?,redeemed=0 WHERE id=? AND owner=?').bind(body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,groupId,id,owner).run();
   else await env.DB.prepare('INSERT INTO goals (id,owner,title,reward,target,color,plan,group_id,created_at) VALUES (?,?,?,?,?,?,?,?,?)').bind(gid,owner,body.title.trim(),body.reward.trim(),target,body.color,plan?JSON.stringify(plan):null,groupId,new Date().toISOString()).run();

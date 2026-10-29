@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled} from '../shared/planner.js';
+import {planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete} from '../shared/planner.js';
 
 const source=await readFile(new URL('../ui/app.js',import.meta.url),'utf8');
 const renderSource=source.slice(source.indexOf('function homeStatus(g)'),source.indexOf('function fitDreamGalleries(){'));
@@ -9,10 +9,10 @@ const elements=Object.fromEntries(['#demoBanner','#goalsCount','#content'].map(i
 let day='2026-10-29';
 const goal={id:'aerobic',title:'Fazer aeróbico',target:30,days:['2026-10-28'],entries:[],plan:{...planOf({}),start:'2026-10-28'}};
 const state={goals:[goal],groups:[],view:'dreams',demo:false};
-const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,today:()=>day,
+const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,today:()=>day,
   $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelectorAll:()=>[]},
   esc:String,icon:()=>'',goalCard:g=>`<article data-goal="${g.id}"></article>`,
-  fitDreamGalleries(){},fitAmountTrends(){},requestAnimationFrame(){}});
+  fitDreamGalleries(){},fitAmountTrends(){},requestAnimationFrame(){},queueMicrotask(){},checkIncompleteNotice(){}});
 vm.runInContext(renderSource,context);
 const render=()=>vm.runInContext('render()',context);
 render();

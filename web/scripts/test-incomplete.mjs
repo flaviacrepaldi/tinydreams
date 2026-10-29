@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import {mkdtempSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {api} from '../worker/api.js';
+import {localDB} from './sqlite.mjs';
+import {planOf,needsIncompleteReview,isArchivedIncomplete} from '../shared/planner.js';
+const dir=mkdtempSync(join(tmpdir(),'tiny-incomplete-')),DB=localDB(join(dir,'test.sqlite'));
+async function call(path='',method='GET',body,owner='incomplete-test'){const r=await api(new Request('https://test/api/goals'+path,{method,headers:{'oai-authenticated-user-id':owner},...(body?{body:JSON.stringify(body)}:{})}),{DB});return {status:r.status,data:await r.json()}}
+const base={title:'Período de teste',reward:'Um livro',target:3,color:'peach',plan:{...planOf({}),completionMode:'period',start:'2020-01-01',end:'2020-01-03'}};
+try{
+ const created=await call('','POST',{...base,plan:{...base.plan,incompleteAccepted:true}});assert.equal(created.status,201);let g=created.data;
+ assert.equal(g.plan.incompleteAccepted,undefined,'Creating a dream never silently accepts incompletion');
+ assert.equal(needsIncompleteReview(g,'2020-01-03'),false,'The deadline day is inclusive');
+ assert.equal(needsIncompleteReview(g,'2020-01-04'),true);
+ assert.equal(isArchivedIncomplete(g),false,'Expired dreams await a decision');
+ g=(await call('/'+g.id+'/outcome','POST',{day:'2020-01-01',status:'success'})).data;
+ assert.equal((await call('/'+g.id+'/incomplete','POST',{},'other-owner')).status,404);
+ g=(await call('/'+g.id+'/incomplete','POST',{})).data;
+ assert.equal(isArchivedIncomplete(g),true);assert.equal(g.color,'peach');assert.deepEqual(g.days,['2020-01-01']);
+ assert.equal((await call('/'+g.id+'/incomplete','POST',{})).status,200,'Acceptance is idempotent');
+ assert.equal((await call()).data.find(item=>item.id===g.id).plan.incompleteAccepted,true,'Persists across reads');
+ let r=await call('/'+g.id,'PATCH',{...base,title:'Nome ajustado'});assert.equal(r.data.plan.incompleteAccepted,true,'Metadata edits preserve the archive');
+ assert.equal((await call('/'+g.id,'PATCH',{...base,reopen:true})).status,400,'Retry must adjust the deadline or completion conditions');
+ r=await call('/'+g.id,'PATCH',{...base,reopen:true,plan:{...base.plan,completionMode:'total',end:''}});
+ assert.equal(r.status,200);assert.equal(isArchivedIncomplete(r.data),false);assert.equal(needsIncompleteReview(r.data),false);assert.deepEqual(r.data.days,['2020-01-01']);
+ assert.equal((await call('/'+g.id+'/incomplete','POST',{})).status,400,'Undated habits never expire on failure');
+ const amount=(await call('','POST',{...base,target:100,plan:{...planOf({}),kind:'amount',unit:'R$',start:'2020-01-01',end:'2020-01-03'}})).data;
+ await call('/'+amount.id+'/entry','POST',{key:'deposit',day:'2020-01-01',value:20,done:true});
+ const archivedAmount=(await call('/'+amount.id+'/incomplete','POST',{})).data;
+ assert.equal(isArchivedIncomplete(archivedAmount),true);assert.equal(archivedAmount.entries[0].value,20);
+ const list=(await call('','POST',{...base,plan:{...planOf({}),kind:'list',start:'2020-01-01',end:'2020-01-03',items:[{id:'a',title:'Primeira'},{id:'b',title:'Segunda'}]}})).data;
+ await call('/'+list.id+'/entry','POST',{key:'a',day:'2020-01-01',done:true});
+ const archivedList=(await call('/'+list.id+'/incomplete','POST',{})).data;
+ assert.equal(isArchivedIncomplete(archivedList),true);assert.equal(archivedList.entries[0].key,'a');
+ const future=(await call('','POST',{...base,plan:{...base.plan,kind:'amount',completionMode:undefined,unit:'R$',end:'2099-01-01'}})).data;
+ assert.equal((await call('/'+future.id+'/incomplete','POST',{})).status,400,'Future deadlines remain active');
+ const done=(await call('','POST',{...base,target:1,plan:{...base.plan,completionMode:'period',end:'2020-01-01'}})).data;
+ await call('/'+done.id+'/outcome','POST',{day:'2020-01-01',status:'success'});
+ assert.equal((await call('/'+done.id+'/incomplete','POST',{})).status,400,'Completed dreams cannot be archived as incomplete');
+ console.log('PASS: inclusive deadlines, explicit persisted acceptance, idempotency, isolation, original amulet/history, retry validation and undated/future/completed exclusions.');
+}finally{rmSync(dir,{recursive:true,force:true})}

@@ -3,6 +3,8 @@ export const weekday = day => new Date(day+'T12:00:00Z').getUTCDay();
 export const planOf = g => g.plan || {kind:'habit',start:'',end:'',weekdays:[0,1,2,3,4,5,6],notes:'',unit:'',tasks:[],items:[]};
 export const completionMode = p => p.completionMode || (p.start&&p.end?'period':'total');
 export const practiceToday = () => new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+export const needsIncompleteReview = (g,asOf=practiceToday()) => !!planOf(g).end&&planOf(g).end<asOf&&!complete(g);
+export const isArchivedIncomplete = g => !!planOf(g).incompleteAccepted&&needsIncompleteReview(g);
 export function validatePlan(p){
  if(p?.emoji!=null&&!validEmoji(p.emoji))throw Error('Escolha um único emoji para o sonho.');
  if(!p || !['habit','list','amount'].includes(p.kind))throw Error('Escolha como acompanhar este sonho.');
