@@ -173,10 +173,20 @@ const prettyDay=d=>d?dateFrom(d).toLocaleDateString('pt-BR'):'';
 function deadline(g){const p=planOf(g);if(complete(g))return 'Sonho concluído';if(p.start&&p.start>today())return `Começa em ${prettyDay(p.start)}`;if(!p.end)return 'Sem prazo definido';const n=daysUntil(p.end,today());return n<0?`Prazo em ${prettyDay(p.end)} · encerrado`:n===1?'Prazo hoje':`Até ${prettyDay(p.end)}`}
 function cardCountdown(g){
  if(complete(g))return {value:'✓',label:'Você chegou. Celebre!'};
- const p=planOf(g);
- if(currencyOf(g))return {value:amountText(g,Math.max(0,targetOf(g)-progress(g))),label:'para realizar seu tiny dream'};
- if(p.kind==='habit'&&p.end){const remaining=daysUntil(p.end,today());if(remaining!==null)return {value:fmt(Math.max(0,remaining)),lead:remaining>0?(remaining===1?'Só falta':'Só faltam'):'',label:remaining<0?'Prazo encerrado':'para realizar seu tiny dream'}}
- return {value:fmt(Math.max(0,targetOf(g)-progress(g))),label:'para realizar seu tiny dream'};
+ const p=planOf(g),remaining=Math.max(0,Math.round((targetOf(g)-progress(g))*100)/100);
+ let count=remaining,measure,value;
+ if(p.kind==='habit'&&p.end){
+  const days=daysUntil(p.end,today());
+  if(days!==null){if(days<0)return {value:'0',label:'Prazo encerrado'};count=days;measure=days===1?'dia':'dias'}
+ }
+ if(!measure){
+  if(p.kind==='habit')measure=completionMode(p)==='streak'?(count===1?'dia consecutivo':'dias consecutivos'):(count===1?'conclusão':'conclusões');
+  else if(p.kind==='list')measure=count===1?'conclusão':'conclusões';
+  else if(['R$','BRL'].includes(currencyOf(g))||/^(real|reais)$/i.test(p.unit.trim()))measure=count===1?'real':'reais';
+  else if(currencyOf(g)){value=amountText(g,count);measure=''}
+  else measure=p.unit.trim()||(count===1?'unidade':'unidades');
+ }
+ return {value:value||fmt(count),lead:count===1?'Só falta':'Só faltam',label:`${measure?measure+' ':''}para realizar seu tydream`};
 }
 function unit(g){const p=planOf(g);return p.kind==='habit'?(completionMode(p)==='streak'?'dias consecutivos':'dias'):p.kind==='list'?'etapas':p.unit||'unidades'}
 function routineLabel(g){const p=planOf(g);return p.kind==='habit'?(p.weekdays.length===7?'Todos os dias':p.weekdays.map(d=>weekNames[d]).join(', ')):p.kind==='list'?'Livros, consultas e etapas':'Meta de valor'}
