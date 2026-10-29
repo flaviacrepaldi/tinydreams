@@ -285,7 +285,7 @@ html[data-edition] .dream-overview .goal .dream-progress{display:flex;flex-direc
 .streak-square.rest svg{width:11px;height:11px}
 .streak-key{display:block;font-size:10px;margin-top:6px}
 @media(max-width:700px){
- .amount-trend{display:none!important}
+ .amount-trend{height:160px;flex-shrink:0}
  html[data-edition] .dream-overview .goal .has-amount-trend .dream-summary-copy{align-self:center}
 }
 

@@ -32,11 +32,18 @@ try{
   assert.equal(await js("document.querySelector('.streak-square').getBoundingClientRect().width>25"),true,'Larger squares at '+width);
   assert.equal(await js("document.querySelector('.habit-streak').getBoundingClientRect().bottom<=document.querySelector('[data-goal=grid-test] .dream-date-slot').getBoundingClientRect().top"),true,'Grid above deadline');
   assert.equal(await js("document.querySelectorAll('.streak-square')[7].getBoundingClientRect().top>document.querySelectorAll('.streak-square')[0].getBoundingClientRect().top"),true);
-  assert.equal(await js("getComputedStyle(document.querySelector('.amount-trend')).display==='none'"),width<=700);
+  assert.equal(await js("getComputedStyle(document.querySelector('.amount-trend')).display==='none'"),false);
+  assert.equal(await js("document.querySelector('.amount-trend svg').getBoundingClientRect().height>=85"),true,'Readable plot at '+width);
   if(width<=700)assert.equal(await js("getComputedStyle(document.querySelector('[data-goal=amount-test] .countdown')).visibility"),'visible');
   if([390,1440].includes(width)){
    await js("document.querySelector('#content').scrollIntoView({block:'start'})");
    const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/tiny-streak-grid-${width}.png`,Buffer.from(png.data,'base64'));
+   if(width===390){
+    await js("const gallery=document.querySelector('.goal-grid'),amount=document.querySelector('[data-goal=amount-test]');gallery.scrollTo({left:amount.offsetLeft-gallery.firstElementChild.offsetLeft,behavior:'instant'})");
+    await new Promise(r=>setTimeout(r,250));
+    const amountMobile=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/tiny-amount-mobile.png',Buffer.from(amountMobile.data,'base64'));
+   }
+
   }
  }
  await cdp('Emulation.setDeviceMetricsOverride',{width:1440,height:1050,deviceScaleFactor:1,mobile:false});
@@ -48,5 +55,5 @@ try{
  const standalone=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/tiny-amount-standalone.png',Buffer.from(standalone.data,'base64'));
  await js("state.goals=[{...state.goals[0],id:'new-test',days:[],entries:[],failures:[],plan:{...planOf({}),completionMode:'total'}}];render()");
  assert.equal(await js("document.querySelectorAll('.streak-square.rest').length"),13,'No invented missing history before a habit begins');
- console.log('PASS: 14 squares in two rows, rest-day crosses, success/failure/missing states, blank history, responsive chart removal/restoration and countdown at 320/390/700/768/1440px. Demo only.');
+ console.log('PASS: 14 squares in two rows, rest-day crosses, success/failure/missing states, blank history, readable charts on mobile and desktop and countdown at 320/390/700/768/1440px. Demo only.');
 }finally{await cdp('Page.close');ws.close()}

@@ -223,7 +223,7 @@ function amountTrend(g){
 function fitAmountTrends(){
  document.querySelectorAll('.amount-trend').forEach(chart=>{
   const summary=chart.closest('.goal').querySelector('.dream-summary'),value=summary.querySelector('.countdown strong');
-  chart.hidden=window.matchMedia('(max-width:700px)').matches;
+  chart.hidden=false;
   chart.classList.add('expanded-trend');
   value.style.removeProperty('font-size');
   if(value.scrollWidth>value.clientWidth){const size=parseFloat(getComputedStyle(value).fontSize);value.style.fontSize=`${Math.max(18,size*value.clientWidth/value.scrollWidth)}px`}
