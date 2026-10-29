@@ -15,4 +15,4 @@ const hats={
  atelier:'<path d="M13 29Q15 10 35 11Q53 11 54 27L46 34 19 36Z"/><path class="hat-band" d="M17 31 48 27 48 34 18 39Z"/>'
 };
 export function brandHat(layout){const key=Object.hasOwn(hats,layout)?layout:'halloween';return `<g class="brand-hat" data-hat="${key}">${hats[key]}</g>`}
-export function brandIconSVG(){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#30263e"/><g transform="translate(20 10) scale(.84)" color="#f8f0e8">${brandMonogram}</g></svg>`}
+export function brandIconSVG(){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#30263e"/><g transform="translate(17 5) scale(.84)" color="#f8f0e8">${brandMonogram}</g></svg>`}
