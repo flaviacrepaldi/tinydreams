@@ -16,9 +16,16 @@ try{
  assert.equal(await js("document.querySelectorAll('.streak-square.rest svg').length>0"),true);
  assert.equal(await js("document.querySelector('.habit-streak').parentElement.className"),'dream-daily-slot');
 
+ await js("state.goals.push({...state.goals[0],id:'tall-test',title:'Uma lista diária com um título mais longo para conferir o espaço',reward:'Uma recompensa escolhida para celebrar',plan:{...planOf({}),completionMode:'total',dailyList:true,start:dayBefore(40),tasks:Array.from({length:8},(_,i)=>({id:'t'+i,title:'Item '+i,weekdays:[0,1,2,3,4,5,6]}))}});render()");
  for(const width of [320,390,700,768,1440]){
   await cdp('Emulation.setDeviceMetricsOverride',{width,height:1050,deviceScaleFactor:1,mobile:width<=700});await js('document.fonts.ready');await js('fitAmountTrends();fitDreamGalleries()');
   assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false,'Page overflow at '+width);
+  if(width<=560){
+   assert.equal(await js("(()=>{const slot=document.querySelector('[data-goal=grid-test] .dream-daily-slot').getBoundingClientRect(),grid=document.querySelector('[data-goal=grid-test] .habit-streak').getBoundingClientRect();return Math.abs((grid.top-slot.top)-(slot.bottom-grid.bottom))<20})()"),true,'Balanced space around grid at '+width);
+   assert.equal(await js("Math.abs(document.querySelector('[data-goal=grid-test]').getBoundingClientRect().height-document.querySelector('[data-goal=tall-test]').getBoundingClientRect().height)<2"),true,'Stable carousel card height');
+
+  }
+
   assert.equal(await js("[...document.querySelectorAll('.goal')].every(card=>card.querySelector('.dream-progress').getBoundingClientRect().bottom<=card.querySelector('.dream-card-footer').getBoundingClientRect().top+1)"),true,'Progress and actions must not overlap at '+width);
   assert.equal(await js("getComputedStyle(document.querySelector('.streak-grid')).gridTemplateColumns.split(' ').length"),7);
   assert.equal(await js("(()=>{const grid=document.querySelector('.habit-streak').getBoundingClientRect(),card=document.querySelector('[data-goal=grid-test]').getBoundingClientRect();return Math.abs((grid.left+grid.right)-(card.left+card.right))<2})()"),true,'Centered grid at '+width);
@@ -32,7 +39,14 @@ try{
    const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/tiny-streak-grid-${width}.png`,Buffer.from(png.data,'base64'));
   }
  }
- await js("state.goals=[{...state.goals[0],id:'new-test',days:[],failures:[],plan:{...planOf({}),completionMode:'total'}}];render()");
+ await cdp('Emulation.setDeviceMetricsOverride',{width:1440,height:1050,deviceScaleFactor:1,mobile:false});
+ await js("state.goals=state.goals.filter(g=>g.id==='amount-test');render();fitAmountTrends()");
+ assert.equal(await js("document.querySelector('.amount-trend').getBoundingClientRect().height>=150"),true,'Standalone amount chart has its own height');
+ assert.equal(await js("document.querySelector('.amount-trend svg').getBoundingClientRect().height>=85"),true,'Plot remains readable without a neighboring habit');
+ assert.equal(await js("document.querySelector('.amount-trend').getBoundingClientRect().top>=document.querySelector('.dream-summary').getBoundingClientRect().bottom"),true,'Plot stays below summary');
+ assert.equal(await js("document.querySelector('.amount-trend').getBoundingClientRect().bottom<document.querySelector('.dream-progress>.progress').getBoundingClientRect().top"),true,'Plot stays above progress');
+ const standalone=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/tiny-amount-standalone.png',Buffer.from(standalone.data,'base64'));
+ await js("state.goals=[{...state.goals[0],id:'new-test',days:[],entries:[],failures:[],plan:{...planOf({}),completionMode:'total'}}];render()");
  assert.equal(await js("document.querySelectorAll('.streak-square.rest').length"),13,'No invented missing history before a habit begins');
  console.log('PASS: 14 squares in two rows, rest-day crosses, success/failure/missing states, blank history, responsive chart removal/restoration and countdown at 320/390/700/768/1440px. Demo only.');
 }finally{await cdp('Page.close');ws.close()}
