@@ -42,6 +42,14 @@ try{
     await js("const gallery=document.querySelector('.goal-grid'),amount=document.querySelector('[data-goal=amount-test]');gallery.scrollTo({left:amount.offsetLeft-gallery.firstElementChild.offsetLeft,behavior:'instant'})");
     await new Promise(r=>setTimeout(r,250));
     const amountMobile=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/tiny-amount-mobile.png',Buffer.from(amountMobile.data,'base64'));
+    await js("gallery.scrollTo({left:gallery.scrollWidth-gallery.clientWidth,behavior:'instant'})");await new Promise(r=>setTimeout(r,300));
+    assert.equal(await js('gallery.scrollLeft>0'),true,'Last card stays available to read');
+    await js(`window.gallerySwipe=(dx,dy)=>{const start=new Touch({identifier:7,target:gallery,clientX:250,clientY:400}),end=new Touch({identifier:7,target:gallery,clientX:250+dx,clientY:400+dy});gallery.dispatchEvent(new TouchEvent('touchstart',{touches:[start],changedTouches:[start]}));gallery.dispatchEvent(new TouchEvent('touchend',{touches:[],changedTouches:[end]}))};gallerySwipe(-5,-100)`);
+    await new Promise(r=>setTimeout(r,300));assert.equal(await js('gallery.scrollLeft>0'),true,'Vertical scrolling does not wrap');
+    await js('gallerySwipe(-100,5)');await wait('gallery.scrollLeft<2');
+    await js("gallery.scrollTo({left:gallery.scrollWidth-gallery.clientWidth,behavior:'instant'})");await new Promise(r=>setTimeout(r,300));
+    await js("gallery.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}))");await wait('gallery.scrollLeft<2');
+
    }
 
   }

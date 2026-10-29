@@ -48,7 +48,9 @@ function fitDreamGalleries(){
  document.querySelectorAll('.dream-overview .goal-grid').forEach(grid=>{
   const cards=[...grid.querySelectorAll(':scope > .goal')];if(!cards.length)return;
   grid.style.removeProperty('height');
-  let touching=false,settleTimer;
+  let touching=false,settleTimer,gesture=null;
+  const atEnd=()=>grid.scrollWidth-grid.clientWidth-grid.scrollLeft<=4;
+  const wrap=()=>grid.scrollTo({left:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
   const settle=()=>{
    clearTimeout(settleTimer);if(touching||!grid.isConnected)return;
    if(mobile.matches){
@@ -61,8 +63,25 @@ function fitDreamGalleries(){
   const scheduleSettle=()=>{clearTimeout(settleTimer);settleTimer=setTimeout(settle,180)};
   grid.addEventListener('scroll',scheduleSettle,{passive:true});
   grid.addEventListener('scrollend',settle,{passive:true});
-  grid.addEventListener('touchstart',()=>{touching=true;clearTimeout(settleTimer)},{passive:true});
-  for(const event of ['touchend','touchcancel'])grid.addEventListener(event,()=>{touching=false;scheduleSettle()},{passive:true});
+  grid.addEventListener('touchstart',event=>{
+   touching=true;clearTimeout(settleTimer);
+   const touch=event.touches.length===1?event.touches[0]:null;
+   gesture=touch?{id:touch.identifier,x:touch.clientX,y:touch.clientY,atEnd:atEnd()}:null;
+  },{passive:true});
+  grid.addEventListener('touchend',event=>{
+   if(event.touches.length)return;
+   touching=false;
+   const touch=gesture&&[...event.changedTouches].find(t=>t.identifier===gesture.id);
+   if(mobile.matches&&cards.length>1&&gesture?.atEnd&&touch){
+    const dx=touch.clientX-gesture.x,dy=touch.clientY-gesture.y;
+    if(dx < -45&&Math.abs(dx)>Math.abs(dy)*1.3)wrap();
+   }
+   gesture=null;scheduleSettle();
+  },{passive:true});
+  grid.addEventListener('touchcancel',()=>{touching=false;gesture=null;scheduleSettle()},{passive:true});
+  grid.addEventListener('keydown',event=>{
+   if(event.target===grid&&mobile.matches&&cards.length>1&&event.key==='ArrowRight'&&atEnd()){event.preventDefault();wrap()}
+  });
  });
 }
 function openGroup(id){
