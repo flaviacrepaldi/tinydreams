@@ -276,7 +276,7 @@ body[data-view="calendar"] .calendar-compact{max-width:692px;padding:30px 34px;b
 
 /* Calendar days retain rest markers without changing the schedule-aware streak. */
 html[data-edition] .dream-overview .goal .dream-progress{display:flex;flex-direction:column;justify-content:flex-end}
-.habit-streak{width:100%;max-width:280px;margin:12px auto 16px;min-width:0;color:var(--muted);text-align:center}
+.habit-streak{width:100%;max-width:280px;margin:12px auto 6px;min-width:0;color:var(--muted);text-align:center}
 .streak-caption{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:2px 10px;margin-bottom:10px;font-size:11px}
 .streak-caption small{font-size:10px}
 .streak-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;list-style:none;margin:0;padding:0}
@@ -293,3 +293,5 @@ html[data-edition] .dream-overview .goal .dream-progress{display:flex;flex-direc
  .trend-replaces-countdown .countdown{visibility:visible}
  html[data-edition] .dream-overview .goal .has-amount-trend .dream-summary-copy{align-self:center}
 }
+
+.goal:has(.habit-streak) .dream-date-slot .card-progress-deadline{margin-bottom:6px}
