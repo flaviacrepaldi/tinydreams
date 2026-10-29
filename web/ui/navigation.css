@@ -72,7 +72,7 @@ html[data-edition] .welcome .intro{margin-bottom:0}
 .topbar #settingsButton svg{width:24px;height:24px}
 body[data-view="today"] .welcome,body[data-view="calendar"] .welcome,body[data-view="shelf"] .welcome{display:none}
 body:not([data-view="dreams"]) .workspace{margin-top:32px}
-body:not([data-view="dreams"]) .sky,body:not([data-view="dreams"]) .night-magic{display:none}
+body[data-view="today"] .sky,body[data-view="shelf"] .sky,body[data-view="today"] .night-magic,body[data-view="shelf"] .night-magic{display:none}
 body:not([data-view="dreams"]) .topbar .brand,body:not([data-view="dreams"]) #settingsButton{color:var(--text)}
 .overview-add{display:none}
 .today-heading h2,.shelf-heading h2{margin-bottom:8px}
@@ -260,3 +260,16 @@ html[data-edition] .dream-overview .goal .has-amount-trend .countdown strong{dis
 .calendar-pending[open]>summary{margin-bottom:8px}
 @media(min-width:701px){.calendar-compact .calendar-grid .calendar-day{height:56px;min-height:56px}}
 @media(max-width:360px){.calendar-compact .calendar-grid{gap:3px}.calendar-compact .calendar-grid .calendar-day{height:44px;min-height:44px}.calendar-achievements{gap:18px 8px}}
+
+/* The calendar belongs to the same illustrated room as the home. */
+body[data-view="calendar"] .workspace{margin-top:96px}
+body[data-view="calendar"] .workspace-top{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:0 20px;margin-bottom:24px}
+body[data-view="calendar"] .calendar-compact{max-width:692px;padding:30px 34px;background:var(--bg);border:1px solid var(--line);border-radius:16px}
+@media(max-width:700px){
+ body[data-view="calendar"] .workspace{margin-top:64px}
+ body[data-view="calendar"] .workspace-top{border:0;background:none;padding:0;margin:0;min-height:0}
+ body[data-view="calendar"] .calendar-compact{padding:22px 14px;border-radius:14px}
+ body[data-view="calendar"] main{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+ body[data-view="calendar"] .calendar-heading{gap:6px}
+ body[data-view="calendar"] .calendar-heading h2{font-size:23px}
+}

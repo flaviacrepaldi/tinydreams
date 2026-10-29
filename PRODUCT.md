@@ -160,3 +160,6 @@ The shared create action is named “novo tiny dream”, matching “novo big dr
 
 ## Compact monthly calendar
 The user chose a compact monthly calendar with only day numbers. Past/current days use theme-accent intensity for the proportion of completed dreams to expected/recorded dreams; future days remain neutral. Selecting any date shows all earned stickers and their titles inline below the month, without truncation. Pending/planned/failed/partial records remain accessible in a disclosure below, preserving date editing. Default to today in the current month and the first day in other months. No saved data changes.
+
+## Calendar atmosphere follows home
+The user wants the calendar to feel like the home, rather than a plain purple screen. Show the same active edition scenery and ambient effects behind the compact calendar, with an opaque reading surface for the month and selected day's stickers. This supersedes the earlier quiet-base-only calendar direction. Other destinations remain unchanged.
