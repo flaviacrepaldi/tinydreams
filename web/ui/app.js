@@ -69,8 +69,17 @@ function fitDreamGalleries(){
   const cards=[...grid.querySelectorAll(':scope > .goal')];if(!cards.length)return;
   grid.style.removeProperty('height');
   let touching=false,settleTimer,gesture=null;
-  const atEnd=()=>grid.scrollWidth-grid.clientWidth-grid.scrollLeft<=4;
-  const wrap=()=>grid.scrollTo({left:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  const atEnd=()=>grid.scrollWidth-grid.clientWidth-grid.scrollLeft<=4||cards.at(-1).getBoundingClientRect().right<=grid.getBoundingClientRect().right+4;
+  const wrap=()=>{
+   clearTimeout(settleTimer);
+   // Wait until native touch scrolling releases the element (notably on iOS).
+   requestAnimationFrame(()=>{
+    if(!grid.isConnected)return;
+    grid.style.scrollSnapType='none';
+    grid.scrollTo({left:0,behavior:'instant'});
+    requestAnimationFrame(()=>{if(!grid.isConnected)return;grid.scrollTo({left:0,behavior:'instant'});grid.style.removeProperty('scroll-snap-type')});
+   });
+  };
   const nextPending=()=>!!grid.dataset.returnToPending&&cards.some(card=>card.dataset.goal===grid.dataset.returnToPending&&Math.abs(card.getBoundingClientRect().left-grid.getBoundingClientRect().left)<30)&&!!grid.querySelector('[data-today-status="0"]');
   const settle=()=>{
    clearTimeout(settleTimer);if(touching||!grid.isConnected)return;
@@ -89,13 +98,22 @@ function fitDreamGalleries(){
    const touch=event.touches.length===1?event.touches[0]:null;
    gesture=touch?{id:touch.identifier,x:touch.clientX,y:touch.clientY,atEnd:atEnd(),nextPending:nextPending()}:null;
   },{passive:true});
+  grid.addEventListener('touchmove',event=>{
+   if(!mobile.matches||cards.length<2||!gesture||event.touches.length!==1||!(gesture.atEnd||gesture.nextPending))return;
+   const touch=event.touches[0],dx=touch.clientX-gesture.x,dy=touch.clientY-gesture.y;
+   // Only claim an outward horizontal gesture; vertical page scrolling stays native.
+   if(dx < -8&&Math.abs(dx)>Math.abs(dy)*1.3){
+    if(event.cancelable)event.preventDefault();
+    gesture.forward=dx < -35;
+   }else gesture.forward=false;
+  },{passive:false});
   grid.addEventListener('touchend',event=>{
    if(event.touches.length)return;
    touching=false;
    const touch=gesture&&[...event.changedTouches].find(t=>t.identifier===gesture.id);
    if(mobile.matches&&cards.length>1&&(gesture?.atEnd||gesture?.nextPending)&&touch){
     const dx=touch.clientX-gesture.x,dy=touch.clientY-gesture.y;
-    if(dx < -45&&Math.abs(dx)>Math.abs(dy)*1.3){delete grid.dataset.returnToPending;wrap()}
+    if((gesture.forward||dx < -35)&&Math.abs(dx)>Math.abs(dy)*1.3){delete grid.dataset.returnToPending;wrap()}
    }
    gesture=null;scheduleSettle();
   },{passive:true});
