@@ -5,15 +5,50 @@
 .garden-life.is-ready{visibility:visible}
 .garden-stage{position:absolute;left:0;top:0;width:1536px;height:1024px;transform-origin:0 0}
 .garden-plate,.garden-leaves{position:absolute;inset:0;width:100%;height:100%;max-width:none}
-.garden-leaves{transform-origin:100% 0;animation:garden-breeze 11s ease-in-out infinite;animation-play-state:paused}
+.garden-leaves{transform-origin:100% 0;animation:garden-breeze 8.5s ease-in-out infinite;animation-play-state:paused}
 .garden-shade{position:absolute;inset:0}
-.garden-lamplight{position:absolute;transform:translate(-50%,-50%);background:radial-gradient(ellipse,#ffd27a42 0%,#ffa93720 38%,#ffa93700 72%);opacity:.65;animation:garden-lamplight var(--lamp-duration) ease-in-out var(--lamp-delay) infinite;animation-play-state:paused}
-.garden-lamplight i{position:absolute;left:48%;top:58%;width:5px;height:13px;border-radius:65% 35% 55% 45%;background:radial-gradient(ellipse at 50% 70%,#fff5ccba,#ffd07875 40%,#ffac3200 75%);transform-origin:50% 100%;animation:garden-flame 1.9s ease-in-out var(--lamp-delay) infinite;animation-play-state:paused}
+.garden-lamplight{position:absolute;transform:translate(-50%,-50%);background:radial-gradient(ellipse,#ffd27a80 0%,#ffa93745 38%,#ffa93700 72%);opacity:.65;animation:garden-lamplight var(--lamp-duration) ease-in-out var(--lamp-delay) infinite;animation-play-state:paused}
+.garden-lamplight i{position:absolute;left:48%;top:58%;width:8px;height:22px;border-radius:65% 35% 55% 45%;background:radial-gradient(ellipse at 50% 70%,#fff5ccee,#ffd078b0 40%,#ffac3200 75%);transform-origin:50% 100%;animation:garden-flame 1.9s ease-in-out var(--lamp-delay) infinite;animation-play-state:paused}
 html[data-scene-motion=active] .garden-leaves,html[data-scene-motion=active] .garden-lamplight,html[data-scene-motion=active] .garden-lamplight i{animation-play-state:running}
-@keyframes garden-breeze{0%,100%{transform:rotate(-.18deg)}35%{transform:rotate(.32deg) translate(-1px,1px)}70%{transform:rotate(-.08deg) translate(0,2px)}}
-@keyframes garden-lamplight{0%,100%{opacity:.45}23%{opacity:.7}42%{opacity:.52}68%{opacity:.85}83%{opacity:.62}}
-@keyframes garden-flame{0%,100%{transform:rotate(-5deg) scale(.92,1)}37%{transform:rotate(6deg) scale(1.06,.87)}73%{transform:rotate(-2deg) scale(.9,1.12)}}
+@keyframes garden-breeze{0%,100%{transform:rotate(-.65deg)}35%{transform:rotate(1.05deg) translate(-3px,5px)}70%{transform:rotate(-.3deg) translate(1px,3px)}}
+@keyframes garden-lamplight{0%,100%{opacity:.35}23%{opacity:.95}42%{opacity:.48}68%{opacity:1}83%{opacity:.62}}
+@keyframes garden-flame{0%,100%{transform:rotate(-11deg) scale(.9,1.1)}37%{transform:rotate(13deg) scale(1.15,.78)}73%{transform:rotate(-5deg) scale(.8,1.28)}}
 @media(prefers-reduced-motion:reduce){.garden-leaves,.garden-lamplight,.garden-lamplight i{animation:none!important}}
+/* Ambient details stay registered to the painted room, including its mobile crop. */
+.edition-life{position:absolute;inset:0;overflow:hidden;pointer-events:none;mask-image:linear-gradient(#000 28%,#000b 57%,transparent 95%)}
+.edition-life-stage{position:absolute;top:0;left:50%;width:max(100%,calc(680px * var(--scene-ratio)));aspect-ratio:3/2;transform:translateX(-50%)}
+.scene-detail{position:absolute;display:block;animation:scene-light var(--scene-duration) ease-in-out var(--scene-delay) infinite;animation-play-state:paused}
+.scene-light,.scene-flame,.scene-hearth{background:radial-gradient(ellipse,#ffe0a36b,#ffc66b35 35%,#ffb34d00 72%)}
+.scene-flame::after{content:'';position:absolute;left:45%;top:42%;width:10%;height:30%;border-radius:70% 30% 50% 50%;background:radial-gradient(ellipse at 50% 70%,#fff4d4a6,#ffd27b65 37%,#ffc46600 75%);transform-origin:50% 100%;animation:garden-flame 2.1s ease-in-out var(--scene-delay) infinite;animation-play-state:paused}
+.scene-hearth{animation-name:scene-firelight}
+.scene-pearl{background:radial-gradient(ellipse,#fff3cf35,#c3f4e91c 40%,#c3f4e900 73%);animation-name:scene-pearl}
+.scene-star{background:radial-gradient(ellipse,#fff5d88c,#ffe9ad24 23%,#ffe9ad00 69%);animation-name:scene-pearl}
+.scene-steam{animation:scene-steam 8s ease-in-out var(--scene-delay) infinite;animation-play-state:paused}
+.scene-steam svg{display:block;width:100%;height:100%;overflow:visible;fill:none;stroke:#f9eed5;stroke-width:2.2;stroke-linecap:round;filter:blur(1.2px);opacity:.55}
+.scene-steam path:last-child{opacity:.45}
+.scene-water{overflow:hidden;clip-path:ellipse(49% 48%);animation-name:scene-water}
+.scene-water::before,.scene-reflection::before{content:'';position:absolute;inset:-15%;background:radial-gradient(ellipse at 35% 32%,#b3f8ef38,transparent 40%),radial-gradient(ellipse at 72% 69%,#d5fff82b,transparent 39%);animation:scene-current 13s ease-in-out var(--scene-delay) infinite;animation-play-state:paused}
+.scene-reflection{overflow:hidden;animation-name:scene-water}
+.scene-reflection::before{background:radial-gradient(ellipse,#ffda8e25,transparent 65%);transform:scaleY(.3)}
+.scene-rain,.scene-pollen{overflow:hidden;animation:none;mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent)}
+.scene-rain i,.scene-pollen i{position:absolute;display:block;animation:scene-raindrop var(--particle-duration) linear var(--particle-delay) infinite;animation-play-state:paused}
+.scene-rain i{width:1px;height:6%;background:linear-gradient(transparent,#d6e5ef70,transparent)}
+.scene-pollen i{width:2px;height:2px;border-radius:50%;background:#fff3cb;animation-name:scene-pollen}
+.scene-sun{background:radial-gradient(ellipse,#ffe5a936,transparent 71%);animation:scene-daylight 17s ease-in-out var(--scene-delay) infinite;animation-play-state:paused}
+.scene-mist{background:radial-gradient(ellipse,#edf5ef1f,transparent 70%);animation:scene-mist 24s ease-in-out var(--scene-delay) infinite;animation-play-state:paused}
+html[data-scene-motion=active] .scene-detail,html[data-scene-motion=active] .scene-detail::before,html[data-scene-motion=active] .scene-detail::after,html[data-scene-motion=active] .scene-detail i{animation-play-state:running}
+@keyframes scene-light{0%,100%{opacity:.45}31%{opacity:.8}56%{opacity:.54}79%{opacity:.93}}
+@keyframes scene-firelight{0%,100%{opacity:.5}19%{opacity:.95}41%{opacity:.58}64%{opacity:.88}83%{opacity:.65}}
+@keyframes scene-pearl{0%,100%{opacity:.25}50%{opacity:.85}}
+@keyframes scene-steam{0%{opacity:0;transform:translate(0,18%) scale(.9)}25%{opacity:.65}65%{opacity:.4}100%{opacity:0;transform:translate(12%,-23%) scale(1.07)}}
+@keyframes scene-water{0%,100%{opacity:.4}50%{opacity:.9}}
+@keyframes scene-current{0%,100%{transform:translate(-5%,-3%) scale(.95)}50%{transform:translate(7%,5%) scale(1.1)}}
+@keyframes scene-raindrop{from{opacity:0;transform:translate(0,-30px)}25%,65%{opacity:.65}to{opacity:0;transform:translate(-3px,55px)}}
+@keyframes scene-pollen{0%{opacity:0;transform:translate(0,12px)}35%,70%{opacity:.5}100%{opacity:0;transform:translate(16px,-25px)}}
+@keyframes scene-daylight{0%,100%{opacity:.3;transform:translateX(-2%)}50%{opacity:.9;transform:translateX(2%)}}
+@keyframes scene-mist{0%,100%{opacity:.35;transform:translateX(-4%)}50%{opacity:.8;transform:translateX(5%)}}
+@media(max-width:560px){.edition-life-stage{left:64%;width:max(100%,calc(600px * var(--scene-ratio)));transform:translateX(-64%)}}
+@media(prefers-reduced-motion:reduce){.edition-life{display:none}}
 .talisman{position:absolute;right:13px;top:56px;--art-height:175px;width:calc(var(--art-height)*.455);height:var(--art-height);background:url('/talismans.png') left center/auto 100% no-repeat;pointer-events:none;filter:grayscale(calc(1 - var(--charge))) brightness(calc(.72 + var(--charge)*.28));transition:filter 1s ease-out}.peach .talisman{background-position:center center}.sage .talisman{background-position:right center}.goal h2{max-width:calc(100% - 83px);min-height:58px;position:relative}.goal-meta{max-width:calc(100% - 80px);flex-wrap:wrap;gap:5px}.countdown{position:relative;margin-top:18px;max-width:calc(100% - 85px);flex-wrap:wrap;column-gap:7px;row-gap:3px;min-height:70px}.countdown span{max-width:105px;font-size:11px}.progress{position:relative;overflow:visible;margin-top:10px}.progress>span{position:relative;box-shadow:0 3px 9px #18101c60}.progress>span::after{content:'';position:absolute;right:-2px;top:-2px;width:9px;height:9px;background:var(--goal);border:2px solid #fff3df;border-radius:50%}.empty-talisman{width:66px;height:145px;background:url('/talismans.png') right center/auto 100% no-repeat;margin:0 auto 10px}.goal.celebrate .talisman{animation:enchant 1.2s ease-out}.calendar-day.has-check{background-color:#b49ac51b!important}.goal-top .goal-symbol{width:22px;height:22px}.celebrate .reward{animation:bloom 1.3s ease-out}@keyframes enchant{0%{filter:brightness(1.8) saturate(.4)}100%{filter:brightness(1)}}@media(max-width:560px){.talisman{--art-height:190px;right:12px;top:46px}.goal h2{max-width:calc(100% - 100px)}.goal-meta{max-width:calc(100% - 100px)}.countdown{max-width:calc(100% - 110px);min-height:74px}.countdown span{max-width:100px}.goal .progress{margin-top:15px}}
 
 .talisman,.empty-talisman{background-size:auto 100%}.form-hint,.calendar-legend{font-size:12px}.form-row{grid-template-columns:.9fr 1.1fr}.edition span{font-size:11px}.footer-season{font-size:11px}dialog{border:0}.workspace-top{padding-bottom:2px}

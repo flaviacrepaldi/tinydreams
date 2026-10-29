@@ -1,5 +1,5 @@
 'use strict';
-// October's small enchantments. No data requests, sound, or layout measurements per frame.
+// Seasonal scenery. No data requests, sound, or layout measurements per frame.
 (()=>{
   const root=document.documentElement;
   const canvas=document.querySelector('#nightMagic');
@@ -9,6 +9,90 @@
   let atmosphere=document.documentElement.dataset.atmosphere||'stars';
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const sky=document.querySelector('.sky');
+  // Authored points in each illustration, rather than screen-space decorations.
+  // x/y are centers; dimensions refer to the original 1536 × 1024 asset sheet.
+  const sceneDetails={
+    '2026-11':[
+      ['light',732,124,96,106],['light',996,195,75,86],['light',1332,51,100,100],
+      ['pearl',102,299,97,85],['pearl',959,376,66,54],
+      ['water',1091,218,183,255],['water',1427,202,170,260],
+    ],
+    '2026-12':[
+      ['flame',167,31,30,50],['flame',1007,268,32,56],['flame',1357,330,24,44],
+      ['light',1319,454,100,90],['light',641,246,60,74],['light',739,350,65,57],
+      ['steam',1104,377,44,66],['steam',77,438,31,52],
+    ],
+    '2027-01':[
+      ['flame',94,289,28,52],['flame',357,184,24,43],['flame',682,251,21,40],
+      ['light',1282,383,75,96],['star',1226,71,22,22],['star',1086,158,14,14],['star',1005,105,10,10],
+    ],
+    '2027-02':[
+      ['flame',70,333,28,48],['flame',757,244,24,44],['flame',801,217,25,45],['flame',845,277,23,42],
+      ['light',1241,172,68,95],['star',837,78,38,38],['steam',1063,404,32,59],
+    ],
+    '2027-03':[
+      ['hearth',30,422,100,126],['flame',91,156,25,42],['flame',202,147,21,38],
+      ['flame',532,341,23,41],['light',1346,333,121,42],
+      ['rain',1208,121,276,241],['rain',1393,96,114,192],
+    ],
+    '2027-04':[
+      ['flame',25,376,22,43],['light',550,432,62,82],
+      ['steam',1034,405,34,59],['steam',1402,456,39,69],
+      ['sun',1187,248,267,280],
+    ],
+    '2027-05':[
+      ['flame',444,121,23,42],['flame',1093,278,24,46],['light',856,218,136,91],
+      ['steam',118,412,35,60],['sun',1283,205,240,215],
+    ],
+    '2027-06':[
+      ['light',168,181,62,91],['light',810,193,46,61],['light',627,378,35,55],
+      ['light',1223,160,39,48],['light',1344,76,40,46],['light',1121,269,58,48],
+      ['reflection',452,330,267,56],
+    ],
+    '2027-07':[
+      ['light',1012,228,101,45],['light',1254,83,45,35],['light',1290,128,33,29],
+      ['steam',1081,326,30,51],['mist',555,285,450,85],['mist',285,365,430,105],
+    ],
+    '2027-08':[
+      ['light',916,283,58,49],['light',1035,253,38,38],['light',866,156,35,37],
+      ['flame',92,340,20,35],['sun',230,251,228,258],
+    ],
+    '2027-09':[
+      ['sun',963,199,225,231],['sun',1170,476,337,107],
+      ['pollen',992,210,188,220],['pollen',1332,282,137,147],
+    ],
+  };
+  let editionScene=null,sceneInView=true;
+  function prepareEditionScene(){
+    editionScene?.remove();editionScene=null;
+    const details=sceneDetails[root.dataset.edition];
+    if(!details)return;
+    editionScene=document.createElement('div');editionScene.className='edition-life';
+    const stage=document.createElement('div');stage.className='edition-life-stage';
+    for(const [index,[kind,x,y,w,h]]of details.entries()){
+      const detail=document.createElement('span');detail.className=`scene-detail scene-${kind}`;
+      detail.style.cssText=`left:${(x-w/2)/1536*100}%;top:${(y-h/2)/1024*100}%;width:${w/1536*100}%;height:${h/1024*100}%;--scene-delay:${-index*1.37}s;--scene-duration:${4.1+index%4*.73}s`;
+      if(kind==='steam'){
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('viewBox','0 0 40 70');
+        for(const offset of [0,9]){
+          const path=document.createElementNS(svg.namespaceURI,'path');
+          path.setAttribute('d',`M${16+offset} 67 C${3+offset} 50 ${34+offset} 39 ${19+offset} 22 S${13+offset} 10 ${20+offset} 2`);
+          svg.append(path);
+        }
+        detail.append(svg);
+      }
+      if(kind==='rain'||kind==='pollen'){
+        for(let n=0;n<(kind==='rain'?17:6);n++){
+          const particle=document.createElement('i');
+          particle.style.cssText=`left:${(n*37+13)%97}%;top:${(n*23+7)%91}%;--particle-delay:${-n*.43}s;--particle-duration:${kind==='rain'?1.8+(n%4)*.3:8+(n%3)*2}s`;
+          detail.append(particle);
+        }
+      }
+      stage.append(detail);
+    }
+    editionScene.append(stage);sky.append(editionScene);
+  }
   let garden=null;
   // Coordinates are authored against garden.png's 1536 × 1024 canvas.
   // Scale the complete stage with the CSS background, including its mobile crop.
@@ -101,7 +185,7 @@
   });
   function update(){
     root.dataset.motion=active()?'active':'paused';
-    root.dataset.sceneMotion=active()&&inView?'active':'paused';
+    root.dataset.sceneMotion=active()&&sceneInView?'active':'paused';
     toggle.checked=enabled&&!reduced.matches;
     toggle.disabled=reduced.matches;
     hint.textContent=reduced.matches?'Os movimentos estão pausados pela preferência de reduzir movimento do seu dispositivo.':'Você pode pausar os movimentos quando quiser.';
@@ -151,15 +235,17 @@
       context.fillStyle=`rgba(255,250,231,${alpha})`;context.beginPath();context.arc(x,y,1.4,0,Math.PI*2);context.fill();
     }
   }
-  document.addEventListener('dreameditionchange',()=>{atmosphere=root.dataset.atmosphere||'stars';shootingStar=null;prepareGarden();update();});
+  document.addEventListener('dreameditionchange',()=>{atmosphere=root.dataset.atmosphere||'stars';shootingStar=null;prepareGarden();prepareEditionScene();update();});
   toggle.addEventListener('change',()=>{enabled=toggle.checked;try{localStorage.setItem('tiny-dreams-motion',enabled?'on':'off');}catch{}update();});
   reduced.addEventListener('change',update);
   document.addEventListener('visibilitychange',update);
   const dialogObserver=new MutationObserver(update);
   document.querySelectorAll('dialog').forEach(dialog=>dialogObserver.observe(dialog,{attributes:true,attributeFilter:['open']}));
   new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;update();}).observe(canvas);
+  new IntersectionObserver(entries=>{sceneInView=entries[0].isIntersecting;update();}).observe(sky);
   window.addEventListener('resize',resize,{passive:true});
   new ResizeObserver(placeGarden).observe(sky);
   prepareGarden();
+  prepareEditionScene();
   resize();update();
 })();

@@ -210,3 +210,15 @@ existing shooting stars on mobile. Separate background and transparent foliage
 assets retain the original scene as fallback. Scale effects with the illustration's
 actual responsive crop; preserve all existing motion pause/reduced-motion rules.
 This scenery request does not restore animation to card amulets or the ghost.
+
+## Motion across every prepared room
+
+The user requested animated scenic details in all twelve editions and reported
+that the initial Halloween motion was too subtle to see. Use visibly perceptible
+but gentle motion: October's top foliage now swings over an 8.5-second cycle with
+stronger lantern light/flame variation. Every other room has individually placed
+ambient details selected from its existing artwork: lights/flames, cup steam,
+water reflections, window rain, daylight, mist or pollen. Do not reveal future
+editions or preload their artwork. Effects must stay attached to the image's
+responsive crop and pause manually, offscreen, in hidden tabs, in dialogs and
+under reduced motion. Amulets remain stationary.

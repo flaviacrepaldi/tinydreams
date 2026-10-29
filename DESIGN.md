@@ -489,3 +489,19 @@ The eleven-second foliage cycle is subtle; light cycles have independent phases.
 Pause with manual/reduced motion, dialogs, hidden pages and offscreen scenery.
 Keep the original image as the loading/error fallback and load only October's
 layers during that edition. Card amulets, ghost and later editions are unchanged.
+
+## Perceptible scenic motion in all editions
+
+October's foliage breeze is now 8.5 seconds, from −0.65° to +1.05°, with small
+translations and clearer lantern flame/light variation. This supersedes the
+original eleven-second, nearly imperceptible cycle. Preserve the shooting stars.
+
+The eleven other rooms use source-coordinate effect maps in `ui/magic.js`.
+Native layers add localized candle/lantern light, rising cup steam, window water
+light/rain, distant reflection, passing mist, daylight or pollen according to
+each illustration. Avoid moving books, furniture or card amulets. Match the
+existing illustration width of max(viewport, scene height × scene ratio), its
+centered desktop positioning and 64% mobile crop. All effects share manual,
+dialog, document-visibility, offscreen and reduced-motion controls. Only the
+active edition mounts its layer; no new raster assets or future-image requests
+are needed for these ambient overlays.
