@@ -1,4 +1,4 @@
-import {planOf, scheduled, complete, targetOf} from './planner.js';
+import {planOf, scheduled, complete, targetOf, habitCompletionDay} from './planner.js';
 const calendarDateFormatter = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'});
 
 // Count dreams, not individual routine tasks. Unscheduled completions also count.
@@ -16,7 +16,7 @@ export function calendarState(goal, day, asOf) {
   if (plan.kind === 'habit') {
     done = goal.days.includes(day);
     const start = plan.start || (goal.created_at ? calendarDateFormatter.format(new Date(goal.created_at)) : asOf);
-    const finished = complete(goal) && !plan.end ? [...goal.days].sort()[targetOf(goal)-1] : '';
+    const finished = complete(goal) && !plan.end ? habitCompletionDay(goal) : '';
     planned = day >= start && scheduled(goal, day) && (!finished || day <= finished);
   } else if (plan.kind === 'list') {
     planned = plan.items.some(item => item.date === day);

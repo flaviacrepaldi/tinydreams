@@ -445,3 +445,7 @@ This supersedes wrapping stickers inside day cells. The month uses equal 48px da
 
 ## Calendar in the illustrated room
 The calendar now shares the home's active seasonal scene and ambient layer. Keep the introductory home copy hidden; expose the illustration with 96px of space below the header (64px mobile). The compact month and daily collection sit together on an opaque theme-background sheet with a thin boundary and 16px corners, protecting date colors and text contrast. Desktop navigation has an opaque theme surface; mobile retains the fixed bottom navigation. Reuse only the active edition's existing art and motion preferences.
+
+## Habit completion choice
+
+The existing goal wizard's meta step includes one labeled native select for accumulated days, consecutive scheduled days, or a defined period. An adjacent live hint explains failures and corrections. Total/streak show an editable day target and optional start; period shows required start/end and a read-only computed practice-day target. Daily lists share these controls; amount and one-time list deadlines retain their existing form. Use the established field, hint, focus, and dialog styles without introducing another visual system.

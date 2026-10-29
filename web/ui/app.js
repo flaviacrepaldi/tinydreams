@@ -178,7 +178,7 @@ function cardCountdown(g){
  if(p.kind==='habit'&&p.end){const remaining=daysUntil(p.end,today());if(remaining!==null)return {value:fmt(Math.max(0,remaining)),lead:remaining>0?(remaining===1?'Só falta':'Só faltam'):'',label:remaining<0?'Prazo encerrado':'para realizar seu tiny dream'}}
  return {value:fmt(Math.max(0,targetOf(g)-progress(g))),label:'para realizar seu tiny dream'};
 }
-function unit(g){const p=planOf(g);return p.kind==='habit'?'dias':p.kind==='list'?'etapas':p.unit||'unidades'}
+function unit(g){const p=planOf(g);return p.kind==='habit'?(completionMode(p)==='streak'?'dias consecutivos':'dias'):p.kind==='list'?'etapas':p.unit||'unidades'}
 function routineLabel(g){const p=planOf(g);return p.kind==='habit'?(p.weekdays.length===7?'Todos os dias':p.weekdays.map(d=>weekNames[d]).join(', ')):p.kind==='list'?'Livros, consultas e etapas':'Meta de valor'}
 function frontDailyActions(g,iconOnly=false){
  if(planOf(g).kind!=='habit')return '';
@@ -256,13 +256,23 @@ function addItemRow(i={id:crypto.randomUUID(),title:'',date:''}){const el=docume
 function isDailyList(){return $('#goalKind').value==='daily-list'}
 function formKind(){return isDailyList()?'habit':$('#goalKind').value}
 function syncDuration(){
- const target=$('#goalTarget'),hint=$('#durationHint');target.setCustomValidity('');target.readOnly=false;hint.hidden=formKind()!=='habit';$('#durationInfo').hidden=hint.hidden;if(hint.hidden){$('#durationInfo').open=false;return}
- const start=$('#goalStart').value,end=$('#goalEnd').value;$('#targetLabel').textContent=start&&end?'Dias de prática no período':'Quantos dias de prática?';const weekdays=[...$('#goalWeekdays').querySelectorAll('input:checked')].map(input=>Number(input.value));
- if(!start||!end){hint.textContent='Com início e término, calculo os dias da sua rotina. Sem período completo, defina a meta em dias.';return}
- const count=practiceDays(start,end,weekdays);
+ const target=$('#goalTarget'),hint=$('#durationHint'),habit=formKind()==='habit',mode=$('#goalCompletionMode').value,period=habit&&mode==='period';
+ target.setCustomValidity('');target.readOnly=false;hint.hidden=!habit;$('#durationInfo').hidden=!habit;
+ $('#completionModeField').hidden=!habit;$('#goalCompletionMode').disabled=!habit;
+ $('#goalEndField').hidden=habit&&!period;$('#goalEnd').disabled=habit&&!period;
+ $('#goalStart').required=period;$('#goalEnd').required=period;
+ $('label[for="goalStart"]').textContent=period?'começa em':'começa em (opcional)';$('label[for="goalEnd"]').textContent=period?'termina em':'prazo (opcional)';
+ $('#completionModeHint').textContent=mode==='total'?'Cada dia cumprido soma à meta. Falhas não apagam o progresso. Sem início definido, conte a partir do primeiro dia cumprido.':mode==='streak'?'Cumpra os dias da rotina em sequência. Falhas ou dias anteriores sem registro interrompem a sequência; você pode corrigir o histórico. Dias fora da rotina não interrompem.':'A meta corresponde aos dias da rotina entre início e término. Mudar o período recalcula a meta; chegar ao término não conclui o sonho automaticamente.';
+ if(!habit){$('#durationInfo').open=false;return}
+ $('#targetLabel').textContent=period?'Dias de prática no período':mode==='streak'?'Quantos dias consecutivos?':'Quantos dias cumpridos?';
+ hint.textContent=period?'Defina início e término para calcular os dias da rotina.':mode==='streak'?'A conclusão fica conquistada ao atingir a sequência. Uma falha posterior não desfaz a conquista.':'A meta não depende de um prazo. Cada dia cumprido conta uma vez.';
+ if(!period)return;
+ const start=$('#goalStart').value,end=$('#goalEnd').value;
+ if(!start||!end)return;
+ const weekdays=[...$('#goalWeekdays').querySelectorAll('input:checked')].map(input=>Number(input.value)),count=practiceDays(start,end,weekdays);
  if(count===null){hint.textContent='O término precisa ser na data de início ou depois dela.';target.setCustomValidity(hint.textContent);return}
  target.readOnly=true;target.value=count;
- hint.textContent=count?`Pelo período: ${count} ${count===1?'dia de prática':'dias de prática'}, incluindo início e término. A meta acompanha as datas e os dias da rotina.`:'Nenhum dia da rotina neste período. Ajuste as datas ou os dias da semana.';
+ hint.textContent=count?`Pelo período: ${count} dias de prática, incluindo início e término. A meta acompanha as datas e os dias da rotina.`:'Nenhum dia da rotina neste período. Ajuste as datas ou os dias da semana.';
  if(!count)target.setCustomValidity(hint.textContent);
  if(count>3650){hint.textContent='Este período passa de 3650 dias de prática. Escolha um período menor.';target.setCustomValidity(hint.textContent)}
 }
@@ -280,7 +290,7 @@ function showGoalStep(step,focus=true){
  const steps=goalSteps();goalStep=steps.includes(step)?step:steps[0];
  document.querySelectorAll('[data-goal-step]').forEach(section=>section.hidden=Number(section.dataset.goalStep)!==goalStep);
  const kind=$('#goalKind').value;
- const titles={0:'qual é o seu tiny dream?',1:kind==='list'?'quais etapas fazem parte?':kind==='daily-list'?'como é a sua lista diária?':'como será a sua rotina?',2:kind==='amount'?'qual é a sua meta?':'qual é o seu período?',3:'deixe com a sua cara'};
+ const titles={0:'qual é o seu tiny dream?',1:kind==='list'?'quais etapas fazem parte?':kind==='daily-list'?'como é a sua lista diária?':'como será a sua rotina?',2:kind==='list'?'qual é o seu período?':'qual é a sua meta?',3:'deixe com a sua cara'};
  $('#goalStepTitle').textContent=titles[goalStep];$('#goalStepStatus').textContent=`passo ${steps.indexOf(goalStep)+1} de ${steps.length}`;
  $('#goalBack').hidden=goalStep===0;$('#goalNext').hidden=goalStep===3;$('#saveGoal').hidden=goalStep!==3;
  $('#goalExtras').open=goalStep===3;$('#formError').textContent='';
@@ -313,8 +323,8 @@ $('#goalForm').addEventListener('submit',event=>{
   if(!validateGoalStep()){const error=$('#formError').textContent;showGoalStep(step);$('#formError').textContent=error;event.preventDefault();event.stopImmediatePropagation();return}
  }
 },true);
-function openForm(id){$('#durationInfo').open=false;$('#goalExtras').open=false;const g=state.goals.find(x=>x.id===id),p=g?planOf(g):planOf({});$('#goalGroup').innerHTML='<option value="">Sem Big Dream</option>'+state.groups.map(group=>`<option value="${esc(group.id)}">${esc(group.name)}</option>`).join('');$('#goalGroup').value=g?.group_id||'';$('#goalId').value=g?.id||'';$('#goalTitle').value=g?.title||'';$('#goalReward').value=g?.reward||'';$('#goalTarget').value=g?targetOf(g):'';$('#goalEmoji').value=p.emoji||({sage:'🌿',peach:'⭐',lavender:'📖'}[g?.color]||'📖');updateEmojiPicker();$('#goalKind').value=p.dailyList?'daily-list':p.kind;$('#goalKind').disabled=!!g&&(g.days.length>0||(g.entries||[]).length>0||(g.failures||[]).length>0);$('#goalStart').value=p.start||'';$('#goalEnd').value=p.end||'';$('#goalNotes').value=p.notes;$('#goalUnit').value=p.unit;$('#habitMeasure').value=p.impulse?'impulse':p.dailyTarget?'quantity':p.tasks.length?'tasks':'check';$('#goalSupport').value=p.support||'';$('#habitMeasure').disabled=!!g&&!!(p.dailyTarget||p.tasks.length)&&(g.days.length>0||(g.entries||[]).length>0);$('#goalDailyTarget').value=p.dailyTarget||'';$('#goalDailyUnit').value=p.dailyTarget?p.unit:'';$('#goalDailyUnit').readOnly=!!p.dailyTarget&&!!g?.entries?.length;$('#goalWeekdays').innerHTML=dayOptions(p.weekdays);$('#routineRows').innerHTML='';$('#itemRows').innerHTML='';p.tasks.forEach(addRoutineRow);p.items.forEach(addItemRow);$('#formTitle').textContent=g?'editar tiny dream':'novo tiny dream';$('#saveGoal').textContent=g?'salvar alterações':'criar tiny dream';$('#formError').textContent='';syncKind();showGoalStep(0,false);$('#goalDialog').showModal()}
-function formPlan(){return {impulse:formKind()==='habit'&&$('#habitMeasure').value==='impulse',support:$('#goalSupport').value.trim(),emoji:$('#goalEmoji').value.trim(),kind:formKind(),dailyList:isDailyList(),start:$('#goalStart').value,end:$('#goalEnd').value,notes:$('#goalNotes').value.trim(),unit:formKind()==='habit'&&$('#habitMeasure').value==='quantity'?$('#goalDailyUnit').value.trim():$('#goalUnit').value.trim(),dailyTarget:formKind()==='habit'&&$('#habitMeasure').value==='quantity'?Number($('#goalDailyTarget').value):null,weekdays:[...$('#goalWeekdays').querySelectorAll('input:checked')].map(e=>Number(e.value)),tasks:formKind()==='habit'&&$('#habitMeasure').value==='tasks'?[...document.querySelectorAll('.routine-row')].map(el=>({id:el.dataset.key,title:el.querySelector('.row-title').value.trim(),weekdays:[...el.querySelectorAll('input:checked')].map(e=>Number(e.value))})):[],items:$('#goalKind').value==='list'?[...document.querySelectorAll('.item-row')].map(el=>({id:el.dataset.key,title:el.querySelector('.row-title').value.trim(),date:el.querySelector('.row-date').value})):[]}}
+function openForm(id){$('#durationInfo').open=false;$('#goalExtras').open=false;const g=state.goals.find(x=>x.id===id),p=g?planOf(g):planOf({});$('#goalGroup').innerHTML='<option value="">Sem Big Dream</option>'+state.groups.map(group=>`<option value="${esc(group.id)}">${esc(group.name)}</option>`).join('');$('#goalGroup').value=g?.group_id||'';$('#goalId').value=g?.id||'';$('#goalTitle').value=g?.title||'';$('#goalReward').value=g?.reward||'';$('#goalTarget').value=g?targetOf(g):'';$('#goalEmoji').value=p.emoji||({sage:'🌿',peach:'⭐',lavender:'📖'}[g?.color]||'📖');updateEmojiPicker();$('#goalKind').value=p.dailyList?'daily-list':p.kind;$('#goalKind').disabled=!!g&&(g.days.length>0||(g.entries||[]).length>0||(g.failures||[]).length>0);$('#goalCompletionMode').value=g?completionMode(p):'total';$('#goalStart').value=p.start||'';$('#goalEnd').value=p.end||'';$('#goalNotes').value=p.notes;$('#goalUnit').value=p.unit;$('#habitMeasure').value=p.impulse?'impulse':p.dailyTarget?'quantity':p.tasks.length?'tasks':'check';$('#goalSupport').value=p.support||'';$('#habitMeasure').disabled=!!g&&!!(p.dailyTarget||p.tasks.length)&&(g.days.length>0||(g.entries||[]).length>0);$('#goalDailyTarget').value=p.dailyTarget||'';$('#goalDailyUnit').value=p.dailyTarget?p.unit:'';$('#goalDailyUnit').readOnly=!!p.dailyTarget&&!!g?.entries?.length;$('#goalWeekdays').innerHTML=dayOptions(p.weekdays);$('#routineRows').innerHTML='';$('#itemRows').innerHTML='';p.tasks.forEach(addRoutineRow);p.items.forEach(addItemRow);$('#formTitle').textContent=g?'editar tiny dream':'novo tiny dream';$('#saveGoal').textContent=g?'salvar alterações':'criar tiny dream';$('#formError').textContent='';syncKind();showGoalStep(0,false);$('#goalDialog').showModal()}
+function formPlan(){return {...(formKind()==='habit'?{completionMode:$('#goalCompletionMode').value}:{}),impulse:formKind()==='habit'&&$('#habitMeasure').value==='impulse',support:$('#goalSupport').value.trim(),emoji:$('#goalEmoji').value.trim(),kind:formKind(),dailyList:isDailyList(),start:$('#goalStart').value,end:$('#goalEnd').disabled?'':$('#goalEnd').value,notes:$('#goalNotes').value.trim(),unit:formKind()==='habit'&&$('#habitMeasure').value==='quantity'?$('#goalDailyUnit').value.trim():$('#goalUnit').value.trim(),dailyTarget:formKind()==='habit'&&$('#habitMeasure').value==='quantity'?Number($('#goalDailyTarget').value):null,weekdays:[...$('#goalWeekdays').querySelectorAll('input:checked')].map(e=>Number(e.value)),tasks:formKind()==='habit'&&$('#habitMeasure').value==='tasks'?[...document.querySelectorAll('.routine-row')].map(el=>({id:el.dataset.key,title:el.querySelector('.row-title').value.trim(),weekdays:[...el.querySelectorAll('input:checked')].map(e=>Number(e.value))})):[],items:$('#goalKind').value==='list'?[...document.querySelectorAll('.item-row')].map(el=>({id:el.dataset.key,title:el.querySelector('.row-title').value.trim(),date:el.querySelector('.row-date').value})):[]}}
 let historyFilter='pending',historyPage=0;
 function outcomeLabel(g,day){const status=outcomeOf(g,day);return status==='success'?(planOf(g).impulse?'Consegui resistir':'Sucesso'):status==='failure'?(planOf(g).impulse?'Cedi ao impulso':'Falha registrada'):'Sem registro'}
 function dayOutcomeControls(g,day,canSucceed=true){
@@ -419,8 +429,8 @@ $('#goalForm').addEventListener('click',e=>{
 });
 $('#goalForm').addEventListener('input',updateTaskSummaries);
 $('#goalForm').addEventListener('change',updateTaskSummaries);
-$('#goalForm').addEventListener('input',event=>{if(event.target.matches('#goalStart,#goalEnd,#goalWeekdays input'))syncDuration()});
-$('#goalForm').addEventListener('change',event=>{if(event.target.matches('#goalStart,#goalEnd,#goalWeekdays input'))syncDuration()});
+$('#goalForm').addEventListener('input',event=>{if(event.target.matches('#goalStart,#goalEnd,#goalCompletionMode,#goalWeekdays input'))syncDuration()});
+$('#goalForm').addEventListener('change',event=>{if(event.target.matches('#goalStart,#goalEnd,#goalCompletionMode,#goalWeekdays input'))syncDuration()});
 $('#goalForm').addEventListener('invalid',e=>{const row=e.target.closest('.routine-row');if(row)row.open=true},true);
 
 $('#progressContent').addEventListener('change',e=>{if(e.target.id==='routineDay')renderRoutineChecks()});
@@ -436,7 +446,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-action="de
 // The shelf is derived from persisted records, independent of reward redemption or edition.
 function completionDay(g){
  const p=planOf(g),target=targetOf(g);
- if(p.kind==='habit')return [...g.days].sort()[target-1]||'';
+ if(p.kind==='habit')return habitCompletionDay(g);
  const entries=(g.entries||[]).filter(e=>p.kind!=='list'||p.items.some(i=>i.id===e.key)).slice().sort((a,b)=>a.day.localeCompare(b.day));
  let total=0;const seen=new Set();
  for(const e of entries){if(p.kind==='list'){if(seen.has(e.key))continue;seen.add(e.key);total++}else total=Math.round((total+e.value)*100)/100;if(total>=target)return e.day}

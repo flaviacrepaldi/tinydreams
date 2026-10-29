@@ -163,3 +163,11 @@ The user chose a compact monthly calendar with only day numbers. Past/current da
 
 ## Calendar atmosphere follows home
 The user wants the calendar to feel like the home, rather than a plain purple screen. Show the same active edition scenery and ambient effects behind the compact calendar, with an opaque reading surface for the month and selected day's stickers. This supersedes the earlier quiet-base-only calendar direction. Other destinations remain unchanged.
+
+## Configurable habit completion
+
+Habits and daily lists explicitly choose `plan.completionMode`: `total` (accumulate successful practice days), `streak` (consecutive successful scheduled days), or `period` (all scheduled days in an inclusive start/end period). This supersedes automatic date-derived targets for newly configured habits. New dreams default to accumulated days with an explicit numeric target. Total and streak modes have an optional start, no deadline, and keep the numeric target when the start changes. Period mode requires both dates and derives its target from dates and weekdays. Amount and one-time list deadlines remain independent.
+
+A missed or failed scheduled day interrupts a streak; unrecorded today remains available until the day ends in America/Sao_Paulo. Rest days do not interrupt it. Backfilling or correcting history recalculates progress and completion. Once any recorded sequence reaches the target, subsequent failures do not undo that achievement; correcting an essential record can undo it. Successful days outside an explicitly configured habit's schedule/start do not contribute to its target, but their history remains stored. Missing outcomes remain unrecorded rather than becoming inferred failures.
+
+Legacy plans without completionMode retain their date-derived or accumulated behavior on read. Editing initializes the matching choice. Shelf completion dates, calendar planning, reward eligibility, and daily-list completion share the selected rule. Future-start dreams stay off the home and active counter until their start date, remaining accessible through the calendar. No real personal records are altered by this implementation or its tests.

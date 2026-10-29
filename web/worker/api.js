@@ -77,7 +77,8 @@ export async function api(request,env){
   if(status==='success')statements.push(env.DB.prepare('INSERT INTO checkins (goal_id,day) VALUES (?,?)').bind(id,day));
   if(status==='failure')statements.push(env.DB.prepare('INSERT INTO day_failures (goal_id,day) VALUES (?,?)').bind(id,day));
   if(status===null&&(p.tasks.length||p.dailyTarget))statements.push(env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=? AND day=?').bind(id,day));
-  statements.push(env.DB.prepare('UPDATE goals SET redeemed=CASE WHEN (SELECT COUNT(*) FROM checkins WHERE goal_id=?) < ? THEN 0 ELSE redeemed END WHERE id=? AND owner=?').bind(id,targetOf(existing),id,owner));
+  const updated={...existing,days:[...existing.days.filter(d=>d!==day),...(status==='success'?[day]:[])],failures:[...existing.failures.filter(d=>d!==day),...(status==='failure'?[day]:[])]};
+  statements.push(env.DB.prepare('UPDATE goals SET redeemed=CASE WHEN ? THEN redeemed ELSE 0 END WHERE id=? AND owner=?').bind(complete(updated)?1:0,id,owner));
   await env.DB.batch(statements);return json(await goals(env.DB,owner,id));
  }
  if(request.method==='POST'&&['check','entry'].includes(action)){
