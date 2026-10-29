@@ -308,7 +308,8 @@ html[data-edition] .dream-overview .goal .dream-progress{display:flex;flex-direc
 .daily-state svg{width:12px;height:12px;flex-shrink:0}
 .daily-state-pending{color:var(--text)}
 .daily-state-done{color:var(--goal);border-color:color-mix(in srgb,var(--goal) 55%,var(--line));background:color-mix(in srgb,var(--goal) 9%,transparent)}
-.goal.done-today{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--goal) 60%,transparent)}
+.goal{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--line) 60%,var(--muted))}
+.goal.done-today{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--goal) 75%,transparent)}
 html[data-edition] .dream-overview .group-heading .group-today-progress{margin-top:6px;font-size:12px;color:var(--accent)}
 
 /* Amulets stay still; charge color and brightness remain tied to earned progress. */
