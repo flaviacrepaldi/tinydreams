@@ -157,3 +157,6 @@ The user wants published updates to appear automatically in the installed web ap
 ## Adaptive tiny dream creation
 
 The shared create action is named “novo tiny dream”, matching “novo big dream”. It lives in the header beside preferences; phones show a compact plus with an accessible name. The home introduction uses content-driven height and reduced spacing before the dreams. Creation and editing use steps for identity/type, routine or list items, period/target, and optional personalization. Amount goals skip the routine step. Back preserves draft values, dependent fields follow the chosen type, and validation happens before advancing or saving. Existing records and history guards remain intact.
+
+## Compact monthly calendar
+The user chose a compact monthly calendar with only day numbers. Past/current days use theme-accent intensity for the proportion of completed dreams to expected/recorded dreams; future days remain neutral. Selecting any date shows all earned stickers and their titles inline below the month, without truncation. Pending/planned/failed/partial records remain accessible in a disclosure below, preserving date editing. Default to today in the current month and the first day in other months. No saved data changes.

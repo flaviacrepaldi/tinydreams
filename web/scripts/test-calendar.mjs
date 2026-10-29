@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {calendarState} from '../shared/calendar.js';
+import {calendarState, calendarSummary} from '../shared/calendar.js';
 const asOf='2026-10-27';
 const plan={kind:'habit',start:'2026-10-01',end:'2026-10-31',weekdays:[1,3,5],tasks:[],items:[],unit:'',notes:''};
 const habit={id:'habit',title:'Meu SONHO',target:12,color:'sage',plan,days:['2026-10-26'],entries:[],failures:['2026-10-23'],created_at:'2026-10-10T12:00:00Z'};
@@ -26,3 +26,9 @@ assert.equal(calendarState(amount,'2026-10-26',asOf).status,'feito');
 assert.equal(calendarState(amount,'2026-10-28',asOf).visible,false,'Amount goals are not daily habits');
 assert.equal(JSON.stringify(habit),before,'Calendar must not mutate records');
 console.log('PASS: planned vs actual stickers, schedules, São Paulo creation dates, completed habits, one-time lists, quantities, failures, partial entries and immutable records.');
+
+assert.deepEqual(calendarSummary([],asOf,asOf),{total:0,completed:0,percent:0});
+const mixed=[{planned:true,done:true},{planned:true,done:false,failed:true},{planned:true,done:false,partial:true},{done:true,planned:false}];
+assert.deepEqual(calendarSummary(mixed,asOf,asOf),{total:4,completed:2,percent:50});
+assert.equal(calendarSummary(mixed,'2026-10-28',asOf).percent,0,'Future days stay neutral');
+assert.equal(calendarSummary([{planned:true,done:true}],asOf,asOf).percent,100);

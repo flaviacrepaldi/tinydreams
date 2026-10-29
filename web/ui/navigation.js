@@ -27,7 +27,7 @@
     const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
     tabs[next].click();tabs[next].focus();
   });
-  $('#calendarDayContent').addEventListener('click', event => {
+  document.addEventListener('click', event => {
     const button=event.target.closest('[data-calendar-goal]');if(!button)return;
     $('#calendarDayDialog').close();openDetails(button.dataset.calendarGoal,button.dataset.day);
   });

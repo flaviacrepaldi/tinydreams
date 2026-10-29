@@ -1,6 +1,13 @@
 import {planOf, scheduled, complete, targetOf} from './planner.js';
 const calendarDateFormatter = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'});
 
+// Count dreams, not individual routine tasks. Unscheduled completions also count.
+export function calendarSummary(entries, day, asOf) {
+  const total = entries.filter(entry => entry.planned || entry.done || entry.failed || entry.partial).length;
+  const completed = entries.filter(entry => entry.done).length;
+  return {total, completed, percent: day > asOf || !total ? 0 : Math.round(completed / total * 100)};
+}
+
 // Presentation only: a planned sticker is never a completion record.
 export function calendarState(goal, day, asOf) {
   const plan = planOf(goal), entries = goal.entries || [];
