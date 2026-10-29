@@ -28,12 +28,12 @@ function demoGoals(){return [{id:'demo-read',title:'Ler antes de dormir',reward:
 function showDemo(){resetMilestonePanel();state.demo=true;state.goals=demoGoals();state.groups=[];seedMilestones();render()}
 function render(){
  const gs=state.goals;document.body.dataset.view=state.view;
- $('#demoBanner').hidden=!state.demo;$('#goalsCount').textContent=gs.filter(g=>!complete(g)&&!dayDone(g,today())).length;
+ $('#demoBanner').hidden=!state.demo;$('#goalsCount').textContent=gs.filter(g=>(!planOf(g).start||planOf(g).start<=today())&&!complete(g)&&!dayDone(g,today())).length;
  document.querySelectorAll('.tab').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);if(b.dataset.view===state.view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  if(state.view==='shelf')renderShelf();else if(state.view==='today')renderToday();else if(state.view==='calendar')renderCalendar();else renderOverview();
 }
 function renderOverview(){
- const active=state.goals.filter(g=>!complete(g)&&!dayDone(g,today()));
+ const active=state.goals.filter(g=>(!planOf(g).start||planOf(g).start<=today())&&!complete(g)&&!dayDone(g,today()));
  const section=(name,goals,group)=>{
   const members=group?state.goals.filter(g=>g.group_id===group.id):goals,finished=members.filter(complete).length;
   return `<section class="dream-group ${group?'big-dream-volume':''}"><div class="group-heading">${group?`<span class="volume-emblem" aria-hidden="true">${icon('book')}</span>`:''}<div class="volume-title"><h2>${esc(name)}</h2><p>${group?`${members.length} ${members.length===1?'tydream':'tydreams'} · ${finished} ${finished===1?'realizado':'realizados'}`:`${goals.length} ${goals.length===1?'tydream em andamento':'tydreams em andamento'}`}</p></div>${group?`<button class="text-button rename-group-button" data-action="edit-group" data-group="${esc(group.id)}" aria-label="renomear big dream ${esc(name)}" title="renomear big dream">${icon('edit')}</button>`:''}</div>${goals.length?`<div class="goal-grid" tabindex="0" role="region" aria-label="Tydreams de ${esc(name)}">${goals.map(goalCard).join('')}</div>`:`<p class="group-empty">${members.length?'nenhum tydream pendente neste grupo. consulte seus registros em hoje ou calendário.':'Escolha este Big Dream ao criar ou editar um tiny dream.'}</p>`}</section>`;
