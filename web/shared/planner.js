@@ -6,6 +6,8 @@ export const practiceToday = () => new Intl.DateTimeFormat('en-CA',{timeZone:'Am
 export const needsIncompleteReview = (g,asOf=practiceToday()) => !!planOf(g).end&&planOf(g).end<asOf&&!complete(g);
 export const isArchivedIncomplete = g => !!planOf(g).incompleteAccepted&&needsIncompleteReview(g);
 export function validatePlan(p){
+ if(p?.skippedDays!=null&&(!Array.isArray(p.skippedDays)||p.skippedDays.some(d=>!validDay(d))))throw Error('Confira os dias pulados.');
+ if(p?.dayNotes!=null&&(typeof p.dayNotes!=='object'||Array.isArray(p.dayNotes)||Object.entries(p.dayNotes).some(([d,n])=>!validDay(d)||typeof n!=='string'||n.length>2000)))throw Error('Confira as observações dos dias.');
  if(p?.emoji!=null&&!validEmoji(p.emoji))throw Error('Escolha um único emoji para o sonho.');
  if(!p || !['habit','list','amount'].includes(p.kind))throw Error('Escolha como acompanhar este sonho.');
  if(p.completionMode!=null&&(p.kind!=='habit'||!['total','streak','period'].includes(p.completionMode)))throw Error('Escolha como alcançar a meta de dias.');
@@ -36,25 +38,25 @@ export function validatePlan(p){
  if(p.kind==='list'&&!p.items.length)throw Error('Adicione pelo menos uma etapa, livro ou consulta.');
  return p;
 }
-export function scheduled(g,day){const p=planOf(g);return (!p.start||day>=p.start)&&(!p.end||day<=p.end)&&p.weekdays.includes(weekday(day));}
+export function scheduled(g,day){const p=planOf(g);return (!p.start||day>=p.start)&&(!p.end||day<=p.end)&&p.weekdays.includes(weekday(day))&&!(p.skippedDays||[]).includes(day);}
 export function tasksOn(g,day){return planOf(g).tasks.filter(t=>t.weekdays.includes(weekday(day)));}
 export function habitDays(g){const p=planOf(g);return [...new Set(g.days)].filter(day=>!p.completionMode||scheduled(g,day)).sort();}
 export function habitSequence(g,asOf=practiceToday()){
  const p=planOf(g),days=habitDays(g).filter(day=>day<=asOf&&!(g.failures||[]).includes(day));
  let current=0,previous='',completedOn='';
  for(const day of days){
-  current=previous&&practiceDays(previous,day,p.weekdays)===2?current+1:1;
+  current=previous&&practiceDays(previous,day,p.weekdays)-(p.skippedDays||[]).filter(d=>d>=previous&&d<=day&&p.weekdays.includes(weekday(d))).length===2?current+1:1;
   if(!completedOn&&current>=targetOf(g))completedOn=day;
   previous=day;
  }
- if(previous&&(practiceDays(previous,asOf,p.weekdays)-(scheduled(g,asOf)?1:0)>1||(g.failures||[]).includes(asOf)))current=0;
+ if(previous&&(practiceDays(previous,asOf,p.weekdays)-(p.skippedDays||[]).filter(d=>d>=previous&&d<=asOf&&p.weekdays.includes(weekday(d))).length-(scheduled(g,asOf)?1:0)>1||(g.failures||[]).includes(asOf)))current=0;
  return {current,completedOn};
 }
 export function habitCompletionDay(g){return completionMode(planOf(g))==='streak'?habitSequence(g).completedOn:habitDays(g)[targetOf(g)-1]||'';}
 export function progress(g){const p=planOf(g);if(p.kind==='amount')return Math.round((g.entries||[]).reduce((n,e)=>n+e.value,0)*100)/100;if(p.kind==='list')return p.items.filter(i=>(g.entries||[]).some(e=>e.key===i.id)).length;if(completionMode(p)==='streak'){const sequence=habitSequence(g);return sequence.completedOn?targetOf(g):sequence.current}return habitDays(g).length;}
 export function targetOf(g){
  const p=planOf(g);if(p.kind==='list')return p.items.length;
- if(p.kind==='habit'&&completionMode(p)==='period'&&p.start&&p.end){const count=practiceDays(p.start,p.end,p.weekdays);if(count!==null)return count}
+ if(p.kind==='habit'&&completionMode(p)==='period'&&p.start&&p.end){const count=practiceDays(p.start,p.end,p.weekdays);if(count!==null)return Math.max(1,count-(p.skippedDays||[]).filter(day=>day>=p.start&&day<=p.end&&p.weekdays.includes(weekday(day))).length)}
  return g.target;
 }
 export const complete = g => progress(g)>=targetOf(g);
@@ -90,12 +92,19 @@ export function daysUntil(end,day){
  return difference>=0?difference+1:difference;
 }
 
-export const outcomeOf = (g,day) => g.days.includes(day)?'success':(g.failures||[]).includes(day)?'failure':null;
+export const outcomeOf = (g,day,asOf=practiceToday()) => {
+ if(g.days.includes(day))return 'success';
+ if((planOf(g).skippedDays||[]).includes(day))return 'skipped';
+ if((g.failures||[]).includes(day))return 'failure';
+ const p=planOf(g),start=p.start||(g.created_at?new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(g.created_at)):asOf);
+ const finished=p.kind==='habit'&&!p.end?habitCompletionDay(g):'';
+ return p.kind==='habit'&&day>=start&&day<asOf&&scheduled(g,day)&&(!finished||day<=finished)?'failure':null;
+};
 export function pastPracticeDays(g,asOf){
  const p=planOf(g);if(p.kind!=='habit'||!p.start||!validDay(asOf))return [];
  const end=p.end&&p.end<asOf?p.end:asOf,days=[];
  for(const d=new Date(p.start+'T12:00:00Z');d.toISOString().slice(0,10)<=end;d.setUTCDate(d.getUTCDate()+1)){
-  const day=d.toISOString().slice(0,10);if(day<asOf&&scheduled(g,day))days.push(day);
+  const day=d.toISOString().slice(0,10);if(day<asOf&&scheduled({...g,plan:{...p,skippedDays:[]}},day))days.push(day);
  }
  return days;
 }

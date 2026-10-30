@@ -222,3 +222,6 @@ water reflections, window rain, daylight, mist or pollen. Do not reveal future
 editions or preload their artwork. Effects must stay attached to the image's
 responsive crop and pause manually, offscreen, in hidden tabs, in dialogs and
 under reduced motion. Amulets remain stationary.
+
+## Automatic missed days and exceptions
+Scheduled habit dates before today without completion now count as failures, including partial days. Today stays open. Skipped dates are explicit exceptions, may be planned ahead, do not break streaks, and are removed from period targets. Per-date optional notes preserve context without judgment. Store skippedDays and dayNotes in goal plan JSON, without rewriting past check-ins. This supersedes the prior missing-record policy.

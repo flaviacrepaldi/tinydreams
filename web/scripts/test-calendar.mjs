@@ -10,7 +10,7 @@ assert.equal(calendarState(habit,'2026-11-02',asOf).visible,false);
 assert.equal(calendarState(habit,'2026-10-02',asOf).planned,true,'Explicit past start survives later creation');
 assert.equal(calendarState(habit,'2026-10-26',asOf).status,'feito');
 assert.equal(calendarState(habit,'2026-10-23',asOf).status,'não cumprido');
-assert.equal(calendarState({...habit,entries:[{key:'task',day:'2026-10-21',value:1}]},'2026-10-21',asOf).status,'em andamento');
+assert.equal(calendarState({...habit,entries:[{key:'task',day:'2026-10-21',value:1}]},'2026-10-21',asOf).status,'não cumprido');
 assert.equal(calendarState({...habit,plan:{...plan,start:''}},'2026-10-05',asOf).planned,false,'Never invent schedules before creation');
 assert.equal(calendarState({...habit,plan:{...plan,start:''},created_at:'2026-10-10T01:00:00Z'},'2026-10-09',asOf).planned,true,'Creation date uses São Paulo');
 const finished={...habit,target:1,plan:{...plan,start:'',end:''}};

@@ -74,16 +74,19 @@ export async function api(request,env){
  }
  if(request.method==='POST'&&action==='outcome'){
   const p=planOf(existing),day=body.day,status=body.status;
-  if(p.kind!=='habit'||!validDay(day)||day>saoPauloDay()||!['success','failure',null].includes(status))return json({error:'Escolha um dia válido até hoje e seu resultado.'},400);
-  if(status&&!scheduled(existing,day))return json({error:'Este dia está fora da rotina ou do período do sonho.'},400);
+  if(p.kind!=='habit'||!validDay(day)||(day>saoPauloDay()&&status!=='skipped'&&status!==null)||!['success','failure','skipped',null].includes(status))return json({error:'Escolha um dia válido até hoje e seu resultado.'},400);
+  if(body.note!=null&&(typeof body.note!=='string'||body.note.length>2000))return json({error:'Use até 2000 caracteres para a observação.'},400);
+  if(status&&!scheduled({...existing,plan:{...p,skippedDays:[]}},day))return json({error:'Este dia está fora da rotina ou do período do sonho.'},400);
   if(status==='success'&&p.dailyTarget&&dailyTotal(existing,day)<p.dailyTarget)return json({error:'Registre a quantidade deste dia antes de concluí-lo.'},400);
   if(status==='success'&&p.tasks.length&&!tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`)))return json({error:'Conclua as tarefas previstas para este dia.'},400);
-  if(status==='failure'&&(p.dailyTarget&&dailyTotal(existing,day)>=p.dailyTarget||p.tasks.length&&tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`))))return json({error:'Corrija os registros deste dia antes de marcá-lo como falha.'},400);
+  if((status==='failure'||status==='skipped')&&(p.dailyTarget&&dailyTotal(existing,day)>=p.dailyTarget||p.tasks.length&&tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`))))return json({error:'Corrija os registros deste dia antes de marcá-lo como falha.'},400);
   const statements=[env.DB.prepare('DELETE FROM checkins WHERE goal_id=? AND day=?').bind(id,day),env.DB.prepare('DELETE FROM day_failures WHERE goal_id=? AND day=?').bind(id,day)];
   if(status==='success')statements.push(env.DB.prepare('INSERT INTO checkins (goal_id,day) VALUES (?,?)').bind(id,day));
   if(status==='failure')statements.push(env.DB.prepare('INSERT INTO day_failures (goal_id,day) VALUES (?,?)').bind(id,day));
   if(status===null&&(p.tasks.length||p.dailyTarget))statements.push(env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=? AND day=?').bind(id,day));
-  const updated={...existing,days:[...existing.days.filter(d=>d!==day),...(status==='success'?[day]:[])],failures:[...existing.failures.filter(d=>d!==day),...(status==='failure'?[day]:[])]};
+  const plan={...p,skippedDays:[...(p.skippedDays||[]).filter(d=>d!==day),...(status==='skipped'?[day]:[])],dayNotes:{...(p.dayNotes||{}),...(body.note!=null?{[day]:body.note.trim()}:{})}};
+  statements.push(env.DB.prepare('UPDATE goals SET plan=? WHERE id=? AND owner=?').bind(JSON.stringify(plan),id,owner));
+  const updated={...existing,plan,days:[...existing.days.filter(d=>d!==day),...(status==='success'?[day]:[])],failures:[...existing.failures.filter(d=>d!==day),...(status==='failure'?[day]:[])]};
   statements.push(env.DB.prepare('UPDATE goals SET redeemed=CASE WHEN ? THEN redeemed ELSE 0 END WHERE id=? AND owner=?').bind(complete(updated)?1:0,id,owner));
   await env.DB.batch(statements);return json(await goals(env.DB,owner,id));
  }

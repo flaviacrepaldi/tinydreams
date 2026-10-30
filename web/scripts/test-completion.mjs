@@ -45,3 +45,7 @@ try{
  }
  console.log('PASS: total/streak/period completion, schedule gaps, corrections, future starts, legacy plans, rewards and daily lists.');
 }finally{rmSync(dir,{recursive:true,force:true})}
+
+const exception={...base,target:3,days:['2026-01-01','2026-01-03'],plan:{...base.plan,completionMode:'streak',skippedDays:['2026-01-02']}};
+assert.equal(habitSequence(exception,'2026-01-03').current,2,'Skipped date preserves streak without adding success');
+assert.equal(targetOf({...exception,plan:{...exception.plan,completionMode:'period',start:'2026-01-01',end:'2026-01-03'}}),2,'Skipped date leaves period target');

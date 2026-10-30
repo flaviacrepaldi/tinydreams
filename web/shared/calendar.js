@@ -1,4 +1,4 @@
-import {planOf, scheduled, complete, targetOf, habitCompletionDay} from './planner.js';
+import {planOf, scheduled, complete, targetOf, habitCompletionDay, outcomeOf} from './planner.js';
 const calendarDateFormatter = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'});
 
 // Count dreams, not individual routine tasks. Unscheduled completions also count.
@@ -32,8 +32,9 @@ export function calendarState(goal, day, asOf) {
       done = reached === day;
     }
   }
-  const failed = (goal.failures || []).includes(day);
+  const skipped=outcomeOf(goal,day,asOf)==='skipped';
+  const failed = outcomeOf(goal,day,asOf)==='failure';
   const partial = !done && !failed && dayEntries.length > 0;
-  return {planned, done, failed, partial, visible:planned || done || failed || partial,
-    status:done ? 'feito' : failed ? 'não cumprido' : partial ? 'em andamento' : 'planejado'};
+  return {planned, done, failed, partial, skipped, visible:planned || done || failed || partial || skipped,
+    status:skipped ? 'dia pulado' : done ? 'feito' : failed ? 'não cumprido' : partial ? 'em andamento' : 'planejado'};
 }
