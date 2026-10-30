@@ -312,3 +312,5 @@ html[data-edition] .dream-overview .goal[data-amulet-edition]:not([data-amulet-e
 html[data-paper="true"] .dream-overview .goal .goal-menu .diary-button{color:var(--goal)}
 html[data-edition] .dream-overview .goal .dream-progress>.progress{align-self:stretch}
 html[data-edition] .dream-overview .goal .quick-outcomes>.check-button{grid-column:auto;grid-row:auto}
+
+html[data-edition] .dream-overview .goal .quick-outcomes>.annotation-button{grid-column:1 / -1;justify-self:center;width:auto}
