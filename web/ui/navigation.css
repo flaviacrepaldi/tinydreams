@@ -343,3 +343,13 @@ html[data-edition] .incomplete-collection .goal-grid>.goal{display:flex;flex-dir
 .brand-hat{fill:var(--accent);color:var(--accent)}
 .brand-hat .hat-band{fill:var(--bg);opacity:.75}
 @media(max-width:700px){.topbar .brand>svg.brand-monogram{width:38px;height:41px}.topbar .brand{gap:8px}}
+
+/* The celebration backdrop owns outside clicks and protects the page beneath it. */
+#milestoneDialog{position:fixed;inset:0;margin:0;width:100%;max-width:none;height:100dvh;max-height:none;padding:0;border:0;background:transparent;overflow:hidden}
+#milestoneDialog::backdrop{background:#090512b8}
+#milestoneDialog .milestone{margin:0;border:0;box-shadow:0 24px 80px #09051299;overscroll-behavior:contain;overflow:auto}
+html.milestone-open{overflow:hidden;overscroll-behavior:none}
+html.milestone-open body{position:fixed;top:var(--milestone-scroll-top);width:100%;overflow:hidden}
+html[data-motion=active] #milestone{animation-duration:180ms}
+html[data-motion=active] #milestone .dream-book{animation-duration:300ms}
+html[data-motion=active] #milestone .book-seal{animation-duration:240ms}

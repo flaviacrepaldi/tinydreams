@@ -594,13 +594,26 @@ function randomCongratulations(){
  return tydreamCongratulations[lastCongratulations];
 }
 let milestoneTimer;
-function resetMilestonePanel(){milestoneQueue.clear();clearTimeout(milestoneTimer);$('#milestone').hidden=true}
+let milestoneScrollY=0;
+function showMilestone(){
+ const dialog=$('#milestoneDialog');if(dialog.open)return;
+ milestoneScrollY=window.scrollY;document.body.style.setProperty('--milestone-scroll-top',`-${milestoneScrollY}px`);
+ document.documentElement.classList.add('milestone-open');dialog.showModal();
+}
+function dismissMilestone(){
+ clearTimeout(milestoneTimer);$('#milestone').hidden=true;
+ const dialog=$('#milestoneDialog');if(!dialog.open)return;
+ dialog.close();document.documentElement.classList.remove('milestone-open');document.body.style.removeProperty('--milestone-scroll-top');window.scrollTo(0,milestoneScrollY);
+}
+$('#milestoneDialog').addEventListener('click',event=>{if(event.target===$('#milestoneDialog'))dismissMilestone()});
+$('#milestoneDialog').addEventListener('cancel',event=>{event.preventDefault();dismissMilestone()});
+function resetMilestonePanel(){milestoneQueue.clear();clearTimeout(milestoneTimer);dismissMilestone()}
 function milestoneKey(key){return `${state.demo?'demo':'real'}:${key}`}
 function milestoneSeen(key){const k=milestoneKey(key);try{return milestoneMemory.has(k)||localStorage.getItem('tiny-dreams-celebrated:'+k)==='1'}catch{return milestoneMemory.has(k)}}
 function rememberMilestone(key){const k=milestoneKey(key);milestoneMemory.add(k);if(!state.demo)try{localStorage.setItem('tiny-dreams-celebrated:'+k,'1')}catch{}}
 function seedMilestones(){for(const g of state.goals){if(complete(g))rememberMilestone('dream:'+g.id);if(dayDone(g,today()))rememberMilestone('day:'+g.id+':'+today())}}
 function celebrateMilestone(g,previous){
- if(progress(g)<=previous){milestoneQueue.delete(g.id);if($('#milestone').dataset.goal===g.id)$('#milestone').hidden=true;return}
+ if(progress(g)<=previous){milestoneQueue.delete(g.id);if($('#milestone').dataset.goal===g.id)dismissMilestone();return}
  if(complete(g)&&previous<targetOf(g)&&!milestoneSeen('dream:'+g.id))milestoneQueue.set(g.id,{id:g.id,kind:'dream'});
  else if(planOf(g).kind==='habit'&&dayDone(g,today())&&!milestoneSeen('day:'+g.id+':'+today()))milestoneQueue.set(g.id,{id:g.id,kind:'day',day:today()});
  flushMilestones();
@@ -619,12 +632,12 @@ function flushMilestones(){
  const panel=$('#milestone');panel.dataset.goal=g.id;panel.dataset.magic=atmosphere;panel.dataset.edition=edition?.id||'';panel.classList.toggle('final-chapter',m.kind==='dream');
  const enchantment=magicalEmblem(motif,m.kind);
  panel.innerHTML=`<button class="icon-button milestone-close" data-action="dismiss-milestone" aria-label="Fechar celebração">×</button>${enchantment}${m.kind==='dream'?bookMarkup(g):''}<div class="milestone-copy"><h2>${m.kind==='dream'?'Seu tydream virou uma história realizada.':wholeDay?'Tudo de hoje concluído.':randomCongratulations()}</h2><p>${m.kind==='dream'?esc(g.title):wholeDay?`${habits.length} hábitos de hoje concluídos.`:`${esc(g.title)} · ${fmt(progress(g))} de ${fmt(targetOf(g))} <span data-user-content>${esc(unit(g))}</span>`}</p>${m.kind==='dream'&&g.reward?`<p>Recompensa liberada: <span data-user-content>${esc(g.reward)}</span></p>`:''}<button class="secondary" data-action="${m.kind==='dream'?'open-shelf':'dismiss-milestone'}">${m.kind==='dream'?'Ver na minha prateleira':'Continuar'}</button></div>`;
- $('#toast').hidden=true;clearTimeout(toastTimer);panel.hidden=false;clearTimeout(milestoneTimer);if(m.kind!=='dream')milestoneTimer=setTimeout(()=>panel.hidden=true,10000);
+ $('#toast').hidden=true;clearTimeout(toastTimer);panel.hidden=false;showMilestone();clearTimeout(milestoneTimer);if(m.kind!=='dream')milestoneTimer=setTimeout(dismissMilestone,10000);
 }
-document.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(action==='dismiss-milestone')$('#milestone').hidden=true;if(action==='open-shelf'||action==='back-dreams'){$('#milestone').hidden=true;state.view=action==='open-shelf'?'shelf':'dreams';render();$('#content').scrollIntoView({block:'start'});document.querySelector(`[data-view="${state.view}"]`).focus()}});
+document.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(action==='dismiss-milestone')dismissMilestone();if(action==='open-shelf'||action==='back-dreams'){dismissMilestone();state.view=action==='open-shelf'?'shelf':'dreams';render();$('#content').scrollIntoView({block:'start'});document.querySelector(`[data-view="${state.view}"]`).focus()}});
 new MutationObserver(flushMilestones).observe(document.body,{subtree:true,attributes:true,attributeFilter:['open']});
 document.addEventListener('visibilitychange',flushMilestones);
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('#milestone').hidden){$('#milestone').hidden=true;clearTimeout(milestoneTimer)}});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('#milestone').hidden){dismissMilestone();clearTimeout(milestoneTimer)}});
 // A curated selection: change the list only when the user requests new quotations.
 const welcomePhrases=[
  {id:'reis-inteiro',text:'Põe quanto és no mínimo que fazes.',author:'Ricardo Reis (Fernando Pessoa)',work:'Odes · “Para ser grande, sê inteiro”',source:'https://pt.wikisource.org/wiki/Para_ser_grande,_sê_inteiro'},
