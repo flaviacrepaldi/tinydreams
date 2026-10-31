@@ -505,3 +505,7 @@ centered desktop positioning and 64% mobile crop. All effects share manual,
 dialog, document-visibility, offscreen and reduced-motion controls. Only the
 active edition mounts its layer; no new raster assets or future-image requests
 are needed for these ambient overlays.
+
+## Consistent seasonal destinations
+
+All four main destinations and both collection subviews share the active edition's sky and ambient layer. Only the home shows the welcome copy. Other destinations expose 96px of scenery below the header (64px mobile), then use opaque themed sheets with a thin boundary and 16px corners for readable content. Desktop navigation uses the same opaque themed surface across tabs; mobile keeps the shared bottom navigation. Today and collection sheets inherit background, text, muted, line and accent tokens, including collection buttons and locked album slots. Preserve the wooden shelf, portrait and paper-book materials. This supersedes the previous Today/Shelf scene suppression and fixed collection shell palette.

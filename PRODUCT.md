@@ -225,3 +225,7 @@ under reduced motion. Amulets remain stationary.
 
 ## Automatic missed days and exceptions
 Scheduled habit dates before today without completion now count as failures, including partial days. Today stays open. Skipped dates are explicit exceptions, may be planned ahead, do not break streaks, and are removed from period targets. Per-date optional notes preserve context without judgment. Store skippedDays and dayNotes in goal plan JSON, without rewriting past check-ins. This supersedes the prior missing-record policy.
+
+## Shared appearance across destinations
+
+The user wants every destination accessible from home to share its seasonal appearance. Home, Today, Calendar, Shelf and the writers album all retain the active edition's illustrated scene and ambient effects. Shared navigation and readable content sheets use the current edition tokens. The collection's outer surfaces and controls follow the season; the wooden bookcase, portrait art and paper album retain their illustrated materials. This supersedes the earlier quiet-background rule for Today/Shelf and fixed plum collection shell.
