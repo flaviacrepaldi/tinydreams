@@ -8,9 +8,9 @@ const renderSource=source.slice(source.indexOf('function homeStatus(g)'),source.
 const elements=Object.fromEntries(['#demoBanner','#goalsCount','#content'].map(id=>[id,{}]));
 let day='2026-10-29';
 const goal={id:'aerobic',title:'Fazer aeróbico',target:30,days:['2026-10-28'],entries:[],plan:{...planOf({}),start:'2026-10-28'}};
-const state={goals:[goal],groups:[],view:'dreams',demo:false};
+const state={goals:[goal],groups:[],view:'dreams',homeFilter:'all',demo:false};
 const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,today:()=>day,
-  $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelectorAll:()=>[]},
+  $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelectorAll:()=>[],addEventListener(){}},
   esc:String,icon:()=>'',goalCard:g=>`<article data-goal="${g.id}"></article>`,
   fitDreamGalleries(){},fitAmountTrends(){},requestAnimationFrame(){},queueMicrotask(){},checkIncompleteNotice(){}});
 vm.runInContext(renderSource,context);
@@ -46,6 +46,15 @@ assert.doesNotMatch(html,/data-goal="finished"/);
 assert.match(html,/1 de 2 feitos hoje/);
 assert.equal(elements['#goalsCount'].textContent,1);
 assert.deepEqual(state.goals.map(g=>g.id),['rest','done','pending','finished'],'Display sorting never mutates persisted order');
+state.homeFilter='today';render();
+html=elements['#content'].innerHTML;
+assert.match(html,/data-filter="today" aria-pressed="true"/);
+assert.match(html,/data-goal="pending"/);
+assert.match(html,/data-goal="done"/);
+assert.doesNotMatch(html,/data-goal="rest"/);
+state.homeFilter='all';render();
+assert.match(elements['#content'].innerHTML,/data-goal="rest"/);
+assert.match(source,/homeFilter:'today'/);
 done.days=[];render();assert.equal(elements['#goalsCount'].textContent,2);
 console.log('PASS: pending/done/rest ordering, visible daily completions, scheduled daily totals, undo and immutable storage order.');
 console.log('PASS: rescheduled dreams stay off the home and active count until their start date, including grouped dreams, without losing history.');
