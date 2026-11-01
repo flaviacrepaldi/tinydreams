@@ -330,3 +330,24 @@ html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .am
 
 html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .dream-summary-title h2{max-width:100%;min-height:0;margin:0}
 .dream-summary-subtitle{margin:6px 0 0;font-size:13px;font-weight:400;line-height:1.5;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* November keeps its library visible while giving the welcome copy quiet water. */
+html[data-edition="2026-11"] .sky{
+ background-image:linear-gradient(180deg,#102d364d 0%,#102d361a 25%,var(--bg) 96%),linear-gradient(90deg,#102d36d9 0%,#102d36bf 32%,#102d3666 51%,#102d3600 72%),var(--edition-scene);
+ background-size:100% 100%,100% 100%,max(100%,calc(680px * var(--scene-ratio))) auto;
+ background-position:center top;
+ background-repeat:no-repeat;
+}
+@media(max-width:560px){
+ html[data-edition="2026-11"] .sky{
+  height:460px;
+  background-image:linear-gradient(180deg,#102d3699 0px,#102d361a 76px,#102d3626 138px,#102d36e6 250px,var(--bg) 296px),var(--edition-scene);
+  background-size:100% 100%,740px auto;
+  background-position:center top,28% top;
+ }
+ html[data-edition="2026-11"] body[data-view="dreams"] .welcome{padding-top:88px}
+}
+@media(max-width:560px){
+ html[data-edition="2026-11"] .edition-life{mask-image:linear-gradient(#000 76px,#000b 138px,transparent 296px)}
+ html[data-edition="2026-11"] .edition-life-stage{left:28%;width:740px;transform:translateX(-28%)}
+}

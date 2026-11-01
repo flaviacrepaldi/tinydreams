@@ -509,3 +509,7 @@ are needed for these ambient overlays.
 ## Consistent seasonal destinations
 
 All four main destinations and both collection subviews share the active edition's sky and ambient layer. Only the home shows the welcome copy. Other destinations expose 96px of scenery below the header (64px mobile), then use opaque themed sheets with a thin boundary and 16px corners for readable content. Desktop navigation uses the same opaque themed surface across tabs; mobile keeps the shared bottom navigation. Today and collection sheets inherit background, text, muted, line and accent tokens, including collection buttons and locked album slots. Preserve the wooden shelf, portrait and paper-book materials. This supersedes the previous Today/Shelf scene suppression and fixed collection shell palette.
+
+### November scenery framing
+
+Preserve the original underwater library artwork. Desktop adds a directional teal shade behind the welcome copy while keeping the ocean side open. At widths up to 560px, the scene uses a 740px-wide atlas at 28% horizontal position so shelves, staircase and ocean share the crop. Leave 88px above the home welcome copy for an unobstructed glimpse of the room, then fade the scene to the theme background before the atlas object row. The scenic animation stage follows the same width and anchor. Other editions keep their existing framing.
