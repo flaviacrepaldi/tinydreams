@@ -23,6 +23,6 @@ await screenshot('partial',390,844);await add(1.5);await wait(`state.goals.find(
 await screenshot('complete',390,844);await click('[data-entry-key]');await wait(`!state.goals.find(g=>g.id==='${goalId}').days.includes(today())`);
 await js("document.querySelector('#routineDay').value=dayBefore(1);renderRoutineChecks()");
 if(!await js("document.querySelector('#routineChecks').textContent.includes('0 de 2 litros')"))throw Error('Day totals leaked');
-await click('[data-close=progressDialog]');await click('[data-view=today]');await screenshot('today',390,844);
+await click('[data-close=progressDialog]');await js("state.view='today';render()");await screenshot('today',390,844);
 if(!await js("document.querySelector('#content').textContent.includes('litros hoje')"))throw Error('Missing today quantity');
 console.log('PASS: daily quantity form, partial progress, automatic completion, undo, separate dates, Today view, mobile overflow.');ws.close();

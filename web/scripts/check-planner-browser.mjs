@@ -42,7 +42,7 @@ for(const template of ['skin','books','money']){
  await click('#newGoalButton');
 }
 await click('[data-close=goalDialog]');
-await click('[data-view=today]');await screenshot('today',390,844);
+await js("state.view='today';render()");await screenshot('today',390,844);
 await click('[data-view=calendar]');await screenshot('calendar',390,844);
 await click('[data-view=dreams]');await screenshot('all',1440,1000);
 await cdp('Page.reload');await wait("typeof state!=='undefined' && !state.busy");

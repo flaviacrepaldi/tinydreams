@@ -375,3 +375,5 @@ html[data-celebration-motion=active] #milestone .book-seal{animation-duration:24
 #milestoneDialog::backdrop{backdrop-filter:none}
 html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebration-backdrop 200ms ease-out both}
 @keyframes celebration-backdrop{from{opacity:0}to{opacity:1}}
+
+.tabs .tab:disabled{opacity:.42;cursor:default;pointer-events:none}

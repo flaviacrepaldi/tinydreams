@@ -4,10 +4,11 @@
     chevronLeft:'<path d="m15 5-7 7 7 7"/>',
     chevronRight:'<path d="m9 5 7 7-7 7"/>',
     calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h1m6 0h1"/>',
+    analytics:'<path d="M4 3v17h17M8 16v-5m5 5V7m5 9V4"/>',
     today:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
     shelf:'<path d="M3 21h18M5 3h4v15H5zm5 2h4v13h-4zm5-1 4-1 3 14-4 1z"/>'
   });
-  const navIcons={dreams:'book',today:'today',calendar:'calendar',shelf:'shelf'};
+  const navIcons={dreams:'book',today:'today',calendar:'calendar',shelf:'shelf',analytics:'analytics'};
   document.querySelectorAll('.tab').forEach(button => {
     button.insertAdjacentHTML('afterbegin', icon(navIcons[button.dataset.view], 'nav-symbol'));
   });
@@ -15,13 +16,13 @@
   let previousView=state.view;
   document.querySelector('.tabs').addEventListener('click', event => {
     const button=event.target.closest('[data-view]');
-    if (!button || button.dataset.view===previousView) return;
+    if (!button || button.disabled || button.dataset.view===previousView) return;
     scrollPositions.set(previousView,scrollY);previousView=button.dataset.view;
     window.scrollTo({top:scrollPositions.get(previousView)||0,behavior:'instant'});
   });
   document.querySelector('.tabs').addEventListener('keydown', event => {
     if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
-    const tabs=[...document.querySelectorAll('.tab')],index=tabs.indexOf(document.activeElement);
+    const tabs=[...document.querySelectorAll('.tab:not(:disabled)')],index=tabs.indexOf(document.activeElement);
     if(index<0)return;
     event.preventDefault();
     const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;

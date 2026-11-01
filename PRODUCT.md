@@ -229,3 +229,7 @@ Scheduled habit dates before today without completion now count as failures, inc
 ## Shared appearance across destinations
 
 The user wants every destination accessible from home to share its seasonal appearance. Home, Today, Calendar, Shelf and the writers album all retain the active edition's illustrated scene and ambient effects. Shared navigation and readable content sheets use the current edition tokens. The collection's outer surfaces and controls follow the season; the wooden bookcase, portrait art and paper album retain their illustrated materials. This supersedes the earlier quiet-background rule for Today/Shelf and fixed plum collection shell.
+
+### Navigation reserved for future analysis
+
+Temporarily remove Today from the shared menu. Keep sonhos, calendário and prateleira, followed by a muted, disabled análises button with a chart icon. The analysis screen is not designed or implemented yet. Dialogs dismiss on an outside click, with no action passed through to the page; a drag starting inside a form does not dismiss it.

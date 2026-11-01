@@ -45,7 +45,7 @@ for(const edition of catalog){
   assert.equal(await js("document.querySelector('#goalDialog').getBoundingClientRect().width<=innerWidth"),true);
   assert.equal(await js("!!document.querySelector('#goalEmoji') && !document.querySelector('#goalColor')"),true);
   await js("document.querySelector('[data-close=goalDialog]').click()");
-  await js("document.querySelector('[data-view=today]').click()");assert.equal(await js("document.querySelectorAll('.today-row').length"),3);
+  await js("state.view='today';render()");assert.equal(await js("document.querySelectorAll('.today-row').length"),3);
   await js("document.querySelector('[data-view=calendar]').click()");assert.ok(await js("document.querySelectorAll('.calendar-day').length>27"));
   await js("document.querySelector('[data-view=dreams]').click()");
   console.log('PASS:',edition.id,'artwork, four viewport widths, form, tabs and data preservation');

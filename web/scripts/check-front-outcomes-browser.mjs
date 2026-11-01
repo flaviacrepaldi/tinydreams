@@ -16,7 +16,7 @@ await click('[data-action=quick-outcome][data-status=success][data-id=front-impu
 await wait("outcomeOf(state.goals[0],today())==='success'");
 await click('[data-action=quick-outcome][data-status=success][data-id=front-impulse]');await wait("outcomeOf(state.goals[0],today())===null");
 await click('[data-action=quick-outcome][data-status=failure][data-id=front-simple]');await wait("outcomeOf(state.goals[1],today())==='failure'");
-await click('[data-view=today]');await capture('today','#content');
+await js("state.view='today';render()");await capture('today','#content');
 await click('[data-action=quick-outcome][data-status=success][data-id=front-simple]');await wait("outcomeOf(state.goals[1],today())==='success'");
 if(await js("document.querySelector('#progressDialog').open"))throw Error('Today action opened history');
 await click('[data-view=dreams]');await capture('desktop','#content',1440);

@@ -20,5 +20,5 @@ if(!await js(`!!document.querySelector('[data-goal="${goalId}"] .card-symbol')`)
 await click(`[data-action=edit][data-id="${goalId}"]`);if(!await js("document.querySelector('#goalEmoji').value==='💧'"))throw Error('Emoji lost on edit');
 await js("document.querySelector('[aria-label=Coração]').click();document.querySelector('#goalForm').requestSubmit()");await wait("!document.querySelector('#goalDialog').open");
 if(!await js(`state.goals.find(g=>g.id==='${goalId}').plan.emoji==='❤️' && state.goals.find(g=>g.id==='${goalId}').color==='${color}'`))throw Error('Symbol or amulet persistence failed');
-await click('[data-view=today]');if(!await js("!!document.querySelector('#content .card-symbol')"))throw Error('Today emoji missing');
+await js("state.view='today';render()");if(!await js("!!document.querySelector('#content .card-symbol')"))throw Error('Today emoji missing');
 console.log('PASS: emoji picker, outline symbol selection, card and Today rendering, edit persistence, automatic amulet, mobile overflow.');ws.close();
