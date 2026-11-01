@@ -77,9 +77,9 @@ export async function api(request,env){
   if(p.kind!=='habit'||!validDay(day)||(day>saoPauloDay()&&status!=='skipped'&&status!==null)||!['success','failure','skipped',null].includes(status))return json({error:'Escolha um dia válido até hoje e seu resultado.'},400);
   if(body.note!=null&&(typeof body.note!=='string'||body.note.length>2000))return json({error:'Use até 2000 caracteres para a observação.'},400);
   if(status&&!scheduled({...existing,plan:{...p,skippedDays:[]}},day))return json({error:'Este dia está fora da rotina ou do período do sonho.'},400);
-  if(status==='success'&&p.dailyTarget&&dailyTotal(existing,day)<p.dailyTarget)return json({error:'Registre a quantidade deste dia antes de concluí-lo.'},400);
-  if(status==='success'&&p.tasks.length&&!tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`)))return json({error:'Conclua as tarefas previstas para este dia.'},400);
-  if((status==='failure'||status==='skipped')&&(p.dailyTarget&&dailyTotal(existing,day)>=p.dailyTarget||p.tasks.length&&tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`))))return json({error:'Corrija os registros deste dia antes de marcá-lo como falha.'},400);
+  if(day>=saoPauloDay()&&status==='success'&&p.dailyTarget&&dailyTotal(existing,day)<p.dailyTarget)return json({error:'Registre a quantidade deste dia antes de concluí-lo.'},400);
+  if(day>=saoPauloDay()&&status==='success'&&p.tasks.length&&!tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`)))return json({error:'Conclua as tarefas previstas para este dia.'},400);
+  if((status==='skipped'||status==='failure'&&day>=saoPauloDay())&&(p.dailyTarget&&dailyTotal(existing,day)>=p.dailyTarget||p.tasks.length&&tasksOn(existing,day).every(t=>existing.entries.some(e=>e.key===`${day}:${t.id}`))))return json({error:'Corrija os registros deste dia antes de marcá-lo como falha.'},400);
   const statements=[env.DB.prepare('DELETE FROM checkins WHERE goal_id=? AND day=?').bind(id,day),env.DB.prepare('DELETE FROM day_failures WHERE goal_id=? AND day=?').bind(id,day)];
   if(status==='success')statements.push(env.DB.prepare('INSERT INTO checkins (goal_id,day) VALUES (?,?)').bind(id,day));
   if(status==='failure')statements.push(env.DB.prepare('INSERT INTO day_failures (goal_id,day) VALUES (?,?)').bind(id,day));

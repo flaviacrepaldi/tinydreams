@@ -50,17 +50,28 @@ try{
  await result('2026-01-01','failure');assert.equal((await call('/'+g.id,'DELETE')).status,200);
  assert.equal((await DB.prepare('SELECT * FROM day_failures WHERE goal_id=?').bind(g.id).all()).results.length,0);
  g=(await call('','POST',{...body,plan:{...plan,impulse:false,dailyTarget:2,unit:'copos'}})).data;
- assert.equal((await result('2026-01-01','success')).status,400);
+ assert.equal((await result('2026-01-01','success')).status,200);
  await result('2026-01-01','failure');
- r=await call('/'+g.id+'/entry','POST',{day:'2026-01-01',key:'quantity',value:2,done:true});assert.equal(outcomeOf(r.data,'2026-01-01'),'success');assert.equal(r.data.failures.length,0);assert.equal((await result('2026-01-01','failure')).status,400);
+ r=await call('/'+g.id+'/entry','POST',{day:'2026-01-01',key:'quantity',value:2,done:true});assert.equal(outcomeOf(r.data,'2026-01-01'),'success');assert.equal(r.data.failures.length,0);r=await result('2026-01-01','failure');assert.equal(r.status,200);assert.equal(r.data.entries.length,1);
  r=await result('2026-01-01',null);assert.equal(r.data.entries.length,0);assert.equal(outcomeOf(r.data,'2026-01-01'),'failure');
  g=(await call('','POST',{...body,plan:{...plan,impulse:false,tasks:[{id:'task',title:'Tarefa',weekdays:[0,1,2,3,4,5,6]}]}})).data;
- assert.equal((await result('2026-01-01','success')).status,400);
+ assert.equal((await result('2026-01-01','success')).status,200);
  await result('2026-01-01','failure');r=await call('/'+g.id+'/entry','POST',{day:'2026-01-01',key:'2026-01-01:task',done:true});assert.equal(outcomeOf(r.data,'2026-01-01'),'success');assert.equal(r.data.failures.length,0);
  g=(await call('','POST',{...body,target:1,plan:{...plan,end:''}})).data;
  r=await result('2099-01-01','skipped');assert.equal(r.status,200);assert.equal(outcomeOf(r.data,'2099-01-01'),'skipped');
  await result('2026-01-01','success');assert.equal((await call('/'+g.id+'/redeem','POST',{})).data.redeemed,1);
  assert.equal((await result('2026-01-02','failure')).data.redeemed,1);
  assert.equal((await result('2026-01-01','failure')).data.redeemed,0);
+ // Historical results can be corrected independently of detailed measurements.
+ for(const measurement of [{dailyTarget:3,unit:'copos',tasks:[]},{tasks:[{id:'task',title:'Tarefa',weekdays:[0,1,2,3,4,5,6]}]}]){
+  g=(await call('','POST',{...body,plan:{...plan,impulse:false,...measurement}})).data;
+  await result('2026-01-01','failure');
+  r=await call('/'+g.id+'/outcome','POST',{day:'2026-01-01',status:'success',note:'Correção do histórico'});
+  assert.equal(r.status,200);assert.equal(outcomeOf(r.data,'2026-01-01'),'success');
+  assert.equal(r.data.plan.dayNotes['2026-01-01'],'Correção do histórico');
+  assert.deepEqual(r.data.entries,[]);
+  r=await result('2026-01-01','failure');assert.equal(r.status,200);assert.equal(outcomeOf(r.data,'2026-01-01'),'failure');
+  r=await result('2026-01-01','success');assert.equal(r.status,200);assert.equal(outcomeOf(r.data,'2026-01-01'),'success');
+ }
  console.log('PASS: three-state outcomes, historical pending days, corrections, date limits, owner isolation, impulse victories independent of daily results, measured/task completion, migration idempotency, and cleanup.');
 }finally{rmSync(dir,{recursive:true,force:true})}
