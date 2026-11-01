@@ -425,7 +425,7 @@ function dayOutcomeControls(g,day,canSucceed=true){
 function dayNoteControls(g,day){return `<section class="day-note"><label for="dayNote">registro do dia</label><textarea id="dayNote" maxlength="2000" rows="3" placeholder="como foi esse dia para você?">${esc(planOf(g).dayNotes?.[day]||'')}</textarea><p class="form-hint">um espaço para contexto, sem julgamento. comece e recomece quantas vezes precisar.</p><button class="secondary" type="button" data-save-day-note="${day}">salvar observação</button></section>`}
 function historyStart(g){return planOf(g).start||(g.created_at?localDay(new Date(g.created_at)):g.days.slice().sort()[0])||today()}
 function habitDetails(g){
- return `<div class="history-toolbar"><button type="button" class="secondary" data-pick-history-date>selecionar data</button><input id="routineDay" type="date" value="${today()}" min="${historyStart(g)}" max="${today()}" aria-label="selecionar data" hidden></div><div id="historyDays"></div><div id="routineChecks"></div><div class="outcome-totals"><span>${g.days.length} sucessos</span><span>${pastPracticeDays(g,today()).filter(d=>outcomeOf(g,d)==='failure').length} falhas</span></div>`;
+ return `<div class="history-toolbar"><button type="button" class="secondary" data-pick-history-date>selecionar data</button><input id="routineDay" type="date" value="${today()}" min="${historyStart(g)}" max="${today()}" aria-label="selecionar data" hidden></div><div id="historyDays"></div><div id="historyPager" class="history-pager"><div id="routineChecks" class="history-page"></div></div><div class="outcome-totals"><span>${g.days.length} sucessos</span><span>${pastPracticeDays(g,today()).filter(d=>outcomeOf(g,d)==='failure').length} falhas</span></div>`;
 }
 const historyDrafts=new Map();
 function shiftedHistoryDay(day,amount){const date=dateFrom(day);date.setDate(date.getDate()+amount);return localDay(date)}
@@ -445,11 +445,51 @@ function renderPastHistory(){
  const tabs=host.firstElementChild,panel=$('#routineChecks');panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby',`history-tab-${selected}`);
  const center=()=>{if(tabs.isConnected){const tab=tabs.querySelector('[aria-selected="true"]');if(!tab)return;tabs.scrollTo({left:tab.offsetLeft-tabs.offsetLeft-(tabs.clientWidth-tab.offsetWidth)/2,behavior:'instant'})}};
  requestAnimationFrame(center);
+ let selectionTimer;
+ const selectCentered=()=>{
+  if(!tabs.isConnected||state.busy)return;
+  const center=tabs.getBoundingClientRect().left+tabs.clientWidth/2;
+  const nearest=[...tabs.children].reduce((best,tab)=>Math.abs(tab.getBoundingClientRect().left+tab.offsetWidth/2-center)<Math.abs(best.getBoundingClientRect().left+best.offsetWidth/2-center)?tab:best);
+  if(nearest.dataset.historyDay!==$('#routineDay').value)selectHistoryDay(nearest.dataset.historyDay);
+ };
+ tabs.addEventListener('scroll',()=>{clearTimeout(selectionTimer);selectionTimer=setTimeout(selectCentered,140)},{passive:true});
+ tabs.addEventListener('scrollend',selectCentered);
+ renderHistoryPager(g,selected);
  tabs.addEventListener('scroll',()=>{
   const first=tabs.firstElementChild.dataset.historyDay,last=tabs.lastElementChild.dataset.historyDay;
   if(tabs.scrollLeft<100&&first>start){const before=tabs.scrollWidth,from=shiftedHistoryDay(first,-30);tabs.insertAdjacentHTML('afterbegin',historyDayTabs(g,from<start?start:from,shiftedHistoryDay(first,-1),selected));tabs.scrollLeft+=tabs.scrollWidth-before}
   if(tabs.scrollWidth-tabs.clientWidth-tabs.scrollLeft<100&&last<end){const to=shiftedHistoryDay(last,30);tabs.insertAdjacentHTML('beforeend',historyDayTabs(g,shiftedHistoryDay(last,1),to>end?end:to,selected))}
  },{passive:true});
+}
+let historyPageResize;
+function renderHistoryPager(g,selected){
+ const pager=$('#historyPager'),panel=$('#routineChecks');if(!pager||!panel)return;
+ historyPageResize?.disconnect();
+ pager.replaceChildren(panel);panel.dataset.pageDay=selected;
+ for(const offset of [-1,1]){
+  const day=shiftedHistoryDay(selected,offset);if(day<historyStart(g)||day>today())continue;
+  const preview=document.createElement('div');preview.className='history-page';preview.dataset.pageDay=day;
+  renderRoutineChecks(g,day,preview);
+  preview.inert=true;preview.setAttribute('aria-hidden','true');
+  preview.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+  if(offset<0)pager.prepend(preview);else pager.append(preview);
+ }
+ let ready=false,timer;
+ const position=()=>{
+  if(!pager.isConnected)return;
+  ready=false;pager.style.height=`${panel.offsetHeight}px`;
+  pager.scrollTo({left:panel.offsetLeft,behavior:'instant'});
+  requestAnimationFrame(()=>{ready=true});
+ };
+ historyPageResize=new ResizeObserver(position);historyPageResize.observe(panel);
+ requestAnimationFrame(position);
+ const settle=()=>{
+  if(!ready||!pager.isConnected||state.busy)return;
+  const page=[...pager.children].reduce((best,el)=>Math.abs(el.offsetLeft-pager.scrollLeft)<Math.abs(best.offsetLeft-pager.scrollLeft)?el:best);
+  if(page.dataset.pageDay!==selected)selectHistoryDay(page.dataset.pageDay);
+ };
+ pager.onscroll=()=>{clearTimeout(timer);timer=setTimeout(settle,140)};
+ pager.onscrollend=settle;
 }
 function selectHistoryDay(day,focus=false){
  const g=state.goals.find(g=>g.id===detailId),input=$('#routineDay');if(!g||!input||!validDay(day)||day<historyStart(g)||day>today())return;
@@ -464,9 +504,9 @@ $('#progressContent').addEventListener('keydown',event=>{
  const next=event.key==='ArrowLeft'?shiftedHistoryDay(day,-1):event.key==='ArrowRight'?shiftedHistoryDay(day,1):event.key==='Home'?historyStart(g):event.key==='End'?today():null;
  if(next){event.preventDefault();selectHistoryDay(next,true)}
 });
-function renderImpulse(g,day){
+function renderImpulse(g,day,host=$('#routineChecks')){
  const p=planOf(g),allowed=day<=today()&&scheduled(g,day),urges=(g.entries||[]).filter(e=>e.day===day&&e.key.startsWith('urge:'));
- $('#routineChecks').innerHTML=`${p.support?`<div class="impulse-support"><h3>Meu combinado</h3><p><span data-user-content>${esc(p.support)}</span></p></div>`:''}<div class="impulse-moment"><h3>Uma vontade de cada vez</h3><p class="form-hint">Registre quando conseguiu atravessar uma vontade sem ceder. Isso não conclui o dia automaticamente.</p><form id="urgeForm"><label for="urgeNote">O que ajudou? (opcional)</label><input id="urgeNote" maxlength="300"><button type="submit" class="primary wide" ${!allowed?'disabled':''}>Resisti a um impulso</button></form><p class="muted">${urges.length} ${urges.length===1?'vontade superada':'vontades superadas'} neste dia</p>${urges.map(e=>`<div class="plan-item"><span>${e.note?'<span data-user-content>'+esc(e.note)+'</span>':'resisti a uma vontade'}</span><button type="button" class="text-button" data-entry-key="${e.key}" data-entry-day="${day}">Remover</button></div>`).join('')}</div>${dayOutcomeControls(g,day)}`;
+ host.innerHTML=`${p.support?`<div class="impulse-support"><h3>Meu combinado</h3><p><span data-user-content>${esc(p.support)}</span></p></div>`:''}<div class="impulse-moment"><h3>Uma vontade de cada vez</h3><p class="form-hint">Registre quando conseguiu atravessar uma vontade sem ceder. Isso não conclui o dia automaticamente.</p><form id="urgeForm"><label for="urgeNote">O que ajudou? (opcional)</label><input id="urgeNote" maxlength="300"><button type="submit" class="primary wide" ${!allowed?'disabled':''}>Resisti a um impulso</button></form><p class="muted">${urges.length} ${urges.length===1?'vontade superada':'vontades superadas'} neste dia</p>${urges.map(e=>`<div class="plan-item"><span>${e.note?'<span data-user-content>'+esc(e.note)+'</span>':'resisti a uma vontade'}</span><button type="button" class="text-button" data-entry-key="${e.key}" data-entry-day="${day}">Remover</button></div>`).join('')}</div>${dayOutcomeControls(g,day)}`;
 }
 function applyDemoOutcome(g,day,status){
  g.plan={...planOf(g),skippedDays:[...(planOf(g).skippedDays||[]).filter(d=>d!==day),...(status==='skipped'?[day]:[])]};
@@ -505,25 +545,24 @@ $('#progressContent').addEventListener('submit',async event=>{if(event.target.id
 
 let detailId,quickDailyList=false;
 function openDetails(id,day,compact=false){clearItemCelebration();detailId=id;const g=state.goals.find(g=>g.id===id);if(!g)return;const p=planOf(g);quickDailyList=compact&&!!p.dailyList;$('#progressDialog').classList.toggle('quick-daily-list',quickDailyList);$('#progressDialog').classList.toggle('daily-list-dialog',!!p.dailyList);$('#progressTitle').textContent=g.title;$('#progressSubtitle').textContent=p.notes||'';$('#progressSubtitle').hidden=!p.notes;let html=`<p class="deadline">${deadline(g)}</p>`;if(p.kind==='list'){html+=`<p class="muted">${progress(g)} de ${targetOf(g)} etapas concluídas. A data planejada pode ser futura; marque quando concluir.</p><label for="entryDay">Data de conclusão</label><input id="entryDay" type="date" value="${today()}" min="${historyStart(g)}" max="${today()}"><div class="plan-items">${p.items.map(i=>{const e=(g.entries||[]).find(e=>e.key===i.id);return `<div class="plan-item"><div><strong>${esc(i.title)}</strong><small>${i.date?'Planejado: '+prettyDay(i.date):'Sem data'}${e?' · Feito: '+prettyDay(e.day):''}</small></div><button class="secondary" data-entry-key="${i.id}" aria-pressed="${!!e}">${e?'Desfazer':'Concluir'}</button></div>`}).join('')}</div>`}else if(p.kind==='amount'){html+=`<p data-user-content>${esc(progressText(g))}</p><form id="amountForm"><label for="entryValue">Quanto você avançou (<span data-user-content>${esc(unit(g))}</span>)?</label><input id="entryValue" type="number" min="0.01" max="1000000000" step="0.01" required><label for="entryDay">Data do registro</label><input id="entryDay" type="date" value="${today()}" min="${historyStart(g)}" max="${today()}" required><label for="entryNote">Anotação (opcional)</label><input id="entryNote" maxlength="300"><button class="primary wide" type="submit">Adicionar progresso</button></form><h3>Seu histórico</h3>${(g.entries||[]).slice().reverse().map(e=>`<div class="plan-item"><div><strong data-user-content>${esc(amountText(g,e.value))}</strong><small>${prettyDay(e.day)}${e.note?' · <span data-user-content>'+esc(e.note)+'</span>':''}</small></div><button class="text-button" data-entry-key="${e.key}">Remover</button></div>`).join('')||'<p class="muted">Seus primeiros passos vão aparecer aqui.</p>'}`}else{html=quickDailyList?`<input id="routineDay" type="hidden" value="${day||today()}"><div id="routineChecks"></div><button class="secondary daily-list-done" data-close="progressDialog">pronto</button>`:habitDetails(g)+html}$('#progressContent').innerHTML=html;if(p.kind==='list'&&day&&day<=today())$('#entryDay').value=day;if(p.kind==='habit'){if(day)$('#routineDay').value=day<historyStart(g)?historyStart(g):day>today()?today():day;renderRoutineChecks();renderPastHistory()}if(!$('#progressDialog').open)$('#progressDialog').showModal()}
-function renderRoutineChecks(){
- const g=state.goals.find(g=>g.id===detailId),day=$('#routineDay').value;
+function renderRoutineChecks(g=state.goals.find(g=>g.id===detailId),day=$('#routineDay').value,host=$('#routineChecks')){
  if(!validDay(day))return;
  const p=planOf(g);
- if(p.impulse){renderImpulse(g,day);prependDayNote(g,day);return}
- if(p.dailyTarget){renderDailyQuantity(g,day);prependDayNote(g,day);return}
- if(!p.tasks.length){$('#routineChecks').innerHTML=dayOutcomeControls(g,day);prependDayNote(g,day);return}
+ if(p.impulse){renderImpulse(g,day,host);prependDayNote(g,day,host);return}
+ if(p.dailyTarget){renderDailyQuantity(g,day,host);prependDayNote(g,day,host);return}
+ if(!p.tasks.length){host.innerHTML=dayOutcomeControls(g,day);prependDayNote(g,day,host);return}
  const tasks=tasksOn(g,day),allowed=day<=today()&&scheduled(g,day);
- $('#routineChecks').innerHTML=tasks.length?tasks.map(task=>{
+ host.innerHTML=tasks.length?tasks.map(task=>{
   const key=`${day}:${task.id}`,done=(g.entries||[]).some(entry=>entry.key===key);
   if(p.dailyList)return `<button type="button" class="secondary daily-list-item" data-entry-key="${key}" data-entry-day="${day}" aria-pressed="${done}" ${!allowed&&!done?'disabled':''}><span class="daily-list-tick" aria-hidden="true">${done?icon('check'):''}</span><span data-user-content>${esc(task.title)}</span></button>`;
   return `<div class="plan-item"><strong>${esc(task.title)}</strong><button class="secondary" data-entry-key="${key}" data-entry-day="${day}" aria-pressed="${done}" ${!allowed&&!done?'disabled':''}>${p.dailyList?`${done?icon('check'):''}${done?'Feito':'Marcar'}`:done?'Desfazer':'Fiz'}</button></div>`;
  }).join(''):'<p class="muted">Nenhuma tarefa prevista para este dia.</p>';
- $('#routineChecks').insertAdjacentHTML('beforeend',dailyItemProgress(g,day));
- $('#routineChecks').insertAdjacentHTML('beforeend',dayOutcomeControls(g,day,false));
- prependDayNote(g,day);
- if(!allowed)$('#routineChecks').insertAdjacentHTML('beforeend','<p class="muted">Este dia está fora da rotina, do período ou ainda não chegou.</p>');
+ host.insertAdjacentHTML('beforeend',dailyItemProgress(g,day));
+ host.insertAdjacentHTML('beforeend',dayOutcomeControls(g,day,false));
+ prependDayNote(g,day,host);
+ if(!allowed)host.insertAdjacentHTML('beforeend','<p class="muted">Este dia está fora da rotina, do período ou ainda não chegou.</p>');
 }
-function prependDayNote(g,day){if(!quickDailyList){$('#routineChecks').insertAdjacentHTML('afterbegin',dayNoteControls(g,day));const outcome=$('#routineChecks .day-outcome');if(outcome)$('#routineChecks').prepend(outcome);const draft=historyDrafts.get(`${g.id}:${day}`);if(draft!=null)$('#dayNote').value=draft}}
+function prependDayNote(g,day,host=$('#routineChecks')){if(!quickDailyList){host.insertAdjacentHTML('afterbegin',dayNoteControls(g,day));const outcome=host.querySelector('.day-outcome');if(outcome)host.prepend(outcome);const draft=historyDrafts.get(`${g.id}:${day}`);if(draft!=null)host.querySelector('#dayNote').value=draft}}
 let itemCelebrationTimer;
 function clearItemCelebration(){clearTimeout(itemCelebrationTimer);$('#itemMilestone')?.remove()}
 function magicalEmblem(motif,kind='day'){const edition=window.DreamThemes?.current,art=edition?.celebrationAsset;if(art){const first=kind==='item'?0:4,count=kind==='item'?4:kind==='dream'?12:8;const frames=Array.from({length:count},(_,i)=>{const pose=first+i,row=Math.floor(pose/4),y=row===3?(edition.celebrationFinalRow??100):row*100/3;return `<span class="celebration-frame ${i===0?'first-frame':i===count-1?'last-frame':''}" style="background-position:${pose%4*100/3}% ${y}%;animation-delay:${i*160}ms"></span>`}).join('');return `<div class="milestone-enchantment painted-enchantment" aria-hidden="true" data-scene="${kind}" style="--celebration-art:url('${esc(art)}');--atlas-final-y:${edition.celebrationFinalRow??100}%"><div class="milestone-aura"></div><div class="potion-sprite">${frames}</div><div class="painted-glints">${Array.from({length:6},(_,i)=>`<span style="--glint-delay:${i*180}ms;--glint-x:${[22,76,15,83,30,68][i]}%;--glint-y:${[32,24,60,57,80,78][i]}%">${icon('star')}</span>`).join('')}</div></div>`}return `<div class="milestone-enchantment" aria-hidden="true"><div class="milestone-aura"></div><div class="milestone-sigil">${icon(motif)}</div><div class="milestone-sparks">${Array.from({length:12},(_,i)=>`<span style="--spark-x:${Math.round(Math.cos(i*Math.PI/6)*140)}px;--spark-y:${Math.round(Math.sin(i*Math.PI/6)*115)}px;--spark-delay:${i*45}ms;--spark-turn:${i%2?24:-24}deg">${icon(i%3===0?motif:'star')}</span>`).join('')}</div></div>`}
@@ -564,9 +603,9 @@ $('#goalForm').addEventListener('invalid',e=>{const row=e.target.closest('.routi
 $('#progressContent').addEventListener('change',e=>{if(e.target.id==='routineDay'){const requested=e.target.value,valid=e.target.checkValidity();e.target.value=e.target.dataset.selectedDay||today();selectHistoryDay(valid&&requested?requested:e.target.value)}});
 $('#progressContent').addEventListener('click',async e=>{const b=e.target.closest('[data-entry-key],[data-routine-day]');if(!b)return;if(b.dataset.routineDay){const day=b.dataset.routineDay;await changeDay(detailId,day);openDetails(detailId);$('#routineDay').value=day;renderRoutineChecks();return}const g=state.goals.find(g=>g.id===detailId),entry=(g.entries||[]).find(e=>e.key===b.dataset.entryKey),day=b.dataset.entryDay||entry?.day||$('#entryDay')?.value||today();await changeEntry(detailId,{key:b.dataset.entryKey,day,done:!entry});if($('#routineDay')&&b.dataset.entryDay){$('#routineDay').value=day;renderRoutineChecks()}});
 $('#progressContent').addEventListener('submit',async e=>{if(e.target.id!=='amountForm')return;e.preventDefault();await changeEntry(detailId,{key:crypto.randomUUID(),day:$('#entryDay').value,value:Number($('#entryValue').value),note:$('#entryNote').value.trim(),done:true})});
-function renderDailyQuantity(g,day){
+function renderDailyQuantity(g,day,host=$('#routineChecks')){
  const p=planOf(g),total=dailyTotal(g,day),allowed=day<=today()&&scheduled(g,day),entries=(g.entries||[]).filter(e=>e.day===day),remaining=Math.max(0,p.dailyTarget-total);
- $('#routineChecks').innerHTML=`<p class="daily-summary">${fmt(total)} de ${fmt(p.dailyTarget)} <span data-user-content>${esc(p.unit)}</span> · ${g.days.includes(day)?'Dia feito':`${remaining===1?'Falta':'Faltam'} ${fmt(remaining)} ${p.dailyCounter?(remaining===1?'repetição':'repetições'):`<span data-user-content>${esc(p.unit)}</span>`}`}</p><div class="progress" role="progressbar" aria-label="Quantidade do dia" aria-valuemin="0" aria-valuemax="${p.dailyTarget}" aria-valuenow="${Math.min(total,p.dailyTarget)}"><span style="width:${Math.min(100,total/p.dailyTarget*100)}%">${progressToken()}</span></div>${allowed&&p.dailyCounter?`<div class="counter-controls"><button type="button" class="primary" data-add-repeat ${total>=p.dailyTarget?'disabled':''}>+1 repetição</button><button type="button" class="secondary" data-undo-repeat ${!entries.length?'disabled':''}>desfazer</button></div>`:allowed?`<form id="dailyAmountForm"><label for="dailyValue">Adicionar quantidade (<span data-user-content>${esc(p.unit)}</span>)</label><input id="dailyValue" type="number" min="0.01" max="1000000000" step="0.01" required><button class="primary wide" type="submit">Registrar quantidade</button></form>`:'<p class="muted">Este dia está fora da rotina, do período ou ainda não chegou.</p>'}<div>${entries.map(e=>`<div class="plan-item"><strong>${fmt(e.value)} <span data-user-content>${esc(p.unit)}</span></strong><button class="text-button" data-entry-key="${e.key}" data-entry-day="${day}">Remover</button></div>`).join('')}</div>${dayOutcomeControls(g,day,false)}`;
+ host.innerHTML=`<p class="daily-summary">${fmt(total)} de ${fmt(p.dailyTarget)} <span data-user-content>${esc(p.unit)}</span> · ${g.days.includes(day)?'Dia feito':`${remaining===1?'Falta':'Faltam'} ${fmt(remaining)} ${p.dailyCounter?(remaining===1?'repetição':'repetições'):`<span data-user-content>${esc(p.unit)}</span>`}`}</p><div class="progress" role="progressbar" aria-label="Quantidade do dia" aria-valuemin="0" aria-valuemax="${p.dailyTarget}" aria-valuenow="${Math.min(total,p.dailyTarget)}"><span style="width:${Math.min(100,total/p.dailyTarget*100)}%">${progressToken()}</span></div>${allowed&&p.dailyCounter?`<div class="counter-controls"><button type="button" class="primary" data-add-repeat ${total>=p.dailyTarget?'disabled':''}>+1 repetição</button><button type="button" class="secondary" data-undo-repeat ${!entries.length?'disabled':''}>desfazer</button></div>`:allowed?`<form id="dailyAmountForm"><label for="dailyValue">Adicionar quantidade (<span data-user-content>${esc(p.unit)}</span>)</label><input id="dailyValue" type="number" min="0.01" max="1000000000" step="0.01" required><button class="primary wide" type="submit">Registrar quantidade</button></form>`:'<p class="muted">Este dia está fora da rotina, do período ou ainda não chegou.</p>'}<div>${entries.map(e=>`<div class="plan-item"><strong>${fmt(e.value)} <span data-user-content>${esc(p.unit)}</span></strong><button class="text-button" data-entry-key="${e.key}" data-entry-day="${day}">Remover</button></div>`).join('')}</div>${dayOutcomeControls(g,day,false)}`;
 }
 $('#progressContent').addEventListener('submit',async e=>{if(e.target.id!=='dailyAmountForm')return;e.preventDefault();await changeEntry(detailId,{key:crypto.randomUUID(),day:$('#routineDay').value,value:Number($('#dailyValue').value),done:true})});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action="details"],[data-action="history"],[data-action="record"],[data-action="daily-list-check"]');if(b){const g=state.goals.find(g=>g.id===b.dataset.id);openDetails(b.dataset.id,b.dataset.day||(b.matches('.diary-button,[data-action="history"]')?(historyStart(g)>dayBefore(1)?historyStart(g):dayBefore(1)):today()),b.dataset.action==='daily-list-check');}});

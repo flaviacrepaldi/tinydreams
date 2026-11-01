@@ -233,7 +233,7 @@ html[data-celebration-motion=active] .painted-glints>span{animation:painted-twin
 
 .history-toolbar{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:12px;margin:24px 0 16px}
 .history-toolbar input{width:auto;max-width:100%}
-.history-days{display:flex;gap:4px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:var(--line) var(--surface);padding:6px 4px 0;margin-bottom:24px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+.history-days{display:flex;gap:4px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;padding:6px calc((100% - 76px)/2) 0;margin-bottom:24px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
 .history-days svg{width:16px;height:16px}
 .history-day{flex:0 0 76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:88px;scroll-snap-align:center;padding:10px 8px 8px;border:1px solid var(--line);border-bottom:3px solid transparent;border-radius:12px 12px 0 0;background:var(--surface);color:var(--text);font-size:13px}
 .history-day>span:first-child{font-size:11px;color:var(--muted)}
@@ -271,3 +271,7 @@ html[data-celebration-motion=active] .celebration-frame.last-frame{animation-nam
  @keyframes painted-crossfade{0%{opacity:0}33.333%,66.667%{opacity:1}100%{opacity:0}}
  @keyframes painted-first-crossfade{0%,66.667%{opacity:1}100%{opacity:0}}
 }
+
+.history-days::-webkit-scrollbar,.history-pager::-webkit-scrollbar{display:none}
+.history-pager{position:relative;display:flex;align-items:flex-start;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.history-page{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;padding:0 2px 4px;overflow-wrap:anywhere}
