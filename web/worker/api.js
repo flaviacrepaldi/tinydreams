@@ -144,7 +144,11 @@ export async function api(request,env){
   try{if(plan)plan=validatePlan(plan)}catch(e){return json({error:e.message},400)}
   if((!plan||plan.kind==='habit')&&(!Number.isInteger(body.target)||body.target>3650))return json({error:'Use uma meta de 1 a 3650 dias.'},400);
   if(existing&&planOf(existing).kind!==(plan?.kind||'habit')&&(existing.days.length||existing.entries.length||existing.failures.length))return json({error:'Crie outro sonho para mudar o tipo sem perder seu histórico.'},400);
-  if(existing?.entries.length&&planOf(existing).kind==='habit'&&(Boolean(planOf(existing).dailyTarget)!==Boolean(plan?.dailyTarget)||(planOf(existing).dailyTarget&&planOf(existing).unit!==plan.unit)))return json({error:'Crie outro hábito para mudar a unidade ou a forma de medir sem misturar registros.'},400);
+  // Equivalent task counters retain entry keys, values, check-ins and corrections.
+  const oldPlan=existing&&planOf(existing);
+  const counterConversion=body.convertTasksToCounter===true&&oldPlan?.kind==='habit'&&oldPlan.tasks.length>0&&plan?.dailyCounter===true&&plan.dailyTarget===oldPlan.tasks.length&&plan.tasks.length===0&&!plan.dailyList&&oldPlan.tasks.every(t=>JSON.stringify([...t.weekdays].sort())===JSON.stringify([...oldPlan.weekdays].sort()))&&['start','end','unit','completionMode'].every(k=>plan[k]===oldPlan[k])&&JSON.stringify(plan.weekdays)===JSON.stringify(oldPlan.weekdays)&&existing.entries.every(e=>e.value===1&&oldPlan.tasks.some(t=>e.key===`${e.day}:${t.id}`));
+  if(body.convertTasksToCounter===true&&!counterConversion)return json({error:'Esta rotina não pode ser convertida sem alterar o histórico.'},400);
+  if(!counterConversion&&existing?.entries.length&&planOf(existing).kind==='habit'&&(Boolean(planOf(existing).dailyTarget)!==Boolean(plan?.dailyTarget)||(planOf(existing).dailyTarget&&planOf(existing).unit!==plan.unit)))return json({error:'Crie outro hábito para mudar a unidade ou a forma de medir sem misturar registros.'},400);
   const groupId=body.groupId===undefined?(existing?.group_id??null):body.groupId;
   if(groupId!==null&&(typeof groupId!=='string'||!(await env.DB.prepare('SELECT id FROM dream_groups WHERE id=? AND owner=?').bind(groupId,owner).all()).results.length))return json({error:'Escolha um Big Dream válido.'},400);
   if(plan){

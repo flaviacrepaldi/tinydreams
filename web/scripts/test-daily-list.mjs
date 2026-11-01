@@ -8,7 +8,7 @@ import {complete,progress} from '../shared/planner.js';
 const dir=mkdtempSync(join(tmpdir(),'tiny-daily-list-')),DB=localDB(join(dir,'test.sqlite'));
 async function call(path='',method='GET',body){const r=await api(new Request('https://test/api/goals'+path,{method,headers:{'oai-authenticated-user-id':'daily-list-test'},...(body?{body:JSON.stringify(body)}:{})}),{DB});return {status:r.status,data:await r.json()}}
 const weekdays=[0,1,2,3,4,5,6],tasks=['fruta','salada','legume'].map(id=>({id,title:id,weekdays}));
-const body={title:'Lista diária de teste',reward:'',target:10,color:'lavender',plan:{kind:'habit',dailyList:true,start:'2026-01-01',end:'',weekdays,tasks,items:[],notes:'',unit:''}};
+const body={title:'Lista diária de teste',reward:'',target:10,color:'lavender',plan:{kind:'habit',dailyList:true,start:'2026-01-01',end:'',weekdays,tasks,items:[],notes:'',unit:'porções'}};
 try{
  const created=await call('','POST',body);assert.equal(created.status,201);let g=created.data;assert.equal(g.plan.dailyList,true);
  for(const task of tasks)g=(await call('/'+g.id+'/entry','POST',{day:'2026-01-01',key:'2026-01-01:'+task.id,done:true})).data;
@@ -20,5 +20,15 @@ try{
  assert.equal((await call('','POST',{...body,plan:{...body.plan,tasks:[]}})).status,400);
  assert.equal((await call('','POST',{...body,plan:{...body.plan,kind:'list',items:tasks}})).status,400);
  assert.equal((await call('','POST',{...body,plan:{...body.plan,dailyList:'yes'}})).status,400);
+ const counterPlan={...g.plan,dailyList:false,tasks:[],dailyTarget:3,dailyCounter:true};
+ assert.equal((await call('/'+g.id,'PATCH',{...body,plan:counterPlan})).status,400);
+ assert.equal((await call('/'+g.id,'PATCH',{...body,plan:{...counterPlan,dailyTarget:2},convertTasksToCounter:true})).status,400);
+ const converted=await call('/'+g.id,'PATCH',{...body,plan:counterPlan,convertTasksToCounter:true});assert.equal(converted.status,200);
+ assert.deepEqual(converted.data.entries,g.entries);assert.deepEqual(converted.data.days,g.days);
+ g=(await call('/'+g.id+'/entry','POST',{day:'2026-01-02',key:'counter-new',value:1,done:true})).data;
+ assert.deepEqual(g.days,['2026-01-01','2026-01-02']);
+ g=(await call('/'+g.id+'/entry','POST',{day:'2026-01-02',key:'counter-new',done:false})).data;
+ assert.deepEqual(g.days,['2026-01-01']);
+ assert.equal((await call('','POST',{...body,plan:{...counterPlan,dailyTarget:1.5}})).status,400);
  console.log('PASS: daily lists persist, complete one day at a time, have independent checks per date, preserve past days on undo, and reject invalid modes.');
 }finally{rmSync(dir,{recursive:true,force:true})}

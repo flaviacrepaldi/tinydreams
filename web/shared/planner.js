@@ -29,6 +29,7 @@ export function validatePlan(p){
   if(p.tasks.includes(item)&&(!Array.isArray(item.weekdays)||!item.weekdays.length||item.weekdays.some(d=>!Number.isInteger(d)||d<0||d>6)))throw Error('Escolha os dias de cada tarefa.');
   if(p.items.includes(item)&&((item.date&&!validDay(item.date))||(item.date&&p.start&&item.date<p.start)||(item.date&&p.end&&item.date>p.end)))throw Error('As datas das etapas devem ficar dentro do período do sonho.');
  }
+ if(p.dailyCounter!=null&&(typeof p.dailyCounter!=='boolean'||p.dailyCounter&&(!Number.isInteger(p.dailyTarget)||p.dailyTarget<1)))throw Error('Use uma meta inteira de repetições por dia.');
  if(p.dailyTarget!=null){
   if(p.kind!=='habit'||!Number.isFinite(p.dailyTarget)||p.dailyTarget<=0||p.dailyTarget>1000000000||Math.abs(Math.round(p.dailyTarget*100)-p.dailyTarget*100)>0.00001||!p.unit.trim())throw Error('Informe uma quantidade diária positiva, com até duas casas decimais, e a unidade.');
   if(p.tasks.length)throw Error('Escolha tarefas ou quantidade diária para este hábito.');
