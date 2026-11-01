@@ -125,7 +125,7 @@ html[data-motion="active"] .goal.celebrate .progress>span {background-image:line
 /* Books retain their identity while inheriting each edition's paper and light. */
 .dream-library{padding:10px 0 30px}.shelf-heading{margin-bottom:30px}.shelf-heading h2{font-family:var(--serif);font-size:32px;font-weight:400;margin:0 0 8px}.shelf-heading p,.book-record p{color:var(--muted);font-size:13px;line-height:1.6}.dream-shelves{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:38px 28px}.shelf-volume{min-width:0;padding:0 12px 20px;border-bottom:8px solid var(--line);box-shadow:0 12px 16px -14px #0009}.dream-book{--book-ink:var(--accent);position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:24px;min-height:250px;padding:26px 22px 24px 30px;background:var(--surface);color:var(--text);border-radius:4px 12px 12px 4px;box-shadow:inset 7px 0 0 var(--line),inset -5px 0 0 var(--book-ink),0 14px 24px -16px #000a;overflow-wrap:anywhere}.dream-book.peach{--book-ink:var(--accent)}.dream-book.sage{--book-ink:var(--accent)}.book-symbol{color:var(--book-ink)}.book-symbol svg{width:30px;height:30px}.dream-book h3{font-family:var(--serif);font-size:26px;line-height:1.25;font-weight:400;margin:0}.book-seal{display:flex;align-items:center;gap:8px;color:var(--book-ink);font-size:12px}.book-seal svg,.shelf-reward svg{width:18px;height:18px;flex-shrink:0}.book-record{padding-top:10px}.book-record p{margin:8px 0}.book-record button{min-height:44px;margin:6px 8px 0 0}.shelf-reward{display:flex;gap:8px;align-items:flex-start;overflow-wrap:anywhere}.shelf-empty{padding:30px 0 60px;max-width:48ch;color:var(--muted);line-height:1.7}.shelf-empty>svg{width:64px;height:64px;color:var(--accent)}
 .milestone{position:fixed;z-index:9;bottom:calc(22px + env(safe-area-inset-bottom));right:24px;width:min(540px,calc(100% - 32px));max-height:80dvh;overflow:auto;background:var(--surface);color:var(--text);padding:28px;border-radius:16px;box-shadow:0 18px 60px #0008;display:flex;align-items:center;gap:24px}.milestone[hidden]{display:none}.milestone-close{position:absolute;top:6px;right:6px;min-width:44px;min-height:44px}.milestone-copy{min-width:0}.milestone h2{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.2;margin:10px 0}.milestone p{color:var(--muted);font-size:14px;line-height:1.6;overflow-wrap:anywhere}.milestone .dream-book{width:155px;min-width:155px;min-height:215px;padding:24px 18px 24px 23px}.milestone .dream-book h3{font-size:21px}.milestone .book-seal{font-size:10px}.daily-book{position:relative;color:var(--accent);flex-shrink:0}.daily-book>svg:first-child{width:70px;height:70px}.daily-book>svg:last-child{position:absolute;right:0;bottom:0;width:28px;height:28px;background:var(--surface)}
-html[data-motion=active] .milestone{animation:chapter-arrival .7s cubic-bezier(.16,1,.3,1) both}html[data-motion=active] .milestone .dream-book{transform-origin:left center;animation:book-open 1.2s cubic-bezier(.16,1,.3,1) both}html[data-motion=active] .milestone .book-seal{animation:seal-reveal 1.4s ease-out both}
+html[data-celebration-motion=active] .milestone{animation:chapter-arrival .7s cubic-bezier(.16,1,.3,1) both}html[data-celebration-motion=active] .milestone .dream-book{transform-origin:left center;animation:book-open 1.2s cubic-bezier(.16,1,.3,1) both}html[data-celebration-motion=active] .milestone .book-seal{animation:seal-reveal 1.4s ease-out both}
 @keyframes chapter-arrival{from{transform:translateY(18px);clip-path:inset(8% 0 0)}to{transform:none;clip-path:inset(0)}}@keyframes book-open{from{transform:perspective(700px) rotateY(-32deg)}to{transform:perspective(700px) rotateY(0)}}@keyframes seal-reveal{0%,40%{opacity:0}100%{opacity:1}}
 @media(max-width:850px){.dream-shelves{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.tabs{gap:12px;flex-wrap:wrap}.tab{font-size:12px}.dream-shelves{grid-template-columns:1fr;gap:30px}.shelf-volume{padding-inline:16px}.dream-book{min-height:235px}.milestone{right:16px;padding:28px 20px 20px;gap:16px}.milestone .dream-book{width:105px;min-width:105px;min-height:190px;padding:20px 12px 18px 18px;gap:16px}.milestone .dream-book h3{font-size:18px}.milestone .book-seal{font-size:10px;gap:4px}.milestone h2{font-size:22px}.milestone p{font-size:12px}.milestone .secondary{padding:10px 12px;min-height:44px}.daily-book>svg:first-child{width:44px;height:44px}}
 
@@ -196,14 +196,14 @@ html[data-motion=active] .milestone{animation:chapter-arrival .7s cubic-bezier(.
 .milestone[data-magic=rain] .milestone-sparks>span:nth-child(odd){width:2px;height:17px;background:currentColor;border-radius:3px}.milestone[data-magic=rain] .milestone-sparks>span:nth-child(odd)>svg{display:none}
 .milestone[data-magic=petals] .milestone-sparks>span:nth-child(odd){width:10px;height:17px;background:currentColor;border-radius:80% 15% 80% 15%}.milestone[data-magic=petals] .milestone-sparks>span:nth-child(odd)>svg{display:none}
 .milestone.final-chapter .milestone-enchantment{height:115px}.milestone.final-chapter .milestone-sparks{transform:scale(.75)}.milestone.final-chapter .dream-book{width:125px;min-width:125px;min-height:165px;padding:18px 14px;margin:0 auto 22px}.milestone.final-chapter .dream-book h3{font-size:18px}
-html[data-motion=active] .milestone{animation:magic-arrival .65s cubic-bezier(.16,1,.3,1) both}
-html[data-motion=active] .milestone-aura{animation:magic-charge 2.4s ease-out both}
-html[data-motion=active] .milestone-sigil{animation:magic-ignite 1.3s cubic-bezier(.16,1,.3,1) both}
-html[data-motion=active] .milestone-sparks>span{animation:magic-scatter 2.5s cubic-bezier(.16,1,.3,1) var(--spark-delay) both}
-html[data-motion=active] .milestone[data-magic=bubbles] .milestone-sparks>span{animation-name:magic-rise}
-html[data-motion=active] .milestone[data-magic=embers] .milestone-sparks>span,html[data-motion=active] .milestone[data-magic=motes] .milestone-sparks>span,html[data-motion=active] .milestone[data-magic=dust] .milestone-sparks>span{animation-name:magic-rise}
-html[data-motion=active] .milestone[data-magic=rain] .milestone-sparks>span,html[data-motion=active] .milestone[data-magic=petals] .milestone-sparks>span{animation-name:magic-fall}
-@keyframes magic-arrival{from{opacity:.4;transform:translate(-50%,-46%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+html[data-celebration-motion=active] .milestone{animation:magic-arrival .65s cubic-bezier(.16,1,.3,1) both}
+html[data-celebration-motion=active] .milestone-aura{animation:magic-charge 2.4s ease-out both}
+html[data-celebration-motion=active] .milestone-sigil{animation:magic-ignite 1.3s cubic-bezier(.16,1,.3,1) both}
+html[data-celebration-motion=active] .milestone-sparks>span{animation:magic-scatter 2.5s cubic-bezier(.16,1,.3,1) var(--spark-delay) both}
+html[data-celebration-motion=active] .milestone[data-magic=bubbles] .milestone-sparks>span{animation-name:magic-rise}
+html[data-celebration-motion=active] .milestone[data-magic=embers] .milestone-sparks>span,html[data-celebration-motion=active] .milestone[data-magic=motes] .milestone-sparks>span,html[data-celebration-motion=active] .milestone[data-magic=dust] .milestone-sparks>span{animation-name:magic-rise}
+html[data-celebration-motion=active] .milestone[data-magic=rain] .milestone-sparks>span,html[data-celebration-motion=active] .milestone[data-magic=petals] .milestone-sparks>span{animation-name:magic-fall}
+@keyframes magic-arrival{from{opacity:0;transform:translate(-50%,-50%) scale(.98)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @keyframes magic-ignite{0%{opacity:.4;transform:scale(.7);filter:drop-shadow(0 0 2px var(--accent))}45%{filter:drop-shadow(0 0 25px var(--accent))}100%{opacity:1;transform:scale(1)}}
 @keyframes magic-charge{0%{opacity:.2;transform:scale(.5)}40%{opacity:1;transform:scale(1.2)}100%{opacity:.75;transform:scale(1)}}
 @keyframes magic-scatter{0%{opacity:0;transform:translate(0,0) scale(.2)}20%{opacity:1}100%{opacity:.4;transform:translate(var(--spark-x),var(--spark-y)) scale(.8)}}
@@ -211,7 +211,7 @@ html[data-motion=active] .milestone[data-magic=rain] .milestone-sparks>span,html
 @keyframes magic-fall{0%{opacity:0;transform:translate(var(--spark-x),calc(var(--spark-y) - 60px)) rotate(0)}25%{opacity:.9}100%{opacity:.4;transform:translate(var(--spark-x),var(--spark-y)) rotate(var(--spark-turn))}}
 @media(max-width:560px){.milestone{padding:30px 20px 24px}.milestone-enchantment{height:190px}.milestone-sparks{transform:scale(.85)}.milestone.final-chapter .milestone-enchantment{height:95px}}
 @media(prefers-reduced-motion:reduce){.milestone,.milestone *{animation:none!important;transition:none!important}.milestone-sparks>span{opacity:.4}}
-html[data-motion=paused] .milestone,html[data-motion=paused] .milestone *{animation:none!important}
+html[data-celebration-motion=paused] .milestone,html[data-celebration-motion=paused] .milestone *{animation:none!important}
 /* Item feedback lives in the open diary's top layer and leaves the checklist usable. */
 .item-milestone{z-index:4;pointer-events:none;width:min(350px,calc(100% - 40px));padding:18px 22px 24px;max-height:calc(100dvh - 40px)}.item-milestone .milestone-enchantment{height:145px}.item-milestone .milestone-sparks{transform:scale(.75)}.item-milestone .milestone-sigil>svg{width:58px;height:58px}.item-milestone h2{font-size:26px}.item-milestone p{margin-bottom:10px}.item-milestone .item-completion-count{font-size:12px;margin-bottom:0}
 
@@ -220,15 +220,9 @@ html[data-motion=paused] .milestone,html[data-motion=paused] .milestone *{animat
 .potion-sprite{width:260px;height:260px;position:relative;background:var(--celebration-art,url('/potion-celebration-v1.png')) 100% 66.666667% / 400% 400% no-repeat;filter:drop-shadow(0 4px 12px color-mix(in srgb,var(--accent) 25%,transparent))}
 .painted-enchantment[data-scene=item] .potion-sprite{background-position:100% 0%}.painted-enchantment[data-scene=dream] .potion-sprite{background-position:100% var(--atlas-final-y,100%)}
 .painted-glints{position:absolute;inset:0;pointer-events:none;color:#f4d5a3}.painted-glints>span{position:absolute;left:var(--glint-x);top:var(--glint-y);width:12px;height:12px;opacity:.5}.painted-glints svg{width:100%;height:100%;stroke-width:1.3}
-html[data-motion=active] .potion-sprite{animation:potion-day 2.4s steps(1,end) both}
-html[data-motion=active] [data-scene=item] .potion-sprite{animation:potion-item 1.4s steps(1,end) both}
-html[data-motion=active] [data-scene=dream] .potion-sprite{animation:potion-dream 3.6s steps(1,end) both}
-html[data-motion=active] .painted-glints>span{animation:painted-twinkle 2.2s ease-out var(--glint-delay) both}
+html[data-celebration-motion=active] .painted-glints>span{animation:painted-twinkle 2.2s ease-out var(--glint-delay) both}
 .milestone.final-chapter .painted-enchantment{height:230px}.milestone.final-chapter .potion-sprite{width:230px;height:230px}
 .item-milestone .painted-enchantment{height:210px}.item-milestone .potion-sprite{width:210px;height:210px}
-@keyframes potion-item{0%{background-position:0% 0%}25%{background-position:33.333333% 0%}50%{background-position:66.666667% 0%}75%,100%{background-position:100% 0%}}
-@keyframes potion-day{0%{background-position:0% 33.333333%}12.5%{background-position:33.333333% 33.333333%}25%{background-position:66.666667% 33.333333%}37.5%{background-position:100% 33.333333%}50%{background-position:0% 66.666667%}62.5%{background-position:33.333333% 66.666667%}75%{background-position:66.666667% 66.666667%}87.5%,100%{background-position:100% 66.666667%}}
-@keyframes potion-dream{0%{background-position:0% 33.333333%}8.333%{background-position:33.333333% 33.333333%}16.666%{background-position:66.666667% 33.333333%}25%{background-position:100% 33.333333%}33.333%{background-position:0% 66.666667%}41.666%{background-position:33.333333% 66.666667%}50%{background-position:66.666667% 66.666667%}58.333%{background-position:100% 66.666667%}66.666%{background-position:0% var(--atlas-final-y,100%)}75%{background-position:33.333333% var(--atlas-final-y,100%)}83.333%{background-position:66.666667% var(--atlas-final-y,100%)}91.666%,100%{background-position:100% var(--atlas-final-y,100%)}}
 @keyframes painted-twinkle{0%{opacity:0;transform:scale(.4)}35%{opacity:1;transform:scale(1.2);filter:drop-shadow(0 0 4px #ffe1ad)}100%{opacity:.25;transform:scale(.7)}}
 @media(max-width:560px){.milestone .painted-enchantment{height:235px}.milestone .potion-sprite{width:235px;height:235px}.item-milestone .painted-enchantment{height:210px}.item-milestone .potion-sprite{width:210px;height:210px}.milestone.final-chapter .painted-enchantment{height:200px}.milestone.final-chapter .potion-sprite{width:200px;height:200px}}
 @media(prefers-reduced-motion:reduce){.potion-sprite,.painted-glints>span{animation:none!important}}
@@ -250,3 +244,30 @@ html[data-motion=active] .painted-glints>span{animation:painted-twinkle 2.2s eas
 .counter-controls{display:flex;gap:12px;margin:20px 0}
 .counter-controls .primary{flex:1}
 .day-note{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+
+#progressDialog .progress-heading{min-width:0;flex:1}
+#progressSubtitle{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+.daily-list-dialog .dialog-top .progress-heading{grid-column:2}
+
+/* Crossfade stationary watercolor poses instead of jumping the atlas background. */
+.celebration-frame{display:none;position:absolute;inset:0;opacity:0;background-image:var(--celebration-art);background-size:400% 400%;background-repeat:no-repeat}
+html[data-celebration-motion=active] .potion-sprite{background-image:none}
+html[data-celebration-motion=active] .celebration-frame{display:block;animation:painted-frame 240ms linear both}
+html[data-celebration-motion=active] .celebration-frame.first-frame{animation-name:painted-first-frame}
+html[data-celebration-motion=active] .celebration-frame.last-frame{animation-name:painted-last-frame}
+@keyframes painted-frame{0%{opacity:0}33.333%,99.999%{opacity:1}100%{opacity:0}}
+@keyframes painted-first-frame{0%,99.999%{opacity:1}100%{opacity:0}}
+@keyframes painted-last-frame{0%{opacity:0}33.333%,100%{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+ html[data-celebration-motion] .potion-sprite{background-image:var(--celebration-art)}
+ .celebration-frame{display:none!important}
+}
+/* Additive blending keeps transparent watercolor from dimming during a crossfade. */
+@supports(mix-blend-mode:plus-lighter){
+ .potion-sprite{isolation:isolate}
+ .celebration-frame{mix-blend-mode:plus-lighter}
+ html[data-celebration-motion=active] .celebration-frame:not(.last-frame){animation-name:painted-crossfade}
+ html[data-celebration-motion=active] .celebration-frame.first-frame{animation-name:painted-first-crossfade}
+ @keyframes painted-crossfade{0%{opacity:0}33.333%,66.667%{opacity:1}100%{opacity:0}}
+ @keyframes painted-first-crossfade{0%,66.667%{opacity:1}100%{opacity:0}}
+}

@@ -162,7 +162,8 @@
     const art=card.querySelector('.talisman'),fill=card.querySelector('.progress>span');
     const from=Math.max(0,Math.min(1,detail.from)),to=Math.max(0,Math.min(1,detail.to));
     card.classList.remove('celebrate');
-    art?.style.setProperty('--charge',String(from));if(fill)fill.style.width=`${from*100}%`;
+    // Deferred feedback must not rewind the progress already rendered under a dialog.
+    if(!detail.deferred){art?.style.setProperty('--charge',String(from));if(fill)fill.style.width=`${from*100}%`}
     // One layout read per user action, never in the ambient drawing loop.
     void card.offsetWidth;
     requestAnimationFrame(()=>{
@@ -185,12 +186,13 @@
   });
   function update(){
     root.dataset.motion=active()?'active':'paused';
+    root.dataset.celebrationMotion=enabled&&!reduced.matches&&!document.hidden?'active':'paused';
     root.dataset.sceneMotion=active()&&sceneInView?'active':'paused';
     toggle.checked=enabled&&!reduced.matches;
     toggle.disabled=reduced.matches;
     hint.textContent=reduced.matches?'Os movimentos estão pausados pela preferência de reduzir movimento do seu dispositivo.':'Você pode pausar os movimentos quando quiser.';
     if(!enabled||reduced.matches||document.hidden){pendingCelebrations.clear();document.querySelectorAll('.goal.celebrate').forEach(card=>card.classList.remove('celebrate'))}
-    if(active()&&pendingCelebrations.size){for(const detail of pendingCelebrations.values())celebrate(detail);pendingCelebrations.clear()}
+    if(active()&&pendingCelebrations.size){for(const detail of pendingCelebrations.values())celebrate({...detail,deferred:true});pendingCelebrations.clear()}
     cancelAnimationFrame(frame);frame=0;
     if(active()&&inView&&context){nextStar=performance.now()+2000+Math.random()*3000;lastFrame=0;frame=requestAnimationFrame(draw);}
     else{shootingStar=null;context?.clearRect(0,0,width,height);}

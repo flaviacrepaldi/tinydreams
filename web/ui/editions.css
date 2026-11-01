@@ -62,7 +62,7 @@ html[data-paper="true"] .welcome .date{color:var(--muted)}html[data-paper="true"
 }
 /* Shared completion language; all colors come from the active edition. */
 html:not([data-edition="2026-10"]) .dream-book{--book-ink:var(--goal-lavender,var(--lavender))}html:not([data-edition="2026-10"]) .dream-book.peach{--book-ink:var(--goal-peach,var(--peach))}html:not([data-edition="2026-10"]) .dream-book.sage{--book-ink:var(--goal-sage,var(--sage))}
-html[data-motion="paused"] .milestone,html[data-motion="paused"] .milestone *{animation:none!important}
+html[data-celebration-motion="paused"] .milestone,html[data-celebration-motion="paused"] .milestone *{animation:none!important}
 @media(prefers-reduced-motion:reduce){.milestone,.milestone *{animation:none!important}}
 /* A short, material response for every seasonal object; no new art is loaded. */
 html:not([data-edition="2026-10"])[data-motion="active"][data-atmosphere="bubbles"] .goal.celebrate .talisman{animation:tidal-success 1.2s cubic-bezier(.16,1,.3,1)}
@@ -212,7 +212,7 @@ html[data-edition] .dream-overview .goal .goal-menu{align-items:center}
 html[data-edition] .dream-overview .goal .goal-menu .diary-button{width:44px;height:44px;color:var(--accent)}
 html[data-edition] .dream-overview .goal .goal-menu .diary-button svg{width:20px;height:20px}
 html[data-edition] .dream-overview .goal .goal-menu .skip-day-button{width:44px;height:44px}
-html[data-edition] .dream-overview .goal .goal-menu .skip-day-button svg{width:20px;height:20px}
+html[data-edition] .dream-overview .goal .goal-menu .skip-day-button svg{display:block;flex:0 0 20px;width:20px;height:20px}
 /* On phones, give the dream's words more room than its amulet. */
 @media(max-width:560px){
  html[data-edition] .dream-overview .goal .dream-summary{min-height:190px}

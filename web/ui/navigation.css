@@ -169,7 +169,7 @@ body:not([data-view="dreams"]) .workspace{margin-top:96px}
  .milestone.final-chapter .dream-book{min-height:110px;margin-bottom:12px;padding:12px}
  .milestone h2{font-size:22px;margin-bottom:10px}
  .milestone p{font-size:13px;margin-bottom:12px;line-height:1.4}
- html[data-motion=active] .milestone{animation:none}
+ html[data-celebration-motion=active] .milestone{animation:none}
 }
 /* Two distinct rhythms: today's checked steps and the dream's earned progress. */
 .dream-progress{margin-top:12px}
@@ -347,10 +347,9 @@ html[data-edition] .incomplete-collection .goal-grid>.goal{display:flex;flex-dir
 #milestoneDialog::backdrop{background:#090512b8}
 #milestoneDialog .milestone{margin:0;border:0;box-shadow:0 24px 80px #09051299;overscroll-behavior:contain;overflow:auto}
 html.milestone-open{overflow:hidden;overscroll-behavior:none}
-html.milestone-open body{position:fixed;top:var(--milestone-scroll-top);width:100%;overflow:hidden}
-html[data-motion=active] #milestone{animation-duration:180ms}
-html[data-motion=active] #milestone .dream-book{animation-duration:300ms}
-html[data-motion=active] #milestone .book-seal{animation-duration:240ms}
+html[data-celebration-motion=active] #milestone{animation-duration:240ms}
+html[data-celebration-motion=active] #milestone .dream-book{animation-duration:300ms}
+html[data-celebration-motion=active] #milestone .book-seal{animation-duration:240ms}
 
 .dream-overview .overview-tools{flex-wrap:wrap}
 .home-filter{display:flex;margin-left:auto;padding:3px;gap:3px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
@@ -370,3 +369,9 @@ html[data-motion=active] #milestone .book-seal{animation-duration:240ms}
 @media(max-width:700px),(pointer:coarse){
  .dream-overview .goal-grid:focus{outline:none}
 }
+#progressDialog .outcome-actions [aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+/* The backdrop darkens smoothly without blurring the entire mobile viewport. */
+#milestoneDialog::backdrop{backdrop-filter:none}
+html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebration-backdrop 200ms ease-out both}
+@keyframes celebration-backdrop{from{opacity:0}to{opacity:1}}

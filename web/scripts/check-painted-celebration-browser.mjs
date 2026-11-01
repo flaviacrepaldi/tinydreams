@@ -5,7 +5,7 @@ function cdp(method,params={}){return new Promise((resolve,reject)=>{const n=++r
 async function js(expression){const r=await cdp('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text+': '+r.exceptionDetails.exception?.description);return r.result.value}
 async function wait(expression){const end=Date.now()+10000;while(Date.now()<end){if(await js(expression))return;await new Promise(r=>setTimeout(r,100))}throw Error('Timed out: '+expression)}
 async function click(selector){await js(`document.querySelector(${JSON.stringify(selector)}).click()`)}
-await mkdir('/tmp/tiny-groups-review',{recursive:true});await cdp('Page.enable');await cdp('Page.navigate',{url:'http://localhost:4181'});await wait("typeof state!=='undefined'&&!state.busy");
+await mkdir('/tmp/tiny-groups-review',{recursive:true});await cdp('Page.enable');await cdp('Page.bringToFront');await cdp('Page.navigate',{url:'http://localhost:4181'});await wait("typeof state!=='undefined'&&!state.busy");
 const assert=async(expression,message)=>{if(!await js(expression))throw Error(message)};
 await mkdir('/tmp/tiny-painted-review',{recursive:true});
 await js('showDemo()');
@@ -13,9 +13,9 @@ await assert("fetch('/potion-celebration-v1.png').then(r=>r.ok)",'Missing sprite
 for(const kind of ['day','dream']){
  await js(`DreamThemes.preview('2026-10');{const g=state.goals[0];g.days=Array.from({length:1},(_,i)=>dayBefore(i));g.target=${kind==='dream'?1:21};milestoneQueue.set(g.id,{id:g.id,kind:'${kind}',day:today()});flushMilestones();clearTimeout(milestoneTimer)}`);
  await assert(`document.querySelector('.painted-enchantment').dataset.scene==='${kind}'`,'Wrong sequence');
- const start=await js("getComputedStyle(document.querySelector('.potion-sprite')).backgroundPosition");
+ const start=await js("JSON.stringify([...document.querySelectorAll('.celebration-frame')].map(el=>getComputedStyle(el).opacity))");
  await new Promise(r=>setTimeout(r,1300));
- await assert(`getComputedStyle(document.querySelector('.potion-sprite')).backgroundPosition!==${JSON.stringify(start)}`,'Sprite frames did not advance');
+ await assert(`JSON.stringify([...document.querySelectorAll('.celebration-frame')].map(el=>getComputedStyle(el).opacity))!==${JSON.stringify(start)}`,'Sprite frames did not advance');
  await new Promise(r=>setTimeout(r,2500));
  for(const width of [320,390,1440]){
   await cdp('Emulation.setDeviceMetricsOverride',{width,height:850,deviceScaleFactor:1,mobile:width<600});
@@ -26,6 +26,6 @@ for(const kind of ['day','dream']){
 }
 await cdp('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
 await js("{const g=state.goals[0];milestoneQueue.set(g.id,{id:g.id,kind:'day',day:today()});flushMilestones();clearTimeout(milestoneTimer)}");
-await assert("getComputedStyle(document.querySelector('.potion-sprite')).animationName==='none'",'Reduced motion ignored');
+await assert("[...document.querySelectorAll('.celebration-frame')].every(el=>getComputedStyle(el).display==='none')",'Reduced motion ignored');
 await assert("getComputedStyle(document.querySelector('.potion-sprite')).backgroundPosition.includes('66.6667')",'Reduced-motion final pose missing');
 await cdp('Page.close');ws.close();console.log('PASS: packaged watercolor atlas, distinct day/dream sequences, real frame advancement, mobile/desktop bounds, reduced motion and final pose.');
