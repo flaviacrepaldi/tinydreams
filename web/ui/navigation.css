@@ -331,7 +331,8 @@ html[data-edition] .incomplete-collection .goal-grid>.goal{display:flex;flex-dir
 
 /* Editing keeps type controls compact and removes the creation examples. */
 .editing-goal .dream-kind-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.editing-goal .dream-kind-option{margin:0;padding:10px;min-height:44px;min-width:0;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px}
+#goalForm.editing-goal .dream-kind-option{display:grid;grid-template-columns:18px minmax(0,1fr);margin:0;padding:10px;min-height:44px;min-width:0;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px}
+#goalForm.editing-goal .dream-kind-option input{box-sizing:border-box;width:18px;height:18px;min-height:18px;padding:0;margin:0}
 .editing-goal .dream-kind-option>span>span,.editing-goal .dream-kind-option small,.editing-goal .dream-kind-options+.form-hint{display:none}
 .editing-goal .dream-kind-option strong{font-size:12px;line-height:1.4}
 
@@ -364,3 +365,8 @@ html[data-motion=active] #milestone .book-seal{animation-duration:240ms}
 .today-panel .today-row:last-child{border-bottom:0}
 .writer-collection{border:1px solid var(--line)}
 @media(max-width:700px){.today-panel{padding:22px 14px;border-radius:14px}}
+
+/* Touch galleries must not retain the rectangular keyboard-focus outline. */
+@media(max-width:700px),(pointer:coarse){
+ .dream-overview .goal-grid:focus{outline:none}
+}

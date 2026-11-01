@@ -62,7 +62,27 @@
       "objectTop": 621,
       "objectAspect": 0.787109375,
       "objectSheetHeight": 254.09429280397023,
-      "sceneRatio": 2.489465153970827
+      "sceneRatio": 2.489465153970827,
+      "objectBounds": [
+        [
+          64,
+          665,
+          479,
+          328
+        ],
+        [
+          669,
+          623,
+          257,
+          384
+        ],
+        [
+          1118,
+          625,
+          312,
+          374
+        ]
+      ]
     },
     "progressSymbol": "shell",
     "celebrationAsset": "/celebrations/2026-11-v1.png"
@@ -100,7 +120,27 @@
       "objectTop": 646,
       "objectAspect": 0.73828125,
       "objectSheetHeight": 270.8994708994709,
-      "sceneRatio": 2.392523364485981
+      "sceneRatio": 2.392523364485981,
+      "objectBounds": [
+        [
+          39,
+          680,
+          451,
+          313
+        ],
+        [
+          566,
+          672,
+          406,
+          319
+        ],
+        [
+          1048,
+          652,
+          452,
+          356
+        ]
+      ]
     },
     "progressSymbol": "gift",
     "celebrationAsset": "/celebrations/2026-12-v1.png"
@@ -138,7 +178,27 @@
       "objectTop": 606,
       "objectAspect": 0.81640625,
       "objectSheetHeight": 244.97607655502392,
-      "sceneRatio": 2.5514950166112955
+      "sceneRatio": 2.5514950166112955,
+      "objectBounds": [
+        [
+          30,
+          633,
+          503,
+          354
+        ],
+        [
+          595,
+          616,
+          352,
+          384
+        ],
+        [
+          1064,
+          646,
+          444,
+          345
+        ]
+      ]
     },
     "progressSymbol": "compass",
     "celebrationAsset": "/celebrations/2027-01-v1.png"
@@ -176,7 +236,27 @@
       "objectTop": 611,
       "objectAspect": 0.806640625,
       "objectSheetHeight": 247.94188861985472,
-      "sceneRatio": 2.530477759472817
+      "sceneRatio": 2.530477759472817,
+      "objectBounds": [
+        [
+          15,
+          613,
+          494,
+          381
+        ],
+        [
+          535,
+          611,
+          497,
+          397
+        ],
+        [
+          1067,
+          611,
+          447,
+          394
+        ]
+      ]
     },
     "progressSymbol": "mask",
     "celebrationAsset": "/celebrations/2027-02-v1.png"
@@ -214,7 +294,27 @@
       "objectTop": 594,
       "objectAspect": 0.83984375,
       "objectSheetHeight": 238.13953488372093,
-      "sceneRatio": 2.6033898305084744
+      "sceneRatio": 2.6033898305084744,
+      "objectBounds": [
+        [
+          28,
+          596,
+          511,
+          419
+        ],
+        [
+          569,
+          595,
+          385,
+          423
+        ],
+        [
+          1072,
+          633,
+          438,
+          382
+        ]
+      ]
     },
     "progressSymbol": "coffee",
     "celebrationAsset": "/celebrations/2027-03-v1.png"
@@ -252,7 +352,27 @@
       "objectTop": 620,
       "objectAspect": 0.7890625,
       "objectSheetHeight": 253.46534653465346,
-      "sceneRatio": 2.4935064935064934
+      "sceneRatio": 2.4935064935064934,
+      "objectBounds": [
+        [
+          53,
+          624,
+          439,
+          393
+        ],
+        [
+          608,
+          626,
+          325,
+          371
+        ],
+        [
+          1036,
+          643,
+          451,
+          359
+        ]
+      ]
     },
     "progressSymbol": "leaf",
     "celebrationAsset": "/celebrations/2027-04-v1.png"
@@ -290,7 +410,27 @@
       "objectTop": 632,
       "objectAspect": 0.765625,
       "objectSheetHeight": 261.2244897959184,
-      "sceneRatio": 2.445859872611465
+      "sceneRatio": 2.445859872611465,
+      "objectBounds": [
+        [
+          11,
+          644,
+          482,
+          349
+        ],
+        [
+          520,
+          639,
+          496,
+          359
+        ],
+        [
+          1061,
+          637,
+          467,
+          369
+        ]
+      ]
     },
     "progressSymbol": "envelope",
     "celebrationAsset": "/celebrations/2027-05-v1.png"
@@ -328,7 +468,27 @@
       "objectTop": 593,
       "objectAspect": 0.841796875,
       "objectSheetHeight": 237.58700696055683,
-      "sceneRatio": 2.607809847198642
+      "sceneRatio": 2.607809847198642,
+      "objectBounds": [
+        [
+          3,
+          617,
+          489,
+          373
+        ],
+        [
+          516,
+          601,
+          504,
+          394
+        ],
+        [
+          1034,
+          650,
+          500,
+          349
+        ]
+      ]
     },
     "progressSymbol": "lamp",
     "celebrationAsset": "/celebrations/2027-06-v1.png",
@@ -367,7 +527,27 @@
       "objectTop": 620,
       "objectAspect": 0.7890625,
       "objectSheetHeight": 253.46534653465346,
-      "sceneRatio": 2.4935064935064934
+      "sceneRatio": 2.4935064935064934,
+      "objectBounds": [
+        [
+          29,
+          662,
+          457,
+          347
+        ],
+        [
+          496,
+          647,
+          586,
+          349
+        ],
+        [
+          1077,
+          624,
+          429,
+          396
+        ]
+      ]
     },
     "progressSymbol": "train",
     "celebrationAsset": "/celebrations/2027-07-v1.png"
@@ -405,7 +585,27 @@
       "objectTop": 613,
       "objectAspect": 0.802734375,
       "objectSheetHeight": 249.1484184914842,
-      "sceneRatio": 2.522167487684729
+      "sceneRatio": 2.522167487684729,
+      "objectBounds": [
+        [
+          22,
+          649,
+          484,
+          351
+        ],
+        [
+          526,
+          644,
+          455,
+          354
+        ],
+        [
+          1008,
+          633,
+          511,
+          368
+        ]
+      ]
     },
     "progressSymbol": "key",
     "celebrationAsset": "/celebrations/2027-08-v1.png"
@@ -443,7 +643,27 @@
       "objectTop": 643,
       "objectAspect": 0.744140625,
       "objectSheetHeight": 268.76640419947506,
-      "sceneRatio": 2.403755868544601
+      "sceneRatio": 2.403755868544601,
+      "objectBounds": [
+        [
+          20,
+          657,
+          490,
+          357
+        ],
+        [
+          535,
+          664,
+          481,
+          333
+        ],
+        [
+          1054,
+          647,
+          447,
+          353
+        ]
+      ]
     },
     "progressSymbol": "needle",
     "celebrationAsset": "/celebrations/2027-09-v1.png"

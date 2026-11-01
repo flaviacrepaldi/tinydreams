@@ -237,14 +237,14 @@ html[data-motion=active] .painted-glints>span{animation:painted-twinkle 2.2s eas
 .skip-day-button[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
 .day-outcome textarea{width:100%;box-sizing:border-box;resize:vertical}
 
-.history-toolbar{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.history-toolbar{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:12px;margin:24px 0 16px}
 .history-toolbar input{width:auto;max-width:100%}
-.history-days{display:grid;grid-template-columns:44px repeat(3,minmax(0,1fr)) 44px;gap:6px;margin-bottom:24px;align-items:center}
-.history-days>button{padding:8px 4px;min-width:0}
-.history-days svg{width:20px;height:20px}
-.history-day{display:flex;flex-direction:column;align-items:center;border:1px solid var(--line);background:var(--surface)}
+.history-days{display:flex;gap:4px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:var(--line) var(--surface);padding:6px 4px 0;margin-bottom:24px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+.history-days svg{width:16px;height:16px}
+.history-day{flex:0 0 76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:88px;scroll-snap-align:center;padding:10px 8px 8px;border:1px solid var(--line);border-bottom:3px solid transparent;border-radius:12px 12px 0 0;background:var(--surface);color:var(--text);font-size:13px}
 .history-day>span:first-child{font-size:11px;color:var(--muted)}
-.history-day[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
+.history-day[aria-selected="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
+.history-day:focus-visible{outline-offset:-4px}
 .history-day-mark{height:20px;display:block;color:var(--accent)}
 .outcome-status:empty{display:none}
 .counter-controls{display:flex;gap:12px;margin:20px 0}

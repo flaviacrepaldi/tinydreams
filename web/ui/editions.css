@@ -211,6 +211,8 @@ html[data-edition][data-motion="active"] .dream-overview .goal[data-amulet-editi
 html[data-edition] .dream-overview .goal .goal-menu{align-items:center}
 html[data-edition] .dream-overview .goal .goal-menu .diary-button{width:44px;height:44px;color:var(--accent)}
 html[data-edition] .dream-overview .goal .goal-menu .diary-button svg{width:20px;height:20px}
+html[data-edition] .dream-overview .goal .goal-menu .skip-day-button{width:44px;height:44px}
+html[data-edition] .dream-overview .goal .goal-menu .skip-day-button svg{width:20px;height:20px}
 /* On phones, give the dream's words more room than its amulet. */
 @media(max-width:560px){
  html[data-edition] .dream-overview .goal .dream-summary{min-height:190px}
@@ -315,13 +317,16 @@ html[data-edition] .dream-overview .goal .quick-outcomes>.check-button{grid-colu
 
 html[data-edition] .dream-overview .goal .quick-outcomes>.annotation-button{grid-column:1 / -1;justify-self:center;width:auto}
 
-/* A shared object canvas prevents monthly atlas proportions shrinking amulets. */
-html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .talisman{width:128px;max-width:100%;height:170px;aspect-ratio:auto}
-html[data-edition] .dream-overview .goal[data-amulet-edition]:not([data-amulet-edition="2026-10"]) .dream-summary .talisman{background-size:300% var(--amulet-sheet-height,300%)}
+/* Share the available space, but fit each source without changing its proportions. */
+html[data-edition] .dream-overview .goal .dream-summary{--amulet-width:144px;--amulet-height:170px;grid-template-columns:minmax(0,1fr) var(--amulet-width)}
+html[data-edition] .dream-overview .goal .amulet-frame{grid-column:2;grid-row:1/span 2;width:var(--amulet-width);height:var(--amulet-height);display:grid;place-items:center;align-self:center;justify-self:end;pointer-events:none}
+html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .amulet-frame .talisman{position:relative;grid-column:auto;grid-row:auto;align-self:center;justify-self:center;top:auto;right:auto;margin:0;width:var(--amulet-width);max-width:100%;height:calc(var(--amulet-width) * var(--amulet-aspect,.666667));aspect-ratio:auto}
+html[data-edition] .dream-overview .goal[data-amulet-edition]:not([data-amulet-edition="2026-10"]) .amulet-frame .talisman{width:min(var(--amulet-width),calc(var(--amulet-height) * var(--amulet-crop-aspect)));height:auto;aspect-ratio:var(--amulet-crop-aspect);background-size:var(--amulet-crop-width) var(--amulet-crop-height);background-position:var(--amulet-crop-x) var(--amulet-crop-y)}
+html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"]:is(.lavender,.peach,.sage) .amulet-frame .talisman{width:calc(var(--amulet-height) * 2 / 3);height:var(--amulet-height)}
+html[data-edition] .dream-overview .goal[data-amulet-edition="2026-10"].sage .amulet-frame .ghost-scene{top:0}
 @media(max-width:360px){
- html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .talisman{height:148px}
+ html[data-edition] .dream-overview .goal .dream-summary{--amulet-width:108px;--amulet-height:148px}
 }
-html[data-edition] .dream-overview .goal .dream-summary{grid-template-columns:minmax(0,1fr) 128px}
-@media(max-width:360px){
- html[data-edition] .dream-overview .goal .dream-summary{grid-template-columns:minmax(0,1fr) 108px}
-}
+
+html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .dream-summary-title h2{max-width:100%;min-height:0;margin:0}
+.dream-summary-subtitle{margin:6px 0 0;font-size:13px;font-weight:400;line-height:1.5;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
