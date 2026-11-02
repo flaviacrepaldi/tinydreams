@@ -438,7 +438,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{display:flex;flex-direction:column;inset:0 0 auto;height:calc(100dvh - var(--mobile-nav-height,82px))}
  .mobile-chapter-pager>.mobile-intro-panel{flex:0 0 100%;min-height:0}
- html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager>.workspace{flex:0 0 100%;padding-top:10px;padding-bottom:16px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager>.workspace{flex:0 0 100%;border-top:env(safe-area-inset-top,0px) solid var(--bg);padding-top:12px;padding-bottom:8px}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-back{display:none}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-home-tools{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:0 10px;flex-shrink:0}
  .mobile-home-tools .home-filter{margin-left:0}
@@ -449,4 +449,12 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
  html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.goal-grid{padding-top:2px;padding-bottom:10px}
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal-add,
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .overview-add{display:none}
+}
+
+/* The filter belongs beside its cards, below the iPhone status area. */
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools{flex-wrap:nowrap;gap:8px;margin-bottom:8px;align-items:center}
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools .home-filter{margin-left:auto;padding:2px;gap:2px;border-radius:8px;flex-shrink:0}
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools .home-filter button{min-height:36px;padding:6px 10px;font-size:12px;line-height:1.2;border-radius:5px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview>.dream-group:last-of-type{margin-bottom:0}
 }

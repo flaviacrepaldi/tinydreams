@@ -90,7 +90,8 @@
  function syncTools(){
   const source=workspace.querySelector('.overview-tools');
   if(!source)return;
-  const controls=[...source.querySelectorAll('.home-filter,.new-group-button')];
+  const filter=tools.querySelector('.home-filter');if(filter)source.append(filter);
+  const controls=[...source.querySelectorAll('.new-group-button')];
   if(panel&&controls.length)tools.replaceChildren(...controls);
   else if(!panel&&tools.children.length)source.append(...tools.children);
  }
