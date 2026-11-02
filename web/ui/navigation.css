@@ -475,3 +475,9 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
   background-repeat:no-repeat;
  }
 }
+
+/* Each sliding page owns one closed outline; no shared rule beneath the gallery. */
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume::after{content:none}
+ html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.goal-grid>.goal{border-radius:3px 10px 10px 10px;box-shadow:none}
+}
