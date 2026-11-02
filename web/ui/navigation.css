@@ -403,8 +403,8 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 }
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal .dream-summary{--amulet-width:100px;--amulet-height:132px}
- html[data-mobile-book="true"] body[data-view="dreams"] .habit-streak{max-width:180px;margin-block:8px 4px}
- html[data-mobile-book="true"] body[data-view="dreams"] .streak-grid{gap:4px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .habit-streak{max-width:none;margin-block:12px 8px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .streak-grid{gap:6px}
  html[data-mobile-book="true"] body[data-view="dreams"] .streak-caption{margin-bottom:6px}
 }
 @media(max-width:560px){
