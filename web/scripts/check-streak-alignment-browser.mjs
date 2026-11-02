@@ -14,9 +14,13 @@ for(const width of [320,390,430,1280]){
  assert.ok(Math.max(...offsets.filter(v=>v.hasGrid).map(v=>v.grid))-Math.min(...offsets.filter(v=>v.hasGrid).map(v=>v.grid))<2,JSON.stringify({width,offsets}));
  assert.ok(offsets.every(v=>v.scroll<=v.width+1),JSON.stringify({width,offsets}));
  assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false);
+ assert.equal(await js("document.querySelector('.goal [data-action=annotate]')"),null);
+ const geometry=await js("[...document.querySelectorAll('.goal')].map(c=>{const r=c.getBoundingClientRect();return {height:r.height,title:c.querySelector('h2').getBoundingClientRect().top-r.top,subtitle:c.querySelector('.dream-summary-subtitle').getBoundingClientRect().top-r.top,progress:c.querySelector('.dream-progress').getBoundingClientRect().top-r.top}})");
+ for(const key of ['height','title','subtitle','progress'])assert.ok(Math.max(...geometry.map(v=>v[key]))-Math.min(...geometry.map(v=>v[key]))<2,`Inconsistent ${key}: ${JSON.stringify(geometry)}`);
+
  if(width<600){
   for(const metric of offsets){
-   if(metric.kind==='amount')assert.ok(metric.height<=520,`Amount card too tall: ${JSON.stringify(metric)}`);
+   assert.equal(Math.round(metric.height),556,`Cards must keep the shared compact height: ${JSON.stringify(metric)}`);
    assert.ok(metric.height<=740,`Card too tall: ${JSON.stringify({width,...metric})}`);
    assert.ok(metric.verticalOverflow<=1,`Internal card scroll: ${JSON.stringify(metric)}`);
    assert.ok(metric.footerWaste<=20,`Empty footer space: ${JSON.stringify(metric)}`);
@@ -39,7 +43,7 @@ for(const width of [320,390,430,1280]){
   await js("document.querySelector('.mobile-chapter-link')?.click()");
   await new Promise(r=>setTimeout(r,600));
   const selector='.goal-grid';
-  await js(`(()=>{const g=document.querySelector('${selector}');g.scrollLeft=0;fitGalleryViewport(g);g.scrollIntoView({block:'start'})})()`);
+  await js(`(()=>{const g=document.querySelector('${selector}');g.scrollLeft=0;fitGalleryViewport(g);g.scrollIntoView({block:'start'});window.beforeSwipeHeight=g.getBoundingClientRect().height})()`);
   await new Promise(r=>setTimeout(r,300));
   for(const [direction,expected] of [[-1,1],[-1,2],[1,1]]){
    const box=await js(`(()=>{const r=document.querySelector('${selector}').getBoundingClientRect();return {x:r.left,w:r.width,y:Math.max(80,r.top+70)}})()`);
@@ -49,6 +53,7 @@ for(const width of [320,390,430,1280]){
    await cdp('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
    await new Promise(r=>setTimeout(r,800));
    const result=await js(`(()=>{const g=document.querySelector('${selector}'),cards=[...g.children],left=g.getBoundingClientRect().left,c=cards.reduce((a,b)=>Math.abs(a.getBoundingClientRect().left-left)<Math.abs(b.getBoundingClientRect().left-left)?a:b);return {index:cards.indexOf(c),delta:Math.abs(c.getBoundingClientRect().left-left)}})()`);
+   assert.equal(await js("document.querySelector('.goal-grid').getBoundingClientRect().height===window.beforeSwipeHeight"),true,'Gallery height changed after swipe');
    assert.equal(result.index,expected,`Swipe skipped or stuck at ${width}px: ${JSON.stringify(result)}`);
    assert.ok(result.delta<2,`Swipe stopped between cards: ${JSON.stringify(result)}`);
   }
