@@ -14,6 +14,13 @@ assert.equal(await js("document.querySelector('[data-action=quick-outcome][data-
 for(const width of [390,1440]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});await js('document.fonts.ready');await js("document.querySelector('[data-goal]').scrollIntoView({block:'center'})");
  assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false);
+ if(width<600){
+  assert.equal(await js("getComputedStyle(document.querySelector('.overview-desktop-title')).display"),'none');
+  assert.ok(await js("document.querySelector('.overview-mobile-brand svg path')!==null"));
+  assert.equal(await js("document.querySelector('.streak-square').getBoundingClientRect().height"),22);
+  assert.ok(await js("document.querySelector('.streak-square').getBoundingClientRect().width>30"));
+ }
+
  assert.equal(await js("parseFloat(getComputedStyle(document.querySelector('.impulse-days')).fontSize)>parseFloat(getComputedStyle(document.querySelector('.impulse-hours')).fontSize)*2"),true);
  assert.equal(await js("(()=>{const e=document.querySelector('[data-impulse-clock]');return e.scrollWidth>e.clientWidth&&e.clientWidth>0})()"),false);
  const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/impulse-timer-${width}.png`,Buffer.from(png.data,'base64'));

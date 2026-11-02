@@ -403,7 +403,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 }
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal .dream-summary{--amulet-width:100px;--amulet-height:132px}
- html[data-mobile-book="true"] body[data-view="dreams"] .habit-streak{max-width:none;margin-block:12px 8px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .habit-streak{max-width:none;margin-block:8px 4px}
  html[data-mobile-book="true"] body[data-view="dreams"] .streak-grid{gap:6px}
  html[data-mobile-book="true"] body[data-view="dreams"] .streak-caption{margin-bottom:6px}
 }
@@ -503,3 +503,12 @@ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal .co
 .impulse-days>span{font:500 16px/1.4 var(--sans);letter-spacing:0}
 html[data-edition] .dream-overview .goal .countdown .impulse-hours,
 .impulse-clock .impulse-hours{display:block;margin-top:6px;font:500 14px/1.5 var(--sans);letter-spacing:0;color:var(--muted)}
+
+.overview-mobile-brand{display:none}
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-desktop-title{display:none}
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-mobile-brand{display:flex;align-items:center;gap:8px;font:24px/1.2 var(--serif);white-space:nowrap}
+ .overview-mobile-brand .brand-monogram{width:30px;height:32px;flex-shrink:0;color:var(--text);overflow:visible}
+ html[data-mobile-book="true"] body[data-view="dreams"] .streak-square{aspect-ratio:auto;height:22px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .streak-caption small{flex-basis:100%}
+}

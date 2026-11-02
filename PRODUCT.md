@@ -247,3 +247,5 @@ Impulse dreams display elapsed days, hours, minutes and seconds instead of a rem
 Show completed days prominently and hours/minutes/seconds on a smaller line below. Preserve the streak grid for impulse dreams: each square represents one full elapsed 24-hour interval in the current sequence, with completed intervals filled and the next interval outlined. The 14-square window advances for longer sequences. Update automatically when a new day completes; relapse restarts the grid alongside the counter, and undo restores it.
 
 On mobile, the streak grid spans the card’s full available content width, with 6px gaps and proportionally larger squares. This applies to all habit cards; desktop sizing remains unchanged.
+
+The mobile split home’s lower chapter header uses the tiny dreams name and existing seasonal monogram in place of “Big Dreams”. Mobile streak cells retain their former 22px height while stretching horizontally across the card, keeping the compact card height.
