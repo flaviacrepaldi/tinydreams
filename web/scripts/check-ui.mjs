@@ -19,6 +19,8 @@ try{
  const chrome=start(process.env.TINY_QA_CHROME||'google-chrome',['--headless','--no-sandbox','--disable-gpu',`--remote-debugging-port=${debug}`,`--user-data-dir=${join(temp,'chrome')}`,'about:blank']);
  await Promise.all([ready(qaUrl+'/version.json',server),ready(debugUrl+'/json/version',chrome)]);
  await run('scripts/check-streak-alignment-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
+ await run('scripts/check-edit-dialog-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
+ await run('scripts/check-chapters-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  console.log('PASS: UI publication gate. Screenshots: /tmp/streak-alignment-*.png');
 }finally{
  for(const child of children)if(child.exitCode==null)child.kill('SIGTERM');

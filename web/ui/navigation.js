@@ -83,7 +83,7 @@
  function go(next){
   if(!panel)return;
   page=next;locked=true;clearTimeout(timer);
-  main.scrollTo({top:page===1?workspace.offsetTop:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
+  main.dataset.chapter=String(page);main.scrollTop=0;
   timer=setTimeout(()=>{locked=false},500);
   panel.inert=page===1;workspace.inert=page===0;
  }
@@ -103,11 +103,11 @@
   if(active()&&!panel){
    panel=document.createElement('section');panel.className='mobile-intro-panel';panel.setAttribute('aria-label','início');
    main.prepend(panel);panel.append(header,tools,welcome);if(navigation)document.body.append(navigation);main.classList.add('mobile-chapter-pager');
-   measureNavigation();window.scrollTo({top:0,behavior:'instant'});page=0;main.scrollTop=0;workspace.inert=true;
+   measureNavigation();window.scrollTo({top:0,behavior:'instant'});page=0;main.dataset.chapter='0';main.scrollTop=0;workspace.inert=true;
   }else if(!active()&&panel){
    const source=workspace.querySelector('.overview-tools');for(const button of header.querySelectorAll('.new-group-button')){button.dataset.action='new-group';button.setAttribute('aria-label','novo big dream');button.title='novo big dream';button.removeAttribute('aria-expanded');button.removeAttribute('aria-controls');if(source)source.append(button)}if(source)source.append(...tools.children);document.querySelector('#dreamCreateMenu')?.hidePopover();
    panel.inert=false;workspace.inert=false;if(navigation)workspace.prepend(navigation);document.body.insertBefore(header,main);main.prepend(welcome);panel.remove();panel=null;
-   main.classList.remove('mobile-chapter-pager');main.scrollTop=0;clearTimeout(timer);locked=false;
+   main.classList.remove('mobile-chapter-pager');delete main.dataset.chapter;main.scrollTop=0;clearTimeout(timer);locked=false;
   }
   syncTools();
  }
@@ -139,10 +139,10 @@
  new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-mobile-book']});
  new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['data-view']});
  new MutationObserver(syncTools).observe(document.querySelector('#content'),{childList:true,subtree:true});
- const navObserver=new ResizeObserver(()=>{measureNavigation();if(panel)main.scrollTo({top:page===1?workspace.offsetTop:0,behavior:'instant'})});
+ const navObserver=new ResizeObserver(()=>{measureNavigation();if(panel){main.dataset.chapter=String(page);main.scrollTop=0}});
  navObserver.observe(document.querySelector('.tabs'));
  media.addEventListener('change',sync);
- window.addEventListener('resize',()=>{if(panel)main.scrollTo({top:page===1?workspace.offsetTop:0,behavior:'instant'})});
+ window.addEventListener('resize',()=>{if(panel){main.dataset.chapter=String(page);main.scrollTop=0}});
  sync();
 })();
 

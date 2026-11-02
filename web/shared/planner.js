@@ -1,6 +1,7 @@
 export const validDay = day => typeof day==='string' && /^\d{4}-\d{2}-\d{2}$/.test(day) && !Number.isNaN(Date.parse(day+'T12:00:00Z')) && new Date(day+'T12:00:00Z').toISOString().slice(0,10)===day && day>='2000-01-01' && day<='2100-12-31';
 export const weekday = day => new Date(day+'T12:00:00Z').getUTCDay();
 export const planOf = g => g.plan || {kind:'habit',start:'',end:'',weekdays:[0,1,2,3,4,5,6],notes:'',unit:'',tasks:[],items:[]};
+export const agreementOf = g => {const p=planOf(g);return p.agreement??(p.impulse?p.support||p.notes:p.notes)??''};
 export const completionMode = p => p.completionMode || (p.start&&p.end?'period':'total');
 export const practiceToday = () => new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 export const needsIncompleteReview = (g,asOf=practiceToday()) => !!planOf(g).end&&planOf(g).end<asOf&&!complete(g);
@@ -16,6 +17,7 @@ export function impulseElapsed(g,now=Date.now()){
  return {start,seconds:Math.max(0,Math.floor((now-start)/1000))};
 }
 export function validatePlan(p){
+ if(p?.agreement!=null&&(typeof p.agreement!=='string'||p.agreement.length>2000))throw Error('Use até 2000 caracteres para seu combinado.');
  if(p?.impulseStartedAt!=null&&!Number.isFinite(Date.parse(p.impulseStartedAt)))throw Error('Confira a data e hora de início.');
  if(p?.impulseResets!=null&&(typeof p.impulseResets!=='object'||Array.isArray(p.impulseResets)||Object.entries(p.impulseResets).some(([day,time])=>!validDay(day)||typeof time!=='string'||!Number.isFinite(Date.parse(time)))))throw Error('Confira os horários das recaídas.');
  if(p?.skippedDays!=null&&(!Array.isArray(p.skippedDays)||p.skippedDays.some(d=>!validDay(d))))throw Error('Confira os dias pulados.');

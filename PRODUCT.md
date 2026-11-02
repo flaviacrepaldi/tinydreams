@@ -263,3 +263,13 @@ Amount and one-time-list cards do not inherit habit summary alignment height. Mo
 ## Fixed card template requested by the user
 
 All overview cards now share one complete 556px template before any swipe. Follow this order: title, reserved subtitle, daily status where applicable, counter with amulet on the right, streak or projection region, completion progress, buttons. Leave missing elements blank without collapsing their reserved rows. Amount goals use their projection chart in the streak region. One-time lists reserve the same region without inventing a streak. Remove the front annotation action; retain notes within history. Mobile streak cells are 30px high, funded by removing the annotation row rather than increasing total card height. Long titles/subtitles display up to two lines, with full content retained in details/editing. This supersedes adaptive selected-card height and natural mobile section sizing. Never change carousel/card height after a swipe.
+
+Edit dialogs permit vertical scrolling only. Constrain native date/time controls to their form column, including iOS value internals, and bound nested fieldsets/grids. The mandatory publication gate now opens editing for every goal variant at 320/390/430px and desktop, expands optional fields and checks horizontal overflow at both ends of the form.
+
+Impulse card subtitles display the saved coping agreement (`plan.support`), falling back to notes when there is no agreement. Other types keep displaying notes. This reuses the fixed subtitle region without changing card dimensions or saved records.
+
+## One agreement field
+
+Creation and editing expose only “Meu combinado”, under personalizar sonho. This is the card subtitle for every type. New edits use plan.agreement; missing agreement falls back to legacy support for impulse dreams or notes for other dreams. Preserve legacy fields unchanged, with explicit empty agreement clearing the visible text. History uses the same agreement. There is no separate impulse support textarea or observations field.
+
+Mobile home chapters occupy the same bounded viewport; only the active chapter is visible and interactive. The pager is not a vertically scrollable stack. Each chapter owns its internal vertical scrolling. Preserve the active chapter through focus, editing and viewport/keyboard resizing; upper content must never appear in the lower chapter. The deployment gate covers these cases at three mobile widths and three viewport heights.
