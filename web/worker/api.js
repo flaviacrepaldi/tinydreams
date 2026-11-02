@@ -84,7 +84,7 @@ export async function api(request,env){
   if(status==='success')statements.push(env.DB.prepare('INSERT INTO checkins (goal_id,day) VALUES (?,?)').bind(id,day));
   if(status==='failure')statements.push(env.DB.prepare('INSERT INTO day_failures (goal_id,day) VALUES (?,?)').bind(id,day));
   if(status===null&&(p.tasks.length||p.dailyTarget))statements.push(env.DB.prepare('DELETE FROM goal_entries WHERE goal_id=? AND day=?').bind(id,day));
-  const plan={...p,skippedDays:[...(p.skippedDays||[]).filter(d=>d!==day),...(status==='skipped'?[day]:[])],dayNotes:{...(p.dayNotes||{}),...(body.note!=null?{[day]:body.note.trim()}:{})}};
+  const plan={...p,...(p.impulse?{impulseResets:{...(p.impulseResets||{}),...(status==='failure'&&(!existing.failures.includes(day)||body.restart===true)?{[day]:day===saoPauloDay()?new Date().toISOString():day+'T00:00:00-03:00'}:{})}}:{}),skippedDays:[...(p.skippedDays||[]).filter(d=>d!==day),...(status==='skipped'?[day]:[])],dayNotes:{...(p.dayNotes||{}),...(body.note!=null?{[day]:body.note.trim()}:{})}};
   statements.push(env.DB.prepare('UPDATE goals SET plan=? WHERE id=? AND owner=?').bind(JSON.stringify(plan),id,owner));
   const updated={...existing,plan,days:[...existing.days.filter(d=>d!==day),...(status==='success'?[day]:[])],failures:[...existing.failures.filter(d=>d!==day),...(status==='failure'?[day]:[])]};
   statements.push(env.DB.prepare('UPDATE goals SET redeemed=CASE WHEN ? THEN redeemed ELSE 0 END WHERE id=? AND owner=?').bind(complete(updated)?1:0,id,owner));

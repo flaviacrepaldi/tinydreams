@@ -5,7 +5,19 @@ export const completionMode = p => p.completionMode || (p.start&&p.end?'period':
 export const practiceToday = () => new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 export const needsIncompleteReview = (g,asOf=practiceToday()) => !!planOf(g).end&&planOf(g).end<asOf&&!complete(g);
 export const isArchivedIncomplete = g => !!planOf(g).incompleteAccepted&&needsIncompleteReview(g);
+// Legacy dates have no time: interpret them as midnight in São Paulo.
+export function impulseElapsed(g,now=Date.now()){
+ const p=planOf(g),initial=Date.parse(p.impulseStartedAt||(p.start?p.start+'T00:00:00-03:00':g.created_at||''));
+ let start=Number.isFinite(initial)?initial:now;
+ for(const day of g.failures||[]){
+  const reset=Date.parse(p.impulseResets?.[day]||day+'T00:00:00-03:00');
+  if(Number.isFinite(reset)&&reset<=now)start=Math.max(start,reset);
+ }
+ return {start,seconds:Math.max(0,Math.floor((now-start)/1000))};
+}
 export function validatePlan(p){
+ if(p?.impulseStartedAt!=null&&!Number.isFinite(Date.parse(p.impulseStartedAt)))throw Error('Confira a data e hora de início.');
+ if(p?.impulseResets!=null&&(typeof p.impulseResets!=='object'||Array.isArray(p.impulseResets)||Object.entries(p.impulseResets).some(([day,time])=>!validDay(day)||typeof time!=='string'||!Number.isFinite(Date.parse(time)))))throw Error('Confira os horários das recaídas.');
  if(p?.skippedDays!=null&&(!Array.isArray(p.skippedDays)||p.skippedDays.some(d=>!validDay(d))))throw Error('Confira os dias pulados.');
  if(p?.dayNotes!=null&&(typeof p.dayNotes!=='object'||Array.isArray(p.dayNotes)||Object.entries(p.dayNotes).some(([d,n])=>!validDay(d)||typeof n!=='string'||n.length>2000)))throw Error('Confira as observações dos dias.');
  if(p?.emoji!=null&&!validEmoji(p.emoji))throw Error('Escolha um único emoji para o sonho.');
@@ -53,8 +65,8 @@ export function habitSequence(g,asOf=practiceToday()){
  if(previous&&(practiceDays(previous,asOf,p.weekdays)-(p.skippedDays||[]).filter(d=>d>=previous&&d<=asOf&&p.weekdays.includes(weekday(d))).length-(scheduled(g,asOf)?1:0)>1||(g.failures||[]).includes(asOf)))current=0;
  return {current,completedOn};
 }
-export function habitCompletionDay(g){return completionMode(planOf(g))==='streak'?habitSequence(g).completedOn:habitDays(g)[targetOf(g)-1]||'';}
-export function progress(g){const p=planOf(g);if(p.kind==='amount')return Math.round((g.entries||[]).reduce((n,e)=>n+e.value,0)*100)/100;if(p.kind==='list')return p.items.filter(i=>(g.entries||[]).some(e=>e.key===i.id)).length;if(completionMode(p)==='streak'){const sequence=habitSequence(g);return sequence.completedOn?targetOf(g):sequence.current}return habitDays(g).length;}
+export function habitCompletionDay(g){if(planOf(g).impulse){const {start,seconds}=impulseElapsed(g);return seconds>=targetOf(g)*86400?new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(start+targetOf(g)*86400000)):''}return completionMode(planOf(g))==='streak'?habitSequence(g).completedOn:habitDays(g)[targetOf(g)-1]||'';}
+export function progress(g){const p=planOf(g);if(p.impulse)return Math.floor(impulseElapsed(g).seconds/86400);if(p.kind==='amount')return Math.round((g.entries||[]).reduce((n,e)=>n+e.value,0)*100)/100;if(p.kind==='list')return p.items.filter(i=>(g.entries||[]).some(e=>e.key===i.id)).length;if(completionMode(p)==='streak'){const sequence=habitSequence(g);return sequence.completedOn?targetOf(g):sequence.current}return habitDays(g).length;}
 export function targetOf(g){
  const p=planOf(g);if(p.kind==='list')return p.items.length;
  if(p.kind==='habit'&&completionMode(p)==='period'&&p.start&&p.end){const count=practiceDays(p.start,p.end,p.weekdays);if(count!==null)return Math.max(1,count-(p.skippedDays||[]).filter(day=>day>=p.start&&day<=p.end&&p.weekdays.includes(weekday(day))).length)}
@@ -99,7 +111,7 @@ export const outcomeOf = (g,day,asOf=practiceToday()) => {
  if((g.failures||[]).includes(day))return 'failure';
  const p=planOf(g),start=p.start||(g.created_at?new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(g.created_at)):asOf);
  const finished=p.kind==='habit'&&!p.end?habitCompletionDay(g):'';
- return p.kind==='habit'&&day>=start&&day<asOf&&scheduled(g,day)&&(!finished||day<=finished)?'failure':null;
+ return !p.impulse&&p.kind==='habit'&&day>=start&&day<asOf&&scheduled(g,day)&&(!finished||day<=finished)?'failure':null;
 };
 export function pastPracticeDays(g,asOf){
  const p=planOf(g);if(p.kind!=='habit'||!p.start||!validDay(asOf))return [];

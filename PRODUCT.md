@@ -237,3 +237,7 @@ Temporarily remove Today from the shared menu. Keep sonhos, calendário and prat
 ### Direct repetition entry
 
 For daily counters, the home card adds one repetition directly and shows today's count against the daily target. Reaching the target completes the day; the same action then offers undo of the last repetition. The notebook remains the entry point for history and detailed corrections. Counter entry never opens history automatically.
+
+## Continuous impulse timer
+
+Impulse dreams display elapsed days, hours, minutes and seconds instead of a remaining-day countdown. Count full 24-hour days automatically from plan.impulseStartedAt; use the explicit start date at São Paulo midnight or creation timestamp for legacy dreams. The optional start time uses Brasília time. The overview and Today update each second without reloading. There is no daily success or resisted-urge button. Registering a relapse restarts the sequence immediately, including repeated relapses on the same date; historical corrections and undo remain available. Missing check-ins never imply an impulse relapse. Preserve previous entries and notes.

@@ -496,3 +496,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
  html[data-mobile-book="true"] body[data-view="dreams"] .topbar:has(>.new-group-button) #settingsButton{margin-left:0}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-home-tools:empty{display:none}
 }
+
+html[data-edition] .dream-overview .goal .countdown .impulse-clock,
+html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal .countdown .impulse-clock{font:600 18px/1.5 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:0;overflow-wrap:normal}
+.impulse-clock{font-variant-numeric:tabular-nums}
