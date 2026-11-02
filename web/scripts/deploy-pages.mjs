@@ -19,5 +19,6 @@ if(args[0]==='--help'){
 }else{
   run([fileURLToPath(new URL('scripts/build-pages.mjs',webRoot))]);
   run([fileURLToPath(new URL('scripts/test-pages.mjs',webRoot))]);
+  run([fileURLToPath(new URL('scripts/check-ui.mjs',webRoot))]);
   run([wrangler,'pages','deploy',fileURLToPath(new URL('dist-pages/',webRoot)),'--project-name','tinydreams','--branch','main','--commit-dirty=true']);
 }

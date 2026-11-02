@@ -130,11 +130,11 @@ body:not([data-view="dreams"]) .workspace{margin-top:96px}
   .topbar{gap:16px;padding:calc(16px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) 16px max(22px,env(safe-area-inset-left,0px))}
   .topbar .brand{font-size:26px;min-width:0}
   .topbar .brand>svg{width:30px;height:30px;flex-shrink:0}
-  body{padding-bottom:calc(82px + env(safe-area-inset-bottom))}
-  .tabs{position:fixed;inset:auto 0 0;z-index:8;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line)}
-  .tabs .tab{flex-direction:column;gap:5px;padding:8px 2px;min-height:58px;border:0;border-radius:8px;font-size:11px;line-height:1.3;color:var(--muted);position:relative}
+  body{padding-bottom:calc(53px + env(safe-area-inset-bottom))}
+  .tabs{position:fixed;inset:auto 0 0;z-index:8;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:4px 8px calc(4px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line)}
+  .tabs .tab{flex-direction:column;gap:2px;padding:4px 2px;min-height:44px;border:0;border-radius:8px;font-size:11px;line-height:1.3;color:var(--muted);position:relative}
   .tabs .tab.active{background:color-mix(in srgb,var(--accent) 12%,var(--surface));color:var(--text);border:0}
-  .tabs .nav-symbol{width:22px;height:22px}
+  .tabs .nav-symbol{width:20px;height:20px}
   .tabs #goalsCount{position:absolute;top:5px;left:calc(50% + 9px);font-size:9px;min-width:15px;line-height:15px;padding:0 3px;border-radius:6px;background:var(--accent);color:var(--bg)}
   .tabs .notification-dot{position:absolute;top:7px;left:calc(50% + 11px)}
   .workspace-top{justify-content:flex-end;margin-bottom:22px;min-height:44px;padding-bottom:16px}
@@ -142,8 +142,8 @@ body:not([data-view="dreams"]) .workspace{margin-top:96px}
   .calendar-heading{align-items:flex-start;flex-wrap:wrap;gap:12px}
   .calendar-heading h2{font-size:25px;line-height:44px}
   .calendar-controls{margin-left:auto}
-  .toast{bottom:calc(104px + env(safe-area-inset-bottom))}
-  .milestone{bottom:calc(100px + env(safe-area-inset-bottom))}
+  .toast{bottom:calc(77px + env(safe-area-inset-bottom))}
+  .milestone{bottom:calc(73px + env(safe-area-inset-bottom))}
 }
 @media(max-width:400px){
   .calendar-grid{gap:2px}
@@ -290,11 +290,11 @@ html[data-edition] .dream-overview .goal .dream-progress{display:flex;flex-direc
 
 .streak-routine{display:none}
 @media(max-width:560px){
- /* Share the outer height for steady swipes, while balancing each card's own content. */
- html[data-edition] .dream-overview .goal-grid{grid-template-rows:auto;align-items:stretch}
- html[data-edition] .dream-overview .goal-grid>.goal{display:flex;flex-direction:column;grid-row:auto;align-self:stretch}
+ /* Mobile cards keep natural section heights instead of accumulating row maxima. */
+ html[data-edition] .dream-overview .goal-grid{grid-template-rows:auto;align-items:start}
+ html[data-edition] .dream-overview .goal-grid>.goal{display:flex;flex-direction:column;grid-row:auto;align-self:start}
  html[data-edition] .dream-overview .goal .dream-progress{justify-content:flex-start;margin-top:8px}
- .dream-daily-slot{flex:1;display:flex;flex-direction:column;justify-content:center}
+ .dream-daily-slot{display:flex;flex-direction:column;justify-content:flex-start}
  .dream-card-footer{justify-content:flex-start}
  .dream-date-slot:empty{display:none}
  .streak-routine{display:block;margin:8px 0 10px;font-size:11px;line-height:1.5;color:var(--muted)}
@@ -382,7 +382,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 .mobile-chapter-link{display:none}
 @media(max-width:560px){
  html[data-mobile-book="true"]:has(body[data-view="dreams"]){overflow:hidden}
- html[data-mobile-book="true"] body[data-view="dreams"]{--chapter-height:calc(100svh - 82px - env(safe-area-inset-bottom))}
+ html[data-mobile-book="true"] body[data-view="dreams"]{--chapter-height:calc(100svh - 53px - env(safe-area-inset-bottom))}
  html[data-mobile-book="true"] body[data-view="dreams"] .topbar{min-height:76px}
  html[data-mobile-book="true"] body[data-view="dreams"] .welcome{min-height:calc(var(--chapter-height) - 76px - env(safe-area-inset-top));padding:28px 10px 40px;align-items:center;scroll-snap-align:end}
  html[data-mobile-book="true"] body[data-view="dreams"] .welcome-bottom{margin-top:28px}
@@ -423,7 +423,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 .mobile-chapter-back{display:none}
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"]{overflow:hidden}
- html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{position:fixed;inset:0 0 calc(82px + env(safe-area-inset-bottom));max-width:none;margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
+ html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{position:fixed;inset:0 0 calc(53px + env(safe-area-inset-bottom));max-width:none;margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
  .mobile-chapter-pager>.mobile-intro-panel{height:100%;display:flex;flex-direction:column;overflow-y:auto;padding-inline:max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-right))}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.topbar{flex-shrink:0;width:100%;padding-inline:10px;margin:0}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.welcome{flex:1;min-height:0;padding:24px 10px 32px}
@@ -436,7 +436,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 /* Keep the second chapter for the book and its pages. */
 .mobile-home-tools{display:none}
 @media(max-width:560px){
- html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{display:flex;flex-direction:column;inset:0 0 auto;height:calc(100dvh - var(--mobile-nav-height,82px))}
+ html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{display:flex;flex-direction:column;inset:0 0 auto;height:calc(100dvh - var(--mobile-nav-height,53px))}
  .mobile-chapter-pager>.mobile-intro-panel{flex:0 0 100%;min-height:0}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager>.workspace{flex:0 0 100%;border-top:env(safe-area-inset-top,0px) solid var(--bg);padding-top:12px;padding-bottom:8px}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-back{display:none}
@@ -511,4 +511,19 @@ html[data-edition] .dream-overview .goal .countdown .impulse-hours,
  .overview-mobile-brand .brand-monogram{width:30px;height:32px;flex-shrink:0;color:var(--text);overflow:visible}
  html[data-mobile-book="true"] body[data-view="dreams"] .streak-square{aspect-ratio:auto;height:22px}
  html[data-mobile-book="true"] body[data-view="dreams"] .streak-caption small{flex-basis:100%}
+}
+
+/* Keep the streak's first row anchored across habit types and groups. */
+html[data-edition] .dream-overview .goal .dream-summary{min-height:var(--shared-dream-summary-height,0px)}
+.dream-daily-slot{align-self:start}
+.dream-overview .streak-caption{display:grid;grid-template-rows:auto auto;gap:2px;min-height:34px;align-content:start}
+
+@media(max-width:560px){
+ html[data-edition] .dream-overview .goal .dream-summary{grid-template-rows:auto auto;align-content:start;row-gap:6px}
+ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary>.dream-summary-title{grid-column:1/-1;grid-row:1}
+ html[data-edition] .dream-overview .goal .amulet-frame{grid-column:2;grid-row:2}
+ html[data-edition] .dream-overview .goal .dream-summary-copy{grid-column:1;grid-row:2}
+ .dream-overview .dream-daily-slot{flex:none;align-self:stretch}
+ .dream-overview .dream-daily-slot .daily-item-progress{margin-bottom:12px}
+ .dream-overview .dream-card-footer{margin-top:0;flex:none}
 }

@@ -10,7 +10,7 @@ let day='2026-10-29';
 const goal={id:'aerobic',title:'Fazer aeróbico',target:30,days:['2026-10-28'],entries:[],plan:{...planOf({}),start:'2026-10-28'}};
 const state={goals:[goal],groups:[],view:'dreams',homeFilter:'all',demo:false};
 const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,outcomeOf,today:()=>day,
-  $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelectorAll:()=>[],addEventListener(){}},
+  $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){}},
   esc:String,icon:()=>'',goalCard:g=>`<article data-goal="${g.id}"></article>`,
   fitDreamGalleries(){},fitAmountTrends(){},requestAnimationFrame(){},queueMicrotask(){},checkIncompleteNotice(){}});
 vm.runInContext(renderSource,context);

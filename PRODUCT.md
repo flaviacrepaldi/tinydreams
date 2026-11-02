@@ -249,3 +249,11 @@ Show completed days prominently and hours/minutes/seconds on a smaller line belo
 On mobile, the streak grid spans the card’s full available content width, with 6px gaps and proportionally larger squares. This applies to all habit cards; desktop sizing remains unchanged.
 
 The mobile split home’s lower chapter header uses the tiny dreams name and existing seasonal monogram in place of “Big Dreams”. Mobile streak cells retain their former 22px height while stretching horizontally across the card, keeping the compact card height.
+
+The mobile bottom navigation is compact: 44px minimum tab targets, 20px icons, 2px icon/label gaps and 4px vertical container padding, totaling 53px plus the device bottom safe area. Content and chapter offsets follow the reduced navigation height.
+
+All home cards share a measured summary height across groups, adapting to wrapped titles, notes and counters. Mobile cards use natural-height sections; desktop retains shared rows. Streaks align at the top of their section with a consistent two-line caption, so the first grid row begins at the same card-relative position for every habit type. Measure intrinsic summary content on render, resize and font readiness, never the previously stretched row.
+
+## Mandatory UI regression gate
+
+Every visual change requires full-card screenshot inspection and browser geometry checks for height, blank gaps, internal scrolling, clipping and streak alignment. `npm --prefix web run check:ui` creates a disposable SQLite database and Chrome profile; `npm run deploy` runs this check before upload, including CI. Mobile cards no longer accumulate maximum heights from independent sections. The carousel fits the currently viewed card so shorter cards do not leave an empty tail. Titles use the full width above the counter/art row. See AGENTS.md for the required workflow.

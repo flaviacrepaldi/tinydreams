@@ -8,7 +8,7 @@ const mode=process.env.TINY_DREAMS_DB||'d1';
 let db;
 if(mode==='sqlite'){
   const {localDB}=await import('./sqlite.mjs');
-  db=localDB(fileURLToPath(new URL('../.local/garden.sqlite',import.meta.url)));
+  db=localDB(process.env.TINY_DREAMS_SQLITE_PATH||fileURLToPath(new URL('../.local/garden.sqlite',import.meta.url)));
 }else if(mode==='d1'){
   const {remoteD1}=await import('./d1.mjs');
   const config=JSON.parse(await readFile(new URL('../wrangler.jsonc',import.meta.url),'utf8'));

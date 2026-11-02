@@ -26,6 +26,8 @@ async function api(path='',method='GET',body){
 async function load(){resetMilestonePanel();state.busy=true;$('#loading').hidden=false;$('#errorPanel').hidden=true;$('#content').innerHTML='';try{const [goals,groups]=await Promise.all([api(),api('/groups')]);state.real=goals;state.goals=goals;state.realGroups=groups;state.groups=groups;state.demo=false;seedMilestones();render()}catch(e){$('#errorText').textContent=e.message;$('#errorPanel').hidden=false}finally{state.busy=false;$('#loading').hidden=true;checkIncompleteNotice()}}
 function demoGoals(){return [{id:'demo-read',title:'Ler antes de dormir',reward:'Um livro novo, escolhido sem pressa',target:21,color:'lavender',days:Array.from({length:8},(_,i)=>dayBefore(i+1)),redeemed:0},{id:'demo-move',title:'Movimentar meu corpo',reward:'Uma massagem só para mim',target:15,color:'peach',days:[0,1,2,4,5,7,8,9,10,11].map(dayBefore),redeemed:0},{id:'demo-pause',title:'Um momento só meu',reward:'Um café da manhã bem especial',target:10,color:'sage',days:[1,2,3,4,5,6].map(dayBefore),redeemed:0}]}
 function showDemo(){$('#incompleteReviewDialog')?.close();resetMilestonePanel();state.demo=true;state.goals=demoGoals();state.groups=[];seedMilestones();render()}
+window.addEventListener('resize',()=>requestAnimationFrame(alignDreamSummaries),{passive:true});
+document.fonts?.ready.then(alignDreamSummaries);
 function homeStatus(g){return planOf(g).kind!=='habit'?0:dayDone(g,today())?1:scheduled(g,today())?0:2}
 function visibleOnHome(g){return !isArchivedIncomplete(g)&&(!planOf(g).start||planOf(g).start<=today())&&!complete(g)}
 function dailyStateBadge(g){
@@ -74,7 +76,27 @@ document.addEventListener('click',event=>{
  state.homeFilter=button.dataset.filter==='all'?'all':'today';renderOverview();
  document.querySelector(`[data-action="home-filter"][data-filter="${state.homeFilter}"]`)?.focus({preventScroll:true});
 });
+function alignDreamSummaries(){
+ const overview=document.querySelector('.dream-overview');if(!overview)return;
+ const summaries=[...overview.querySelectorAll('.goal .dream-summary')];
+ overview.style.removeProperty('--shared-dream-summary-height');
+ // Measure intrinsic content, never a stretched subgrid row from the last layout.
+ summaries.forEach(el=>{el.style.minHeight='0px';el.style.height='max-content'});
+ const height=Math.ceil(Math.max(0,...summaries.map(el=>el.getBoundingClientRect().height)));
+ summaries.forEach(el=>{el.style.removeProperty('min-height');el.style.removeProperty('height')});
+ if(height)overview.style.setProperty('--shared-dream-summary-height',height+'px');
+ requestAnimationFrame(()=>overview.querySelectorAll('.goal-grid').forEach(fitGalleryViewport));
+}
+function fitGalleryViewport(grid){
+ if(!window.matchMedia('(max-width:560px)').matches){grid.style.removeProperty('height');return}
+ const cards=[...grid.querySelectorAll(':scope > .goal')];if(!cards.length)return;
+ const left=grid.getBoundingClientRect().left;
+ const card=cards.reduce((best,item)=>Math.abs(item.getBoundingClientRect().left-left)<Math.abs(best.getBoundingClientRect().left-left)?item:best,cards[0]);
+ const css=getComputedStyle(grid);
+ grid.style.height=Math.ceil(card.getBoundingClientRect().height+parseFloat(css.paddingTop)+parseFloat(css.paddingBottom))+'px';
+}
 function fitDreamGalleries(){
+ alignDreamSummaries();
  const mobile=window.matchMedia('(max-width:560px)');
  document.querySelectorAll('.dream-overview .goal-grid').forEach(grid=>{
   const cards=[...grid.querySelectorAll(':scope > .goal')];if(!cards.length)return;
@@ -98,7 +120,8 @@ function fitDreamGalleries(){
     if(Math.abs(grid.scrollLeft-target)>1)grid.scrollTo({left:target,behavior:'instant'});
    }
   };
-  const scheduleSettle=()=>{clearTimeout(settleTimer);settleTimer=setTimeout(settle,180)};
+  const scheduleSettle=()=>{requestAnimationFrame(()=>fitGalleryViewport(grid));clearTimeout(settleTimer);settleTimer=setTimeout(settle,180)};
+  fitGalleryViewport(grid);
   grid.addEventListener('scroll',scheduleSettle,{passive:true});
   grid.addEventListener('scrollend',settle,{passive:true});
   grid.addEventListener('touchstart',event=>{
