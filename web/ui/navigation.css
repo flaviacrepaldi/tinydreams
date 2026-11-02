@@ -497,6 +497,9 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-home-tools:empty{display:none}
 }
 
-html[data-edition] .dream-overview .goal .countdown .impulse-clock,
-html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal .countdown .impulse-clock{font:600 18px/1.5 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:0;overflow-wrap:normal}
-.impulse-clock{font-variant-numeric:tabular-nums}
+.impulse-clock{display:flex;flex-direction:column;align-items:flex-start;font-variant-numeric:tabular-nums}
+html[data-edition] .dream-overview .goal .countdown .impulse-days,
+html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal .countdown .impulse-days{display:flex;align-items:baseline;gap:8px;font-size:48px;line-height:1.1;letter-spacing:-1px;overflow-wrap:normal}
+.impulse-days>span{font:500 16px/1.4 var(--sans);letter-spacing:0}
+html[data-edition] .dream-overview .goal .countdown .impulse-hours,
+.impulse-clock .impulse-hours{display:block;margin-top:6px;font:500 14px/1.5 var(--sans);letter-spacing:0;color:var(--muted)}

@@ -241,8 +241,12 @@ function progressText(g){return currencyOf(g)?`${amountText(g,progress(g))} de $
 const prettyDay=d=>d?dateFrom(d).toLocaleDateString('pt-BR'):'';
 function deadline(g){const p=planOf(g);if(complete(g))return 'Sonho concluído';if(p.start&&p.start>today())return `Começa em ${prettyDay(p.start)}`;if(!p.end)return 'Sem prazo definido';const n=daysUntil(p.end,today());return n<0?`Prazo em ${prettyDay(p.end)} · encerrado`:n===1?'Prazo hoje':`Até ${prettyDay(p.end)}`}
 function impulseTime(g){const n=impulseElapsed(g).seconds;return `${Math.floor(n/86400)}d ${String(Math.floor(n/3600)%24).padStart(2,'0')}h ${String(Math.floor(n/60)%60).padStart(2,'0')}m ${String(n%60).padStart(2,'0')}s`}
-function impulseClock(g){return `<strong class="impulse-clock" data-impulse-clock="${g.id}" data-clock-days="${progress(g)}" aria-label="tempo sem ceder ao impulso">${impulseTime(g)}</strong>`}
-if(typeof window!=='undefined')window.setInterval(()=>{if(document.hidden)return;document.querySelectorAll('[data-impulse-clock]').forEach(node=>{const g=state.goals.find(g=>g.id===node.dataset.impulseClock);if(g){node.textContent=impulseTime(g);if(Number(node.dataset.clockDays)!==progress(g)&&!document.querySelector('dialog[open]'))render()}})},1000);
+function impulseClockContent(g){
+ const n=impulseElapsed(g).seconds,days=Math.floor(n/86400);
+ return `<strong class="impulse-days">${days}<span>${days===1?'dia':'dias'}</span></strong><small class="impulse-hours">${String(Math.floor(n/3600)%24).padStart(2,'0')}h ${String(Math.floor(n/60)%60).padStart(2,'0')}m ${String(n%60).padStart(2,'0')}s</small>`;
+}
+function impulseClock(g){return `<span class="impulse-clock" data-impulse-clock="${g.id}" data-clock-days="${progress(g)}" aria-label="tempo sem ceder ao impulso">${impulseClockContent(g)}</span>`}
+if(typeof window!=='undefined')window.setInterval(()=>{if(document.hidden)return;document.querySelectorAll('[data-impulse-clock]').forEach(node=>{const g=state.goals.find(g=>g.id===node.dataset.impulseClock);if(g){node.innerHTML=impulseClockContent(g);if(Number(node.dataset.clockDays)!==progress(g)&&!document.querySelector('dialog[open]'))render()}})},1000);
 function cardCountdown(g){
  if(planOf(g).impulse)return {value:impulseTime(g),label:'sem ceder ao impulso'};
  if(complete(g))return {value:'✓',label:'Você chegou. Celebre!'};
@@ -306,8 +310,12 @@ function fitAmountTrends(){
 }
 window.addEventListener('resize',()=>requestAnimationFrame(fitAmountTrends),{passive:true});
 function habitStreakGrid(g){
- if(planOf(g).impulse)return '';
  const p=planOf(g);if(p.kind!=='habit')return '';
+ if(p.impulse){
+  const completed=progress(g),first=Math.max(1,completed-12);
+  const cells=Array.from({length:14},(_,i)=>{const day=first+i,done=day<=completed,current=day===completed+1,label=`dia ${day}: ${done?'24 horas completas':current?'em andamento':'a completar'}`;return `<li class="streak-square ${done?'success':'unrecorded'} ${current?'current':''}" aria-label="${label}" title="${label}">${done?icon('check'):''}</li>`});
+  return `<div class="habit-streak impulse-streak"><div class="streak-caption"><span>${completed} ${completed===1?'dia completo':'dias completos'}</span><small>cada quadrado: 24 horas</small></div><ol class="streak-grid" aria-label="dias de 24 horas da sequência atual">${cells.join('')}</ol></div>`;
+ }
  const start=p.start||[...g.days,...(g.failures||[]),...(g.entries||[]).map(e=>e.day)].sort()[0]||today();
  const archived=isArchivedIncomplete(g),anchor=archived?p.end:today();
  const cells=Array.from({length:14},(_,i)=>{

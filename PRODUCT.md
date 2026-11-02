@@ -241,3 +241,7 @@ For daily counters, the home card adds one repetition directly and shows today's
 ## Continuous impulse timer
 
 Impulse dreams display elapsed days, hours, minutes and seconds instead of a remaining-day countdown. Count full 24-hour days automatically from plan.impulseStartedAt; use the explicit start date at São Paulo midnight or creation timestamp for legacy dreams. The optional start time uses Brasília time. The overview and Today update each second without reloading. There is no daily success or resisted-urge button. Registering a relapse restarts the sequence immediately, including repeated relapses on the same date; historical corrections and undo remain available. Missing check-ins never imply an impulse relapse. Preserve previous entries and notes.
+
+### Impulse counter hierarchy and grid
+
+Show completed days prominently and hours/minutes/seconds on a smaller line below. Preserve the streak grid for impulse dreams: each square represents one full elapsed 24-hour interval in the current sequence, with completed intervals filled and the next interval outlined. The 14-square window advances for longer sequences. Update automatically when a new day completes; relapse restarts the grid alongside the counter, and undo restores it.
