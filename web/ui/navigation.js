@@ -53,3 +53,17 @@
     }
   }).observe(document.body,{subtree:true,childList:true,characterData:true});
 })();
+
+// Reversible mobile book proposal; only changes presentation on this device.
+(()=>{
+ const toggle=document.getElementById('mobileBookToggle');
+ if(!toggle)return;
+ let enabled=true;
+ try{enabled=localStorage.getItem('tiny-mobile-book-preview')!=='off'}catch{}
+ const apply=()=>{document.documentElement.dataset.mobileBook=String(enabled);toggle.checked=enabled};
+ apply();
+ toggle.addEventListener('change',()=>{
+  enabled=toggle.checked;apply();
+  try{localStorage.setItem('tiny-mobile-book-preview',enabled?'on':'off')}catch{}
+ });
+})();
