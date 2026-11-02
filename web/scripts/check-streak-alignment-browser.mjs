@@ -16,6 +16,8 @@ for(const width of [320,390,430,1280]){
  assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false);
  assert.equal(await js("document.querySelector('.goal [data-action=annotate]')"),null);
  assert.equal(await js("document.querySelector('[data-goal=align3] .dream-summary-subtitle').textContent"),'Meu combinado para atravessar a vontade.');
+ const circles=await js("[...document.querySelectorAll('.streak-square')].map(e=>{const r=e.getBoundingClientRect();return {width:r.width,height:r.height,radius:getComputedStyle(e).borderRadius}})");
+ assert.ok(circles.every(c=>Math.abs(c.width-c.height)<1&&c.width<=40.1&&c.radius==='50%'),`Streak days are not circles: ${JSON.stringify(circles)}`);
  const artLayout=await js("[...document.querySelectorAll('.goal')].map(c=>{const a=c.querySelector('.amulet-frame').getBoundingClientRect(),t=c.querySelector('.countdown').getBoundingClientRect(),d=c.querySelector('.dream-daily-slot').getBoundingClientRect();return {w:a.width,h:a.height,gap:a.left-t.right,bottom:a.bottom-d.top}})");
  assert.ok(artLayout.every(v=>v.w===116&&v.h===124&&v.gap>=-1&&v.bottom<=1),`Amulet overlap: ${JSON.stringify(artLayout)}`);
  const titleGaps=await js("[...document.querySelectorAll('.goal')].map(c=>{const t=c.querySelector('h2'),s=c.querySelector('.dream-summary-subtitle');return {gap:s.getBoundingClientRect().top-t.getBoundingClientRect().bottom,size:parseFloat(getComputedStyle(t).fontSize)}})");
@@ -25,7 +27,7 @@ for(const width of [320,390,430,1280]){
 
  if(width<600){
   for(const metric of offsets){
-   assert.equal(Math.round(metric.height),556,`Cards must keep the shared compact height: ${JSON.stringify(metric)}`);
+   assert.equal(Math.round(metric.height),582,`Cards must keep the shared compact height: ${JSON.stringify(metric)}`);
    assert.ok(metric.height<=740,`Card too tall: ${JSON.stringify({width,...metric})}`);
    assert.ok(metric.verticalOverflow<=1,`Internal card scroll: ${JSON.stringify(metric)}`);
    assert.ok(metric.footerWaste<=20,`Empty footer space: ${JSON.stringify(metric)}`);

@@ -600,3 +600,8 @@ html[data-edition] .dream-overview .goal .dream-summary-subtitle{margin:2px 0 0}
 /* Give the amulet more presence within the existing counter region. */
 html[data-edition] .dream-overview .goal>.dream-summary{grid-template-columns:minmax(0,1fr) 116px}
 html[data-edition] .dream-overview .goal .amulet-frame{--amulet-width:116px;--amulet-height:124px;width:116px;height:124px;align-self:end}
+
+/* Circular streak days use a little more of the space above the menu. */
+html[data-edition] .dream-overview .goal-grid>.goal{grid-template-rows:44px 222px 134px 18px 54px 76px;height:582px;min-height:582px}
+html[data-edition] .dream-overview .goal>.dream-daily-slot{height:134px}
+html[data-edition] .dream-overview .goal .streak-square{width:min(100%,40px);height:auto;aspect-ratio:1;border-radius:50%;justify-self:center}
