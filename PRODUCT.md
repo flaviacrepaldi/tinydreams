@@ -233,3 +233,7 @@ The user wants every destination accessible from home to share its seasonal appe
 ### Navigation reserved for future analysis
 
 Temporarily remove Today from the shared menu. Keep sonhos, calendário and prateleira, followed by a muted, disabled análises button with a chart icon. The analysis screen is not designed or implemented yet. Dialogs dismiss on an outside click, with no action passed through to the page; a drag starting inside a form does not dismiss it.
+
+### Direct repetition entry
+
+For daily counters, the home card adds one repetition directly and shows today's count against the daily target. Reaching the target completes the day; the same action then offers undo of the last repetition. The notebook remains the entry point for history and detailed corrections. Counter entry never opens history automatically.
