@@ -591,3 +591,12 @@ html[data-edition] .dream-overview .goal .reward-name{display:-webkit-box;-webki
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager[data-chapter="0"]>.mobile-intro-panel,
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager[data-chapter="1"]>.workspace{visibility:visible;pointer-events:auto}
 }
+
+/* Keep title and agreement together inside the existing heading space. */
+html[data-edition] .dream-overview .goal .dream-summary-title{display:block;grid-column:1/-1;grid-row:1/span 2;min-width:0}
+html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .dream-summary-title h2{font-size:24px;line-height:25px}
+html[data-edition] .dream-overview .goal .dream-summary-subtitle{margin:2px 0 0}
+
+/* Give the amulet more presence within the existing counter region. */
+html[data-edition] .dream-overview .goal>.dream-summary{grid-template-columns:minmax(0,1fr) 116px}
+html[data-edition] .dream-overview .goal .amulet-frame{--amulet-width:116px;--amulet-height:124px;width:116px;height:124px;align-self:end}
