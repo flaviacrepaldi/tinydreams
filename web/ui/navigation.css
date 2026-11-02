@@ -613,3 +613,10 @@ html[data-edition] .dream-overview .goal .streak-square{width:min(100%,40px);hei
  html[data-mobile-book="true"] body[data-view="dreams"] .overview-mobile-brand .brand-monogram{width:38px;height:40px}
  html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.group-heading{padding-block:16px 10px}
 }
+
+/* Give serif glyphs breathing room and lift the counter/art from the streak. */
+html[data-edition] .dream-overview .goal>.dream-summary{grid-template-rows:50px 32px 24px 104px}
+html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary .dream-summary-title h2{line-height:28px;padding-inline:2px;margin-inline:-2px}
+html[data-edition] .dream-overview .goal .dream-summary-subtitle{line-height:14px}
+html[data-edition] .dream-overview .goal .dream-summary .countdown{position:relative;top:-9px}
+html[data-edition] .dream-overview .goal .amulet-frame{position:relative;top:-8px}
