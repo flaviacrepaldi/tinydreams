@@ -432,3 +432,21 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 }
 
 @media(max-width:560px){body[data-view="dreams"]>.workspace-top{display:contents}}
+
+/* Keep the second chapter for the book and its pages. */
+.mobile-home-tools{display:none}
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{display:flex;flex-direction:column;inset:0 0 auto;height:calc(100dvh - var(--mobile-nav-height,82px))}
+ .mobile-chapter-pager>.mobile-intro-panel{flex:0 0 100%;min-height:0}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager>.workspace{flex:0 0 100%;padding-top:10px;padding-bottom:16px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-back{display:none}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-home-tools{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:0 10px;flex-shrink:0}
+ .mobile-home-tools .home-filter{margin-left:0}
+ .mobile-home-tools .new-group-button{width:44px;height:44px;flex-shrink:0}
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools{min-height:0;margin-bottom:6px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools>h2{font-size:18px;line-height:1.3}
+ html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.group-heading{padding-block:10px 4px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.goal-grid{padding-top:2px;padding-bottom:10px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal-add,
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .overview-add{display:none}
+}
