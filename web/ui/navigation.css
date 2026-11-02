@@ -527,3 +527,13 @@ html[data-edition] .dream-overview .goal .dream-summary{min-height:var(--shared-
  .dream-overview .dream-daily-slot .daily-item-progress{margin-bottom:12px}
  .dream-overview .dream-card-footer{margin-top:0;flex:none}
 }
+
+/* Value and one-time list cards have no streak row to align. */
+html[data-edition] .dream-overview .goal:not([data-goal-kind="habit"]) .dream-summary{min-height:0}
+@media(max-width:560px){
+ .dream-overview .amount-trend{height:100px;flex-shrink:0;margin:8px 0 12px}
+}
+
+@media(max-width:560px){
+ html[data-edition] .dream-overview .goal-grid>.goal{scroll-snap-stop:always}
+}

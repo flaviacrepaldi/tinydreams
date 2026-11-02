@@ -257,3 +257,5 @@ All home cards share a measured summary height across groups, adapting to wrappe
 ## Mandatory UI regression gate
 
 Every visual change requires full-card screenshot inspection and browser geometry checks for height, blank gaps, internal scrolling, clipping and streak alignment. `npm --prefix web run check:ui` creates a disposable SQLite database and Chrome profile; `npm run deploy` runs this check before upload, including CI. Mobile cards no longer accumulate maximum heights from independent sections. The carousel fits the currently viewed card so shorter cards do not leave an empty tail. Titles use the full width above the counter/art row. See AGENTS.md for the required workflow.
+
+Amount and one-time-list cards do not inherit habit summary alignment height. Mobile amount charts are 100px tall. Horizontal carousels use native mandatory snapping with scroll-snap-stop:always; JavaScript never forces a horizontal correction or changes gallery height during a gesture. Fit gallery height only after scrolling settles. The publication gate includes amount/list cards and forward/backward touch gestures at all three mobile widths.

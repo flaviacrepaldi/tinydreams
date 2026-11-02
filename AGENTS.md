@@ -17,6 +17,7 @@ For every UI change, before publication:
 - Check 320px, 390px and 430px mobile widths and desktop. Reproduce user screenshots with a read-only snapshot of current records when needed. Check the installed-app viewport and bottom safe area for navigation changes.
 - Verify compact total card height, no unintended internal vertical scrolling, no large empty gaps, no clipped actions or horizontal page overflow, and stable streak positions. Alignment alone is not a sufficient result.
 - Do not equalize cards by adding the largest independent height of every section. Do not publish a layout that adds large empty spaces merely to satisfy alignment.
+- For carousel changes, test actual touch gestures forward and backward; require one card per swipe and no stopping between cards. Include cumulative amount and one-time-list cards alongside habit variants in the publication gate.
 - Strengthen the regression checks for any reported issue, then run them against the final build. If a required check fails or cannot run, fix it before publishing; never describe an unperformed check as passed.
 
 `npm run deploy` runs browser layout checks and must stop before upload on failure. Keep this gate in local and CI deployments. Passing automation does not replace inspecting screenshots.
