@@ -620,3 +620,15 @@ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peac
 html[data-edition] .dream-overview .goal .dream-summary-subtitle{line-height:14px}
 html[data-edition] .dream-overview .goal .dream-summary .countdown{position:relative;top:-9px}
 html[data-edition] .dream-overview .goal .amulet-frame{position:relative;top:-8px}
+
+/* Reserve room for a reward above the actions without growing the card. */
+html[data-edition] .dream-overview .goal-grid>.goal{grid-template-rows:44px 222px 126px 18px 42px 96px}
+html[data-edition] .dream-overview .goal>.dream-daily-slot{height:126px}
+html[data-edition] .dream-overview .goal>.dream-progress{padding-top:4px}
+html[data-edition] .dream-overview .goal .dream-progress .progress-label{margin:10px 0 0;line-height:16px}
+html[data-edition] .dream-overview .goal>.dream-card-footer{gap:4px}
+html[data-edition] .dream-overview .goal .reward{flex:0 0 auto;max-height:none;overflow:visible;min-width:0}
+html[data-edition] .dream-overview .goal .reward>div{min-width:0}
+html[data-edition] .dream-overview .goal .reward-name{-webkit-line-clamp:3;line-height:15px;overflow-wrap:anywhere}
+html[data-edition] .dream-overview .goal .plan-open{flex:0 0 auto;line-height:20px;padding-block:8px}
+.detail-reward p{white-space:pre-wrap;overflow-wrap:anywhere}
