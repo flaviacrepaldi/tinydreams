@@ -194,7 +194,7 @@
     if(!enabled||reduced.matches||document.hidden){pendingCelebrations.clear();document.querySelectorAll('.goal.celebrate').forEach(card=>card.classList.remove('celebrate'))}
     if(active()&&pendingCelebrations.size){for(const detail of pendingCelebrations.values())celebrate({...detail,deferred:true});pendingCelebrations.clear()}
     cancelAnimationFrame(frame);frame=0;
-    if(active()&&inView&&context){nextStar=performance.now()+2000+Math.random()*3000;lastFrame=0;frame=requestAnimationFrame(draw);}
+    if(active()&&inView&&context&&atmosphere!=='bubbles'){nextStar=performance.now()+2000+Math.random()*3000;lastFrame=0;frame=requestAnimationFrame(draw);}
     else{shootingStar=null;context?.clearRect(0,0,width,height);}
   }
   function draw(now){
@@ -212,9 +212,7 @@
       if(atmosphere==='rain'){
         const fall=(fly.y*height+seconds*(18+fly.speed*12))%height;
         context.lineWidth=.7;context.beginPath();context.moveTo(x,fall);context.lineTo(x-3,fall+16);context.stroke();
-      }else if(atmosphere==='bubbles'){
-        const rise=height-((fly.y*height+seconds*fly.speed*7)%height);
-        context.lineWidth=.7;context.beginPath();context.arc(x,rise,fly.radius+1,0,Math.PI*2);context.stroke();
+
       }else if(atmosphere==='petals'){
         const fall=(fly.y*height+seconds*fly.speed*5)%height;
         context.fillStyle=`rgba(236,219,228,${pulse})`;context.beginPath();context.ellipse(x,fall,2.6,1.3,Math.sin(seconds*.4+fly.phase),0,Math.PI*2);context.fill();

@@ -481,3 +481,18 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
  html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume::after{content:none}
  html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.goal-grid>.goal{border-radius:3px 10px 10px 10px;box-shadow:none}
 }
+
+/* One compact create entry point on the mobile introduction. */
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .topbar .header-create{display:none}
+ html[data-mobile-book="true"] body[data-view="dreams"] .topbar #settingsButton{margin-left:auto}
+}
+.dream-create-menu{position:fixed;inset:auto 16px auto auto;margin:0;padding:6px;width:min(240px,calc(100vw - 32px));background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:12px}
+.dream-create-menu button{display:block;width:100%;min-height:48px;padding:12px 16px;border:0;border-radius:7px;background:transparent;color:inherit;text-align:left;font:inherit;font-size:14px}
+.dream-create-menu button:hover,.dream-create-menu button:focus-visible{background:color-mix(in srgb,var(--accent) 14%,var(--surface))}
+
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .topbar>.new-group-button{margin-left:auto;width:44px;height:44px;flex-shrink:0;padding:10px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .topbar:has(>.new-group-button) #settingsButton{margin-left:0}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-home-tools:empty{display:none}
+}

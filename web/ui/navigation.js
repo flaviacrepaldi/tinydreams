@@ -92,7 +92,7 @@
   if(!source)return;
   const filter=tools.querySelector('.home-filter');if(filter)source.append(filter);
   const controls=[...source.querySelectorAll('.new-group-button')];
-  if(panel&&controls.length)tools.replaceChildren(...controls);
+  if(panel&&controls.length){for(const button of controls){button.dataset.action='choose-dream';button.setAttribute('aria-label','criar sonho');button.title='criar sonho';button.setAttribute('aria-expanded','false');button.setAttribute('aria-controls','dreamCreateMenu')}header.querySelector('.new-group-button')?.remove();header.insertBefore(controls[0],document.querySelector('#settingsButton'));}
   else if(!panel&&tools.children.length)source.append(...tools.children);
  }
  function measureNavigation(){
@@ -105,7 +105,7 @@
    main.prepend(panel);panel.append(header,tools,welcome);if(navigation)document.body.append(navigation);main.classList.add('mobile-chapter-pager');
    measureNavigation();window.scrollTo({top:0,behavior:'instant'});page=0;main.scrollTop=0;workspace.inert=true;
   }else if(!active()&&panel){
-   const source=workspace.querySelector('.overview-tools');if(source)source.append(...tools.children);
+   const source=workspace.querySelector('.overview-tools');for(const button of header.querySelectorAll('.new-group-button')){button.dataset.action='new-group';button.setAttribute('aria-label','novo big dream');button.title='novo big dream';button.removeAttribute('aria-expanded');button.removeAttribute('aria-controls');if(source)source.append(button)}if(source)source.append(...tools.children);document.querySelector('#dreamCreateMenu')?.hidePopover();
    panel.inert=false;workspace.inert=false;if(navigation)workspace.prepend(navigation);document.body.insertBefore(header,main);main.prepend(welcome);panel.remove();panel=null;
    main.classList.remove('mobile-chapter-pager');main.scrollTop=0;clearTimeout(timer);locked=false;
   }
@@ -144,4 +144,25 @@
  media.addEventListener('change',sync);
  window.addEventListener('resize',()=>{if(panel)main.scrollTo({top:page===1?workspace.offsetTop:0,behavior:'instant'})});
  sync();
+})();
+
+// A single round mobile create button offers both existing creation flows.
+(()=>{
+ const menu=document.querySelector('#dreamCreateMenu');if(!menu)return;
+ let trigger;
+ document.addEventListener('click',event=>{
+  const button=event.target.closest('[data-action="choose-dream"]');if(!button)return;
+  trigger=button;
+  if(menu.matches(':popover-open')){menu.hidePopover();return}
+  menu.showPopover();
+  const box=button.getBoundingClientRect();
+  menu.style.top=Math.min(box.bottom+8,innerHeight-menu.offsetHeight-16)+'px';
+  menu.style.right=Math.max(16,innerWidth-box.right)+'px';
+ });
+ menu.addEventListener('toggle',()=>trigger?.setAttribute('aria-expanded',String(menu.matches(':popover-open'))));
+ menu.addEventListener('click',event=>{
+  const choice=event.target.closest('[data-create-kind]');if(!choice)return;
+  menu.hidePopover();
+  if(choice.dataset.createKind==='tiny')openForm();else openGroup();
+ });
 })();
