@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete} from '../shared/planner.js';
+import {planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,outcomeOf} from '../shared/planner.js';
 
 const source=await readFile(new URL('../ui/app.js',import.meta.url),'utf8');
 const renderSource=source.slice(source.indexOf('function homeStatus(g)'),source.indexOf('function fitDreamGalleries(){'));
@@ -9,7 +9,7 @@ const elements=Object.fromEntries(['#demoBanner','#goalsCount','#content'].map(i
 let day='2026-10-29';
 const goal={id:'aerobic',title:'Fazer aeróbico',target:30,days:['2026-10-28'],entries:[],plan:{...planOf({}),start:'2026-10-28'}};
 const state={goals:[goal],groups:[],view:'dreams',homeFilter:'all',demo:false};
-const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,today:()=>day,
+const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,outcomeOf,today:()=>day,
   $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelectorAll:()=>[],addEventListener(){}},
   esc:String,icon:()=>'',goalCard:g=>`<article data-goal="${g.id}"></article>`,
   fitDreamGalleries(){},fitAmountTrends(){},requestAnimationFrame(){},queueMicrotask(){},checkIncompleteNotice(){}});
@@ -79,3 +79,15 @@ for(const currency of ['R$','BRL','reais']){
 assert.match(countdown({...sample,plan:{...planOf({}),kind:'amount',unit:'páginas'}}).label,/páginas/);
 assert.match(countdown({...sample,plan:{...planOf({}),kind:'list',items:[{id:'a'},{id:'b'}]}}).label,/conclusões/);
 console.log('PASS: remaining counts name completions, days, consecutive days, reais or the custom unit, with singular/plural.');
+
+// Skipping today's dream keeps its card as the gallery's restoration anchor.
+state.homeFilter='today';state.goals=[pending,done];state.groups=[];
+pending.plan={...pending.plan,skippedDays:[day]};render();
+assert.match(elements['#content'].innerHTML,/data-goal="pending"/,'Skipped card remains in today');
+assert.equal(elements['#goalsCount'].textContent,1,'Skipped dream no longer counts as pending');
+state.groups=[{id:'health',name:'Saúde'}];pending.group_id='health';render();
+assert.match(elements['#content'].innerHTML,/data-goal="pending"/,'Grouped skipped card also remains');
+pending.plan={...pending.plan,skippedDays:[]};render();
+assert.match(elements['#content'].innerHTML,/data-goal="pending"/);
+assert.equal(elements['#goalsCount'].textContent,2,'Undo skip restores pending count');
+console.log('PASS: skipping and undo retain today cards in grouped and ungrouped galleries.');
