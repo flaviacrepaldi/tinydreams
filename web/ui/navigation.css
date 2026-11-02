@@ -381,7 +381,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 /* BEGIN reversible mobile book proposal. Disable in Preferences on any device. */
 .mobile-chapter-link{display:none}
 @media(max-width:560px){
- html[data-mobile-book="true"]:has(body[data-view="dreams"]){scroll-snap-type:y proximity;scroll-padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+ html[data-mobile-book="true"]:has(body[data-view="dreams"]){overflow:hidden}
  html[data-mobile-book="true"] body[data-view="dreams"]{--chapter-height:calc(100svh - 82px - env(safe-area-inset-bottom))}
  html[data-mobile-book="true"] body[data-view="dreams"] .topbar{min-height:76px}
  html[data-mobile-book="true"] body[data-view="dreams"] .welcome{min-height:calc(var(--chapter-height) - 76px - env(safe-area-inset-top));padding:28px 10px 40px;align-items:center;scroll-snap-align:end}
@@ -390,7 +390,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
  html[data-mobile-book="true"] body[data-view="dreams"] .workspace{min-height:var(--chapter-height);padding-top:12px;scroll-snap-align:start;scroll-margin-top:0}
  html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools{margin:0 0 12px;min-height:44px}
  html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools>h2{font-size:20px;margin:0 auto 0 0}
- html[data-mobile-book="true"] body[data-view="dreams"] .dream-group{scroll-snap-align:start;scroll-margin-top:12px;margin-bottom:24px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-group{margin-bottom:24px}
  html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.group-heading{display:grid;grid-template-columns:24px minmax(0,1fr) 44px;gap:10px;align-items:center;min-height:0;padding:14px 16px 10px 24px}
  html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.group-heading .volume-emblem{grid-column:1;grid-row:1;width:24px;height:28px}
  html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.group-heading .volume-emblem svg{width:24px;height:24px}
@@ -418,3 +418,17 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .goal .quick-outcomes{margin-top:6px}
 }
 /* END reversible mobile book proposal. */
+
+/* Two complete mobile panels; gestures change chapter rather than scroll the page. */
+.mobile-chapter-back{display:none}
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"]{overflow:hidden}
+ html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{position:fixed;inset:0 0 calc(82px + env(safe-area-inset-bottom));max-width:none;margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
+ .mobile-chapter-pager>.mobile-intro-panel{height:100%;display:flex;flex-direction:column;overflow-y:auto;padding-inline:max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-right))}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.topbar{flex-shrink:0;width:100%;padding-inline:10px;margin:0}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.welcome{flex:1;min-height:0;padding:24px 10px 32px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager>.workspace{height:100%;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;background:var(--bg);padding:12px max(12px,env(safe-area-inset-right)) 24px max(12px,env(safe-area-inset-left));scroll-snap-align:none}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-back{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;margin-bottom:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit;font-size:13px}
+}
+
+@media(max-width:560px){body[data-view="dreams"]>.workspace-top{display:contents}}
