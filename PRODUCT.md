@@ -321,3 +321,7 @@ The user reported the upper status-bar blur encroaching on the logo. Keep the ho
 The user removed the opaque logo strip and requested larger bottom-menu symbols. Keep the toolbar transparent; use 24px navigation icons with unchanged 11px labels, a compact 12px label line height, and the existing 37px base bar.
 
 Removing the logo strip also removes sticky positioning: the transparent home toolbar scrolls naturally with its contents, preventing markers or cards from appearing behind the logo. Keep the system top safe area at the start of the chapter.
+
+## Centered iPhone menu without the lower gap
+
+The user clarified with an iPhone screenshot that the large empty lower strip comes from appending the full device bottom inset below the menu buttons. Cap the navigation's additional inset space at 8px and split it equally above and below the controls, instead of adding the full 34px only underneath. The menu remains 37px on devices without an inset and 45px with a large inset; 24px icons and 11px labels stay unchanged. Chapter/body fallback reservations use this same effective inset, while the raw device inset remains available to other UI. This supersedes full bottom-inset padding on navigation.

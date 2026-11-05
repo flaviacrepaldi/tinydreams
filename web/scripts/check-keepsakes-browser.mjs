@@ -70,7 +70,10 @@ for(const width of [320,390,430,1280]){
   await js("document.documentElement.style.setProperty('--bottom-safe-area','34px');document.documentElement.style.setProperty('--top-safe-area','47px')");
   await new Promise(r=>setTimeout(r,150));
   const safe=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,navTop:document.querySelector('.tabs').getBoundingClientRect().top,workspaceBottom:document.querySelector('#mobileDreams').getBoundingClientRect().bottom})");
-  assert.equal(safe.height,71,'Installed-app bottom safe area remains reserved');
+  assert.equal(safe.height,45,'Large device inset is capped to eight total pixels of menu padding');
+  const centered=await js("(()=>{const bar=document.querySelector('.tabs'),b=bar.querySelector('.tab'),r=bar.getBoundingClientRect(),t=b.getBoundingClientRect(),s=getComputedStyle(bar);return {top:parseFloat(s.paddingTop),bottom:parseFloat(s.paddingBottom),delta:Math.abs((t.top+t.bottom)/2-(r.top+r.bottom)/2)}})()");
+  assert.equal(centered.top,4);assert.equal(centered.bottom,4);
+  assert.ok(centered.delta<=.5,'Menu buttons sit at the vertical center of the entire bar: '+JSON.stringify(centered));
   assert.ok(Math.abs(safe.workspaceBottom-safe.navTop)<2,'Chapter viewport ends above the safe-area menu: '+JSON.stringify(safe));
   await js("document.querySelector('.goal').scrollIntoView({block:'end',inline:'nearest'})");
   assert.ok(await js("document.querySelector('.goal .quick-outcomes').getBoundingClientRect().bottom<=document.querySelector('.tabs').getBoundingClientRect().top"),'Bottom card actions remain reachable above menu');
@@ -81,6 +84,10 @@ for(const width of [320,390,430,1280]){
   assert.equal(await js("getComputedStyle(document.querySelector('.overview-tools')).position"),'relative','Transparent header scrolls naturally instead of overlapping the cord and cards');
   await js("document.querySelector('.goal').scrollIntoView({block:'end',inline:'nearest'})");
   const safeShot=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/keepsakes-safe-area-${width}.png`,Buffer.from(safeShot.data,'base64'));
+  if(width===390){
+   await js(`state.goals=state.goals.slice(0,9);state.groups=[{id:'care',name:'new me'}];const g=state.goals[0];g.title='cuidar das minhas unhas';g.target=20;g.plan={...planOf(g),emoji:'🌸',impulse:true,start:dayBefore(12),notes:'se eu não tirar meu esmalte, as unhas não vão quebrar!',impulseStartedAt:new Date(Date.now()-(12*24+19)*3600000).toISOString(),end:localDay(new Date(dateFrom(today()).getTime()+7*86400000))};render();document.querySelector('#demoBanner').hidden=true;document.querySelector('#mobileDreams').scrollTop=0;`);
+   const reproduction=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/menu-user-reference-390.png',Buffer.from(reproduction.data,'base64'));
+  }
   await js("document.documentElement.style.removeProperty('--bottom-safe-area');document.documentElement.style.removeProperty('--top-safe-area')");
  }
  console.log('PASS: symbol-only keepsakes, completed types, navigation, undo, fixed cards and many seals at '+width+'px');

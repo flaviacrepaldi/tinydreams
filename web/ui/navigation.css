@@ -1,4 +1,4 @@
-:root{--top-safe-area:env(safe-area-inset-top,0px);--bottom-safe-area:env(safe-area-inset-bottom,0px)}
+:root{--top-safe-area:env(safe-area-inset-top,0px);--bottom-safe-area:env(safe-area-inset-bottom,0px);--nav-inset:min(8px,var(--bottom-safe-area))}
 /* One navigation vocabulary across the monthly worlds. */
 .daily-item-progress{margin:16px 0 12px;color:var(--goal,var(--accent))}
 .daily-item-progress p{font-size:12px;line-height:1.4;margin:0 0 8px;color:var(--muted)}
@@ -131,8 +131,8 @@ body:not([data-view="dreams"]) .workspace{margin-top:96px}
   .topbar{gap:16px;padding:calc(16px + var(--top-safe-area)) max(22px,env(safe-area-inset-right,0px)) 16px max(22px,env(safe-area-inset-left,0px))}
   .topbar .brand{font-size:26px;min-width:0}
   .topbar .brand>svg{width:30px;height:30px;flex-shrink:0}
-  body{padding-bottom:calc(37px + var(--bottom-safe-area))}
-  .tabs{position:fixed;inset:auto 0 0;z-index:8;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:0 8px var(--bottom-safe-area);background:var(--surface);border-top:1px solid var(--line)}
+  body{padding-bottom:calc(37px + var(--nav-inset))}
+  .tabs{position:fixed;inset:auto 0 0;z-index:8;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:calc(var(--nav-inset)/2) 8px;background:var(--surface);border-top:1px solid var(--line)}
   .tabs .tab{flex-direction:column;gap:0;padding:0 2px;min-height:36px;border:0;border-radius:8px;font-size:11px;line-height:12px;color:var(--muted);position:relative}
   .tabs .tab.active{background:color-mix(in srgb,var(--accent) 12%,var(--surface));color:var(--text);border:0}
   .tabs .nav-symbol{width:24px;height:24px;flex-shrink:0}
@@ -424,7 +424,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 .mobile-chapter-back{display:none}
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"]{overflow:hidden}
- html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{position:fixed;inset:0 0 calc(37px + var(--bottom-safe-area));max-width:none;margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
+ html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{position:fixed;inset:0 0 calc(37px + var(--nav-inset));max-width:none;margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
  .mobile-chapter-pager>.mobile-intro-panel{height:100%;display:flex;flex-direction:column;overflow-y:auto;padding-inline:max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-right))}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.topbar{flex-shrink:0;width:100%;padding-inline:10px;margin:0}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.welcome{flex:1;min-height:0;padding:24px 10px 32px}

@@ -539,3 +539,5 @@ On the mobile dream chapter, keep the toolbar sticky at 8px inside the safe-area
 The logo toolbar has no opaque background strip. Bottom navigation symbols are now 24px at the user’s request; labels remain 11px with a 12px line height so the existing 37px bar and safe-area padding stay unchanged.
 
 The transparent logo toolbar now stays in normal flow rather than sticky positioning, avoiding overlap with the bookmark cord or card content while scrolling. This supersedes the pinned-toolbar direction.
+
+The bottom menu must center its controls in the whole visible bar. Use `--nav-inset: min(8px, var(--bottom-safe-area))`, split equally into top and bottom padding. With a 34px device inset, the bar is 45px tall and has 4px above and below the 36px controls (plus the top border). Assert equal padding and vertical center alignment in QA; do not shrink the 24px symbols or 11px labels. Reserve the same effective height for chapter/body geometry.
