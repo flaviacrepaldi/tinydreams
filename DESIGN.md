@@ -541,3 +541,5 @@ The logo toolbar has no opaque background strip. Bottom navigation symbols are n
 The transparent logo toolbar now stays in normal flow rather than sticky positioning, avoiding overlap with the bookmark cord or card content while scrolling. This supersedes the pinned-toolbar direction.
 
 The bottom menu must center its controls in the whole visible bar. Use `--nav-inset: min(8px, var(--bottom-safe-area))`, split equally into top and bottom padding. With a 34px device inset, the bar is 45px tall and has 4px above and below the 36px controls (plus the top border). Assert equal padding and vertical center alignment in QA; do not shrink the 24px symbols or 11px labels. Reserve the same effective height for chapter/body geometry.
+
+Final user adjustment: use 8px vertical padding on both sides of the centered navigation controls (`--nav-inset:16px`). Total bar height is 53px, with the same 24px icons, 11px labels and 36px control content. Device safe-area values must not reintroduce an asymmetric empty lower strip.

@@ -325,3 +325,5 @@ Removing the logo strip also removes sticky positioning: the transparent home to
 ## Centered iPhone menu without the lower gap
 
 The user clarified with an iPhone screenshot that the large empty lower strip comes from appending the full device bottom inset below the menu buttons. Cap the navigation's additional inset space at 8px and split it equally above and below the controls, instead of adding the full 34px only underneath. The menu remains 37px on devices without an inset and 45px with a large inset; 24px icons and 11px labels stay unchanged. Chapter/body fallback reservations use this same effective inset, while the raw device inset remains available to other UI. This supersedes full bottom-inset padding on navigation.
+
+The user approved the centered menu and requested doubling its breathing room to 8px above and 8px below. Navigation now reserves 16px total symmetric padding on every mobile viewport, for a 53px bar including its border, without adding the raw device bottom inset. Keep symbols at 24px and labels at 11px. This supersedes the earlier 4px-per-side spacing.

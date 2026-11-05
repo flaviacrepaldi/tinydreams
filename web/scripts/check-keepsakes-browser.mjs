@@ -65,14 +65,14 @@ for(const width of [320,390,430,1280]){
   const menu=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,targets:[...document.querySelectorAll('.tabs .tab')].map(b=>b.getBoundingClientRect().height)})");
   assert.equal(await js("[...document.querySelectorAll('.tabs .nav-symbol')].every(s=>s.getBoundingClientRect().width===24&&s.getBoundingClientRect().height===24)"),true,'Menu icons use the requested larger 24px size');
   assert.equal(await js("[...document.querySelectorAll('.tabs .tab')].every(b=>getComputedStyle(b).fontSize==='11px'&&getComputedStyle(b).flexDirection==='column')"),true,'Labels keep their original 11px size and stacked layout');
-  assert.equal(menu.height,37,'Compact menu uses 37px including border');assert.ok(menu.targets.every(h=>h>=36),'Keep 36px navigation targets in the extra-compact menu');
+  assert.equal(menu.height,53,'Menu keeps eight pixels above and below its controls');assert.ok(menu.targets.every(h=>h>=36),'Keep 36px navigation targets in the extra-compact menu');
   assert.equal(await js("[...document.querySelectorAll('.tabs .tab')].some(b=>b.scrollWidth>b.clientWidth)"),false,'Navigation labels fit at narrow widths');
   await js("document.documentElement.style.setProperty('--bottom-safe-area','34px');document.documentElement.style.setProperty('--top-safe-area','47px')");
   await new Promise(r=>setTimeout(r,150));
   const safe=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,navTop:document.querySelector('.tabs').getBoundingClientRect().top,workspaceBottom:document.querySelector('#mobileDreams').getBoundingClientRect().bottom})");
-  assert.equal(safe.height,45,'Large device inset is capped to eight total pixels of menu padding');
+  assert.equal(safe.height,53,'Device inset does not add another lower gap');
   const centered=await js("(()=>{const bar=document.querySelector('.tabs'),b=bar.querySelector('.tab'),r=bar.getBoundingClientRect(),t=b.getBoundingClientRect(),s=getComputedStyle(bar);return {top:parseFloat(s.paddingTop),bottom:parseFloat(s.paddingBottom),delta:Math.abs((t.top+t.bottom)/2-(r.top+r.bottom)/2)}})()");
-  assert.equal(centered.top,4);assert.equal(centered.bottom,4);
+  assert.equal(centered.top,8);assert.equal(centered.bottom,8);
   assert.ok(centered.delta<=.5,'Menu buttons sit at the vertical center of the entire bar: '+JSON.stringify(centered));
   assert.ok(Math.abs(safe.workspaceBottom-safe.navTop)<2,'Chapter viewport ends above the safe-area menu: '+JSON.stringify(safe));
   await js("document.querySelector('.goal').scrollIntoView({block:'end',inline:'nearest'})");

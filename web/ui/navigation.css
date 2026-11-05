@@ -1,4 +1,4 @@
-:root{--top-safe-area:env(safe-area-inset-top,0px);--bottom-safe-area:env(safe-area-inset-bottom,0px);--nav-inset:min(8px,var(--bottom-safe-area))}
+:root{--top-safe-area:env(safe-area-inset-top,0px);--bottom-safe-area:env(safe-area-inset-bottom,0px);--nav-inset:16px}
 /* One navigation vocabulary across the monthly worlds. */
 .daily-item-progress{margin:16px 0 12px;color:var(--goal,var(--accent))}
 .daily-item-progress p{font-size:12px;line-height:1.4;margin:0 0 8px;color:var(--muted)}
