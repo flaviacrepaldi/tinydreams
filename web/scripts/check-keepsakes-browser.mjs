@@ -43,6 +43,8 @@ for(const width of [320,390,430,1280]){
  assert.equal(await js("document.querySelector('[data-action=find-completed][data-id=care]').classList.contains('is-pending')"),true,'Undo restores the outline in place');
  await js("state.goals[0].days=[];state.goals[3].entries=[];state.goals[4].entries=[];render()");
  assert.equal(await js("document.querySelectorAll('.keepsake.is-done').length"),0);
+ assert.equal(await js("document.querySelector('[data-action=find-completed][data-id=amount]')"),null,'Pending cumulative amounts stay off the cord');
+ assert.equal(await js("document.querySelector('[data-action=find-completed][data-id=list]')"),null,'Pending one-time lists stay off the cord');
  const emptyHeight=await js("document.querySelector('.daily-keepsakes').getBoundingClientRect().height");
  await js("state.goals[0].days=[today()];render()");
  assert.equal(await js("document.querySelector('.daily-keepsakes').getBoundingClientRect().height"),emptyHeight,'First completion does not shift cards');
@@ -58,6 +60,19 @@ for(const width of [320,390,430,1280]){
  await js("document.querySelector('#demoBanner').hidden=true;document.querySelector('#mobileDreams').scrollTop=0");
  if(width<600)assert.ok(await js("document.querySelector('.goal').getBoundingClientRect().bottom<=document.querySelector('.tabs').getBoundingClientRect().top"),'Dense collection keeps the full card above navigation');
  const dense=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/keepsakes-many-${width}.png`,Buffer.from(dense.data,'base64'));
+ if(width<600){
+  const menu=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,targets:[...document.querySelectorAll('.tabs .tab')].map(b=>b.getBoundingClientRect().height)})");
+  assert.equal(menu.height,45,'Compact menu uses 45px including border');assert.ok(menu.targets.every(h=>h>=44),'Keep 44px navigation touch targets');
+  await js("document.documentElement.style.setProperty('--bottom-safe-area','34px')");
+  await new Promise(r=>setTimeout(r,150));
+  const safe=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,navTop:document.querySelector('.tabs').getBoundingClientRect().top,workspaceBottom:document.querySelector('#mobileDreams').getBoundingClientRect().bottom})");
+  assert.equal(safe.height,79,'Installed-app bottom safe area remains reserved');
+  assert.ok(Math.abs(safe.workspaceBottom-safe.navTop)<2,'Chapter viewport ends above the safe-area menu: '+JSON.stringify(safe));
+  await js("document.querySelector('.goal').scrollIntoView({block:'end',inline:'nearest'})");
+  assert.ok(await js("document.querySelector('.goal .quick-outcomes').getBoundingClientRect().bottom<=document.querySelector('.tabs').getBoundingClientRect().top"),'Bottom card actions remain reachable above menu');
+  const safeShot=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/keepsakes-safe-area-${width}.png`,Buffer.from(safeShot.data,'base64'));
+  await js("document.documentElement.style.removeProperty('--bottom-safe-area')");
+ }
  console.log('PASS: symbol-only keepsakes, completed types, navigation, undo, fixed cards and many seals at '+width+'px');
 }
 await cdp('Page.close');ws.close();

@@ -527,3 +527,5 @@ The user permits reducing the summaries below Big Dream names when space is tigh
 ## Responsive pending bookmarks
 
 All currently visible dreams have a stable bookmark slot. Pending bookmarks use a dashed outline and theme-muted symbol on transparent paper; completed ones use the existing filled paper style. Keep both clickable and label their state for assistive technology. The strip stays 56px tall with fixed 44px-wide targets at every viewport size, including large collections. Horizontal overflow stays within the strip, with edge fades indicating more bookmarks. Recording/undo preserves its horizontal position and never changes card dimensions.
+
+Mobile bottom navigation uses a 45px base height (44px targets plus the border), with 18px outline symbols, compact label spacing, no extra vertical container padding, and the full bottom safe-area inset. Update viewport/body fallback reservations together; the chapter layout still follows measured navigation height. Cards retain their fixed 582px template.

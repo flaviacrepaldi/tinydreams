@@ -140,7 +140,7 @@
  new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['data-view']});
  new MutationObserver(syncTools).observe(document.querySelector('#content'),{childList:true,subtree:true});
  const navObserver=new ResizeObserver(()=>{measureNavigation();if(panel){main.dataset.chapter=String(page);main.scrollTop=0}});
- navObserver.observe(document.querySelector('.tabs'));
+ navObserver.observe(document.querySelector('.tabs'),{box:'border-box'});
  media.addEventListener('change',sync);
  window.addEventListener('resize',()=>{if(panel){main.dataset.chapter=String(page);main.scrollTop=0}});
  sync();

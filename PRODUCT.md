@@ -303,3 +303,9 @@ The user requested removing explanatory legends from the home cards, including t
 ## Pending reading bookmarks
 
 The user requested outlines for the tydreams that remain. Every visible home dream now has a bookmark in its stable position: an unfilled dashed outline while pending, filled paper when completed today. Both navigate to the matching card. Undo returns the bookmark to its outline instead of removing it. Keep the 56px single-row strip and 44px touch targets; large volumes scroll horizontally with subtle edge fades rather than wrapping or shrinking. Preserve strip scroll position through recording. This supersedes the completed-only cord behavior.
+
+## Compact bottom menu
+
+The user requested reducing bottom navigation height to free a few pixels of dream viewport space. Mobile navigation now uses a 45px bar including its border, plus the device's bottom safe-area inset. Preserve 44px button hit targets, readable labels and the 582px cards. The measured menu height continues to define the installed-app chapter viewport.
+
+Only habit dreams have pending outlines in the cord. Pending cumulative amounts and one-time lists remain in their galleries without occupying cord slots; once fully completed today they can appear as filled bookmarks.
