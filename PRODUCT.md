@@ -287,3 +287,19 @@ The lower mobile home header has a 38×40px seasonal monogram, 26px wordmark and
 The counter and amulet sit approximately 8px higher within their reserved region, increasing separation from the streak without changing the 582px card height. Card titles retain 24px type with 28px line height and 2px inline glyph padding to avoid clipping serif capitals/overhangs. Subtitle lines use 14px within the same heading allocation, keeping the title/subtitle together.
 
 Rewards fit a dedicated 96px footer with three visible lines and separate action space. Move completion progress approximately 12px higher and reclaim unused streak/progress spacing, retaining the 582px card height and the circular markers. Longer rewards truncate cleanly after three lines; history displays the full saved reward for every type. Test all card variants with rewards, including the 160-character limit, checking text container and button separation.
+
+## Today's accomplishment cord
+
+The user approved a small cord of hanging bookmarks containing only each completed tydream's existing outline symbol, without a visible heading, captions or counts. It sits above the home groups and links directly to the matching card without reordering cards. Habit seals reflect today's successful outcome; amount and one-time-list seals reflect full completion today. Undo removes the corresponding seal. The strip reserves a compact fixed height so the first completion does not shift the cards; many seals scroll horizontally inside the strip. Preserve the 582px card template and mobile bottom navigation clearance.
+
+## Unboxed Big Dreams and reading bookmarks
+
+The user approved removing the Big Dream book-cover/spine structure in favor of a simple group heading directly on the library background. Keep grouping, summaries, edit controls, card order, and the fixed 582px card template. The literary cue moves to the compact accomplishment cord: small paper reading bookmarks, a fine inset border, a tiny botanical detail, and warm clips, with only the dream symbols visible. This supersedes the earlier book-cover presentation of Big Dreams.
+
+## Quiet home cards
+
+The user requested removing explanatory legends from the home cards, including the stale “cada quadrado: 24 horas” impulse caption. Keep actual progress, streak counts, personal content and actions; omit the small instructional/legend lines (including the 14-day caption, schedule and activity key). Preserve the fixed card fields and geometry.
+
+## Pending reading bookmarks
+
+The user requested outlines for the tydreams that remain. Every visible home dream now has a bookmark in its stable position: an unfilled dashed outline while pending, filled paper when completed today. Both navigate to the matching card. Undo returns the bookmark to its outline instead of removing it. Keep the 56px single-row strip and 44px touch targets; large volumes scroll horizontally with subtle edge fades rather than wrapping or shrinking. Preserve strip scroll position through recording. This supersedes the completed-only cord behavior.

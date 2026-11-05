@@ -29,7 +29,7 @@ function showDemo(){$('#incompleteReviewDialog')?.close();resetMilestonePanel();
 window.addEventListener('resize',()=>requestAnimationFrame(alignDreamSummaries),{passive:true});
 document.fonts?.ready.then(alignDreamSummaries);
 function homeStatus(g){return planOf(g).kind!=='habit'?0:dayDone(g,today())?1:scheduled(g,today())?0:2}
-function visibleOnHome(g){return !isArchivedIncomplete(g)&&(!planOf(g).start||planOf(g).start<=today())&&!complete(g)}
+function visibleOnHome(g){return !isArchivedIncomplete(g)&&(!planOf(g).start||planOf(g).start<=today())&&(!complete(g)||completionDay(g)===today())}
 function dailyStateBadge(g){
  if(planOf(g).impulse)return '';
  if(isArchivedIncomplete(g))return '<span class="daily-state">encerrado sem concluir</span>';
@@ -39,27 +39,37 @@ function dailyStateBadge(g){
 }
 function render(){
  const gs=state.goals;document.body.dataset.view=state.view;
- $('#demoBanner').hidden=!state.demo;$('#goalsCount').textContent=gs.filter(g=>visibleOnHome(g)&&homeStatus(g)===0).length;
+ $('#demoBanner').hidden=!state.demo;$('#goalsCount').textContent=gs.filter(g=>visibleOnHome(g)&&!complete(g)&&homeStatus(g)===0).length;
  document.querySelectorAll('.tab').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);if(b.dataset.view===state.view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  if(state.view==='shelf')renderShelf();else if(state.view==='today')renderToday();else if(state.view==='calendar')renderCalendar();else renderOverview();
  if($('#incompleteDialog')?.open)renderIncompleteCollection();
  queueMicrotask(checkIncompleteNotice);
 }
+function completedToday(g){
+ return planOf(g).kind==='habit'?dayDone(g,today()):complete(g)&&completionDay(g)===today();
+}
+function dailyKeepsakes(goals){
+ if(!goals.length)return '';
+ return `<nav class="daily-keepsakes" aria-label="Tydreams de hoje"><div class="keepsake-line"><svg class="keepsake-cord" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M1 3 Q200 25 399 3"/></svg>${goals.map(g=>`<button type="button" class="keepsake ${completedToday(g)?'is-done':'is-pending'}" data-action="find-completed" data-id="${esc(g.id)}" aria-label="Ver ${esc(g.title)}, ${completedToday(g)?'concluído hoje':'pendente'}" title="${esc(g.title)}">${goalEmoji(g)}<svg class="keepsake-rule" viewBox="0 0 42 43" fill="none" aria-hidden="true"><path d="M4 5H38V37L21 31 4 37Z"/></svg><span class="keepsake-leaf" aria-hidden="true">${icon('leaf')}</span></button>`).join('')}</div></nav>`;
+}
 function renderOverview(){
+ const keepsakeLeft=document.querySelector('.daily-keepsakes')?.scrollLeft||0;
  const positions=[...document.querySelectorAll('.dream-overview .goal-grid')].map(grid=>{
   const left=grid.getBoundingClientRect().left,cards=[...grid.querySelectorAll(':scope > .goal')];
   const card=cards.reduce((best,item)=>!best||Math.abs(item.getBoundingClientRect().left-left)<Math.abs(best.getBoundingClientRect().left-left)?item:best,null);
-  return card?{id:card.dataset.goal,wasDone:card.classList.contains('done-today')}:null;
+  return card?{id:card.dataset.goal}:null;
  }).filter(Boolean);
- const active=state.goals.filter(g=>visibleOnHome(g)&&(state.homeFilter==='all'||planOf(g).kind!=='habit'||scheduled(g,today())||dayDone(g,today())||outcomeOf(g,today())==='skipped')).sort((a,b)=>homeStatus(a)-homeStatus(b));
+ const active=state.goals.filter(g=>visibleOnHome(g)&&(state.homeFilter==='all'||planOf(g).kind!=='habit'||scheduled(g,today())||dayDone(g,today())||outcomeOf(g,today())==='skipped'));
  const section=(name,goals,group)=>{
   const members=group?state.goals.filter(g=>g.group_id===group.id):state.goals.filter(g=>!state.groups.some(group=>group.id===g.group_id)),finished=members.filter(complete).length;
   const planned=members.filter(g=>planOf(g).kind==='habit'&&scheduled(g,today())&&(!complete(g)||dayDone(g,today()))),done=planned.filter(g=>dayDone(g,today())).length;
-  return `<section class="dream-group ${group?'big-dream-volume':''}"><div class="group-heading">${group?`<span class="volume-emblem" aria-hidden="true">${icon('book')}</span>`:''}<div class="volume-title"><h2>${esc(name)}</h2><p>${group?`${members.length} ${members.length===1?'tydream':'tydreams'} · ${finished} ${finished===1?'realizado':'realizados'}`:`${goals.length} ${goals.length===1?'tydream em andamento':'tydreams em andamento'}`}</p>${planned.length?`<p class="group-today-progress">${done} de ${planned.length} feitos hoje</p>`:''}</div>${group?`<button class="text-button rename-group-button" data-action="edit-group" data-group="${esc(group.id)}" aria-label="renomear big dream ${esc(name)}" title="renomear big dream">${icon('edit')}</button>`:''}</div>${goals.length?`<div class="goal-grid" tabindex="0" role="region" aria-label="Tydreams de ${esc(name)}">${goals.map(goalCard).join('')}</div>`:`<p class="group-empty">${members.length?(state.homeFilter==='all'?'nenhum tydream pendente neste grupo. consulte seus registros em hoje ou calendário.':'nenhum tiny dream para hoje neste grupo.'):'Escolha este Big Dream ao criar ou editar um tiny dream.'}</p>`}</section>`;
+  return `<section class="dream-group ${group?'big-dream-volume':''}"><div class="group-heading"><div class="volume-title"><h2>${esc(name)}</h2><p>${group?`${members.length} ${members.length===1?'tydream':'tydreams'} · ${finished} ${finished===1?'realizado':'realizados'}`:`${goals.length} ${goals.length===1?'tydream em andamento':'tydreams em andamento'}`}</p>${planned.length?`<p class="group-today-progress">${done} de ${planned.length} feitos hoje</p>`:''}</div>${group?`<button class="text-button rename-group-button" data-action="edit-group" data-group="${esc(group.id)}" aria-label="renomear big dream ${esc(name)}" title="renomear big dream">${icon('edit')}</button>`:''}</div>${goals.length?`<div class="goal-grid" tabindex="0" role="region" aria-label="Tydreams de ${esc(name)}">${goals.map(goalCard).join('')}</div>`:`<p class="group-empty">${members.length?(state.homeFilter==='all'?'nenhum tydream pendente neste grupo. consulte seus registros em hoje ou calendário.':'nenhum tiny dream para hoje neste grupo.'):'Escolha este Big Dream ao criar ou editar um tiny dream.'}</p>`}</section>`;
  };
  const ungrouped=active.filter(g=>!state.groups.some(group=>group.id===g.group_id));
- $('#content').innerHTML=`<div class="dream-overview"><div class="overview-tools"><h2><span class="overview-desktop-title">Big Dreams</span><span class="overview-mobile-brand"><svg class="brand-monogram" viewBox="0 0 128 136" aria-hidden="true">${document.querySelector('.topbar .brand-monogram')?.innerHTML||''}</svg><span>tiny dreams<span class="brand-dot">.</span></span></span></h2><div class="home-filter" role="group" aria-label="mostrar tiny dreams"><button type="button" data-action="home-filter" data-filter="today" aria-pressed="${state.homeFilter!=='all'}">hoje</button><button type="button" data-action="home-filter" data-filter="all" aria-pressed="${state.homeFilter==='all'}">todos</button></div><button class="icon-button new-group-button" data-action="new-group" aria-label="novo big dream" title="novo big dream"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>${!state.goals.length&&!state.groups.length?`<div class="empty"><h2>Seu próximo capítulo começa aqui.</h2><p>Crie seu primeiro tydream ou um Big Dream para reunir seus sonhos.</p><div class="empty-actions"><button class="primary" data-action="new">criar meu primeiro tiny dream</button><button class="text-button" data-action="demo">Explorar um exemplo</button></div></div>`:`${state.groups.map(group=>section(group.name,active.filter(g=>g.group_id===group.id),group)).join('')}${ungrouped.length?section(state.groups.length?'sem big dream':'meus tydreams',ungrouped):''}${!active.length&&state.goals.length&&!state.groups.length?`<p class="muted">${state.homeFilter==='all'?'nenhum tydream pendente. consulte seus registros em hoje ou calendário.':'nenhum tiny dream para hoje. selecione todos para ver os demais.'}</p>`:''}<button class="secondary overview-add" data-action="new">novo tiny dream</button>`}</div>`;
+ $('#content').innerHTML=`<div class="dream-overview"><div class="overview-tools"><h2><span class="overview-desktop-title">Big Dreams</span><span class="overview-mobile-brand"><svg class="brand-monogram" viewBox="0 0 128 136" aria-hidden="true">${document.querySelector('.topbar .brand-monogram')?.innerHTML||''}</svg><span>tiny dreams<span class="brand-dot">.</span></span></span></h2><div class="home-filter" role="group" aria-label="mostrar tiny dreams"><button type="button" data-action="home-filter" data-filter="today" aria-pressed="${state.homeFilter!=='all'}">hoje</button><button type="button" data-action="home-filter" data-filter="all" aria-pressed="${state.homeFilter==='all'}">todos</button></div><button class="icon-button new-group-button" data-action="new-group" aria-label="novo big dream" title="novo big dream"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>${dailyKeepsakes(active)}${!state.goals.length&&!state.groups.length?`<div class="empty"><h2>Seu próximo capítulo começa aqui.</h2><p>Crie seu primeiro tydream ou um Big Dream para reunir seus sonhos.</p><div class="empty-actions"><button class="primary" data-action="new">criar meu primeiro tiny dream</button><button class="text-button" data-action="demo">Explorar um exemplo</button></div></div>`:`${state.groups.map(group=>section(group.name,active.filter(g=>g.group_id===group.id),group)).join('')}${ungrouped.length?section(state.groups.length?'sem big dream':'meus tydreams',ungrouped):''}${!active.length&&state.goals.length&&!state.groups.length?`<p class="muted">${state.homeFilter==='all'?'nenhum tydream pendente. consulte seus registros em hoje ou calendário.':'nenhum tiny dream para hoje. selecione todos para ver os demais.'}</p>`:''}<button class="secondary overview-add" data-action="new">novo tiny dream</button>`}</div>`;
  fitDreamGalleries();
+ const strip=document.querySelector('.daily-keepsakes');
+ if(strip){strip.scrollLeft=keepsakeLeft;const edges=()=>{strip.dataset.before=String(strip.scrollLeft>2);strip.dataset.after=String(strip.scrollWidth-strip.clientWidth-strip.scrollLeft>2)};strip.addEventListener('scroll',edges,{passive:true});requestAnimationFrame(edges)}
  if(window.matchMedia('(max-width:560px)').matches)for(const position of positions){
   const card=[...document.querySelectorAll('.dream-overview .goal')].find(card=>card.dataset.goal===position.id);
   if(!card)continue;
@@ -67,10 +77,18 @@ function renderOverview(){
   grid.style.scrollSnapType='none';
   const restore=()=>grid.scrollTo({left:card.offsetLeft-grid.firstElementChild.offsetLeft,behavior:'instant'});
   restore();requestAnimationFrame(()=>{restore();grid.style.removeProperty('scroll-snap-type')});
-  if(!position.wasDone&&card.classList.contains('done-today'))grid.dataset.returnToPending=position.id;
  }
  requestAnimationFrame(fitAmountTrends);
 }
+document.addEventListener('click',event=>{
+ const seal=event.target.closest('[data-action="find-completed"]');if(!seal)return;
+ const card=[...document.querySelectorAll('.dream-overview .goal')].find(card=>card.dataset.goal===seal.dataset.id);
+ if(!card)return;
+ const grid=card.closest('.goal-grid');
+ card.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
+ if(window.matchMedia('(max-width:560px)').matches)grid.scrollTo({left:card.offsetLeft-grid.firstElementChild.offsetLeft,behavior:'instant'});
+ card.querySelector('.diary-button')?.focus({preventScroll:true});
+});
 document.addEventListener('click',event=>{
  const button=event.target.closest('[data-action="home-filter"]');if(!button)return;
  state.homeFilter=button.dataset.filter==='all'?'all':'today';renderOverview();
@@ -99,7 +117,6 @@ function fitDreamGalleries(){
    grid.scrollTo({left:0,behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
    setTimeout(()=>{wrapping=false;settle()},700);
   };
-  const nextPending=()=>!!grid.dataset.returnToPending&&cards.some(card=>card.dataset.goal===grid.dataset.returnToPending&&Math.abs(card.getBoundingClientRect().left-grid.getBoundingClientRect().left)<30)&&!!grid.querySelector('[data-today-status="0"]');
   const settle=()=>{
    clearTimeout(settleTimer);if(touching||wrapping||!grid.isConnected)return;
    // Native snap owns the horizontal position. Resize only once movement ends.
@@ -112,10 +129,10 @@ function fitDreamGalleries(){
   grid.addEventListener('touchstart',event=>{
    touching=true;clearTimeout(settleTimer);
    const touch=event.touches.length===1?event.touches[0]:null;
-   gesture=touch?{id:touch.identifier,x:touch.clientX,y:touch.clientY,atEnd:atEnd(),nextPending:nextPending()}:null;
+   gesture=touch?{id:touch.identifier,x:touch.clientX,y:touch.clientY,atEnd:atEnd()}:null;
   },{passive:true});
   grid.addEventListener('touchmove',event=>{
-   if(!mobile.matches||cards.length<2||!gesture||event.touches.length!==1||!(gesture.atEnd||gesture.nextPending))return;
+   if(!mobile.matches||cards.length<2||!gesture||event.touches.length!==1||!gesture.atEnd)return;
    const touch=event.touches[0],dx=touch.clientX-gesture.x,dy=touch.clientY-gesture.y;
    // Only claim an outward horizontal gesture; vertical page scrolling stays native.
    if(dx < -8&&Math.abs(dx)>Math.abs(dy)*1.3){
@@ -127,15 +144,15 @@ function fitDreamGalleries(){
    if(event.touches.length)return;
    touching=false;
    const touch=gesture&&[...event.changedTouches].find(t=>t.identifier===gesture.id);
-   if(mobile.matches&&cards.length>1&&(gesture?.atEnd||gesture?.nextPending)&&touch){
+   if(mobile.matches&&cards.length>1&&gesture?.atEnd&&touch){
     const dx=touch.clientX-gesture.x,dy=touch.clientY-gesture.y;
-    if((gesture.forward||dx < -35)&&Math.abs(dx)>Math.abs(dy)*1.3){delete grid.dataset.returnToPending;wrap()}
+    if((gesture.forward||dx < -35)&&Math.abs(dx)>Math.abs(dy)*1.3){wrap()}
    }
    gesture=null;scheduleSettle();
   },{passive:true});
   grid.addEventListener('touchcancel',()=>{touching=false;gesture=null;scheduleSettle()},{passive:true});
   grid.addEventListener('keydown',event=>{
-   if(event.target===grid&&mobile.matches&&cards.length>1&&event.key==='ArrowRight'&&(atEnd()||nextPending())){event.preventDefault();delete grid.dataset.returnToPending;wrap()}
+   if(event.target===grid&&mobile.matches&&cards.length>1&&event.key==='ArrowRight'&&atEnd()){event.preventDefault();wrap()}
   });
  });
 }
@@ -322,7 +339,7 @@ function habitStreakGrid(g){
  if(p.impulse){
   const completed=progress(g),first=Math.max(1,completed-12);
   const cells=Array.from({length:14},(_,i)=>{const day=first+i,done=day<=completed,current=day===completed+1,label=`dia ${day}: ${done?'24 horas completas':current?'em andamento':'a completar'}`;return `<li class="streak-square ${done?'success':'unrecorded'} ${current?'current':''}" aria-label="${label}" title="${label}">${done?icon('check'):''}</li>`});
-  return `<div class="habit-streak impulse-streak"><div class="streak-caption"><span>${completed} ${completed===1?'dia completo':'dias completos'}</span><small>cada quadrado: 24 horas</small></div><ol class="streak-grid" aria-label="dias de 24 horas da sequência atual">${cells.join('')}</ol></div>`;
+  return `<div class="habit-streak impulse-streak"><div class="streak-caption"><span>${completed} ${completed===1?'dia completo':'dias completos'}</span></div><ol class="streak-grid" aria-label="dias de 24 horas da sequência atual">${cells.join('')}</ol></div>`;
  }
  const start=p.start||[...g.days,...(g.failures||[]),...(g.entries||[]).map(e=>e.day)].sort()[0]||today();
  const archived=isArchivedIncomplete(g),anchor=archived?p.end:today();
@@ -332,7 +349,7 @@ function habitStreakGrid(g){
   return `<li class="streak-square ${status||'unrecorded'} ${day===today()?'current':''}" aria-label="${esc(label)}" title="${esc(label)}">${status?icon(status==='success'?'check':'cross'):''}</li>`;
  });
  const count=streak(g);
- return `<div class="habit-streak"><div class="streak-caption"><span>${archived?'período encerrado':`${count} ${count===1?'dia':'dias'} sem falhar`}</span><small>últimos 14 dias</small></div><ol class="streak-grid" aria-label="últimos 14 dias corridos, do mais antigo ao mais recente">${cells.join('')}</ol><small class="streak-key">× sem atividade prevista</small><p class="streak-routine">rotina: ${esc(p.weekdays.length===7?'todos os dias':p.weekdays.map(d=>weekNames[d].toLowerCase()).join(' · '))}</p></div>`;
+ return `<div class="habit-streak"><div class="streak-caption"><span>${archived?'período encerrado':`${count} ${count===1?'dia':'dias'} sem falhar`}</span></div><ol class="streak-grid" aria-label="últimos 14 dias corridos, do mais antigo ao mais recente">${cells.join('')}</ol></div>`;
 }
 function amuletCropStyle(edition,color){
  const geometry=edition?.geometry,rect=geometry?.objectBounds?.[{lavender:0,peach:1,sage:2}[color]];

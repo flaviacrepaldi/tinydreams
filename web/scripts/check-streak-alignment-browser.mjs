@@ -21,6 +21,7 @@ for(const width of [320,390,430,1280]){
  assert.ok(Math.max(...offsets.filter(v=>v.hasGrid).map(v=>v.grid))-Math.min(...offsets.filter(v=>v.hasGrid).map(v=>v.grid))<2,JSON.stringify({width,offsets}));
  assert.ok(offsets.every(v=>v.scroll<=v.width+1),JSON.stringify({width,offsets}));
  assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false);
+ assert.equal(await js("document.querySelectorAll('.streak-caption small,.streak-key,.streak-routine').length"),0,'Home cards omit explanatory legends');
  assert.equal(await js("document.querySelector('.goal [data-action=annotate]')"),null);
  assert.equal(await js("document.querySelector('[data-goal=align3] .dream-summary-subtitle').textContent"),'Meu combinado para atravessar a vontade.');
  const rewardBoxes=await js("[...document.querySelectorAll('.goal')].map(c=>{const r=c.querySelector('.reward').getBoundingClientRect(),n=c.querySelector('.reward-name').getBoundingClientRect(),b=c.querySelector('.quick-outcomes,.plan-open').getBoundingClientRect();return {fits:n.top>=r.top-1&&n.bottom<=r.bottom+1,overlap:r.bottom-b.top}})");
@@ -62,6 +63,15 @@ for(const width of [320,390,430,1280]){
   await js(`(()=>{const g=document.querySelector('${selector}');g.scrollLeft=0;fitGalleryViewport(g);g.scrollIntoView({block:'start'});window.beforeSwipeHeight=g.getBoundingClientRect().height})()`);
   await new Promise(r=>setTimeout(r,300));
   for(const [direction,expected] of [[-1,1],[-1,2],[1,1]]){
+   if(direction===-1&&expected===2){
+    await js("changeEntry('align1',{key:'qa-daily',day:today(),value:2,done:true},false)");await wait('!state.busy');
+    await js('dismissMilestone()');
+    assert.equal(await js("dayDone(state.goals.find(g=>g.id==='align1'),today())"),true);
+    assert.equal(await js("document.querySelector('.goal-grid').children[1].dataset.goal"),'align1','Completion preserves order');
+   }
+   if(direction===1){
+    await js("changeEntry('align2',{key:today()+':a',day:today(),value:1,done:true},false)");await wait('!state.busy');await js('dismissMilestone()');
+   }
    const box=await js(`(()=>{const r=document.querySelector('${selector}').getBoundingClientRect();return {x:r.left,w:r.width,y:Math.max(80,r.top+70)}})()`);
    const start=box.x+box.w*(direction<0?.85:.15),end=box.x+box.w*(direction<0?.15:.85);
    await cdp('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:start,y:box.y}]});

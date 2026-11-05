@@ -513,3 +513,17 @@ All four main destinations and both collection subviews share the active edition
 ### November scenery framing
 
 Preserve the original underwater library artwork. Desktop adds a directional teal shade behind the welcome copy while keeping the ocean side open. At widths up to 560px, the scene uses a 740px-wide atlas at 28% horizontal position so shelves, staircase and ocean share the crop. Leave 88px above the home welcome copy for an unobstructed glimpse of the room, then fade the scene to the theme background before the atlas object row. The scenic animation stage follows the same width and anchor. Other editions keep their existing framing.
+
+## Symbol-only accomplishment cord
+
+Home includes a 56px strip above its groups: a thin curved accent cord, tiny accent pegs, and paper bookmark shapes carrying the existing dream outline symbols. There is no visible text. Each 44px-wide button has an accessible name containing the dream title and jumps to its card without changing gallery order. Paper and ink derive from the active theme tokens. Overflow stays within the strip, without wrapping or expanding it. Reserve the strip height before any completion to avoid shifting cards. On mobile, tighten only external overview/group heading spacing to preserve the complete fixed 582px card above the bottom menu; do not resize card fields or amulets. Empty states show the cord without invented achievements.
+
+## Unboxed group headings
+
+The user approved the preview with simple Big Dream headings on the existing library scenery, removing the enclosing cover, spine, inset outline, cover artwork layer and book emblem. Preserve the current gallery/card geometry and 582px template. Keep each card's own boundary. The 56px cord carries the literary detail through paper bookmark shapes, a fine inset rule, a small existing leaf icon and warm clips. Use active theme tokens; keep only symbols visible and retain accessible dream titles. This supersedes the bound-volume group presentation.
+
+The user permits reducing the summaries below Big Dream names when space is tight. Mobile summaries use 11px type with a 15px line height and compact spacing; keep the group name prominent and all card dimensions fixed.
+
+## Responsive pending bookmarks
+
+All currently visible dreams have a stable bookmark slot. Pending bookmarks use a dashed outline and theme-muted symbol on transparent paper; completed ones use the existing filled paper style. Keep both clickable and label their state for assistive technology. The strip stays 56px tall with fixed 44px-wide targets at every viewport size, including large collections. Horizontal overflow stays within the strip, with edge fades indicating more bookmarks. Recording/undo preserves its horizontal position and never changes card dimensions.

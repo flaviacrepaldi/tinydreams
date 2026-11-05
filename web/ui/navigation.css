@@ -632,3 +632,53 @@ html[data-edition] .dream-overview .goal .reward>div{min-width:0}
 html[data-edition] .dream-overview .goal .reward-name{-webkit-line-clamp:3;line-height:15px;overflow-wrap:anywhere}
 html[data-edition] .dream-overview .goal .plan-open{flex:0 0 auto;line-height:20px;padding-block:8px}
 .detail-reward p{white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* A small cord of today's keepsakes; the card template stays untouched. */
+.daily-keepsakes{height:56px;min-width:0;margin:0 0 8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}
+.daily-keepsakes::-webkit-scrollbar{display:none}
+.keepsake-line{position:relative;isolation:isolate;display:flex;align-items:flex-start;gap:14px;width:max-content;min-width:100%;height:56px;padding:8px 12px 0}
+.keepsake-cord{position:absolute;inset:0 0 auto;width:100%;height:18px;fill:none;stroke:var(--accent);stroke-width:1.5;pointer-events:none;z-index:-1}
+.keepsake{position:relative;flex:0 0 44px;width:44px;height:46px;padding:0;border:0;background:transparent;color:var(--bg);display:grid;place-items:center;isolation:isolate}
+.keepsake::before{content:'';position:absolute;inset:3px 1px 0;background:color-mix(in srgb,var(--text) 88%,var(--accent));clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%);z-index:-1}
+.keepsake::after{content:'';position:absolute;top:-5px;left:20px;width:4px;height:12px;border-radius:1px;background:var(--accent);box-shadow:1px 2px 2px color-mix(in srgb,var(--bg) 35%,transparent)}
+.keepsake svg{width:23px;height:23px;margin-top:-1px}
+.keepsake:focus-visible{outline:2px solid var(--accent);outline-offset:0;border-radius:3px}
+@media(hover:hover){.keepsake:hover::before{background:var(--text)}}
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview:has(.daily-keepsakes)>.overview-tools{margin-bottom:2px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview:has(.daily-keepsakes) .big-dream-volume>.group-heading{padding-block:4px 2px}
+ .daily-keepsakes{margin-bottom:2px}
+}
+
+/* Literary details live on the bookmarks; groups sit directly in the library. */
+html[data-edition] .dream-overview .big-dream-volume{border-color:transparent;border-radius:0;background:none;isolation:auto}
+html[data-edition] .dream-overview .big-dream-volume::before,
+html[data-edition] .dream-overview .big-dream-volume::after{content:none}
+html[data-edition] .dream-overview .big-dream-volume>.group-heading{grid-template-columns:minmax(0,1fr) 44px;min-height:0;gap:12px;padding:16px 22px 10px 32px;overflow:visible}
+html[data-edition] .dream-overview .big-dream-volume>.group-heading .volume-title{grid-column:1;grid-row:1}
+html[data-edition] .dream-overview .big-dream-volume>.group-heading>.rename-group-button{grid-column:2;grid-row:1;align-self:start}
+.keepsake::before{background:linear-gradient(110deg,color-mix(in srgb,var(--text) 83%,var(--accent)),color-mix(in srgb,var(--text) 94%,var(--accent)) 55%,color-mix(in srgb,var(--text) 83%,var(--accent)))}
+.keepsake::after{width:5px;left:19px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 65%,var(--bg)),var(--accent) 45%,color-mix(in srgb,var(--accent) 65%,var(--bg)))}
+.keepsake>.keepsake-rule{position:absolute;inset:3px 1px 0;width:42px;height:43px;margin:0;stroke:currentColor;stroke-width:.6;opacity:.4;pointer-events:none}
+.keepsake-leaf{position:absolute;left:5px;top:8px;opacity:.55;pointer-events:none}
+.keepsake-leaf svg{display:block;width:7px;height:9px;margin:0;transform:rotate(-20deg)}
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading{grid-template-columns:minmax(0,1fr) 44px;padding:4px 12px 2px 20px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.goal-grid>.goal{border-radius:10px;box-shadow:none}
+}
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading .volume-title{grid-column:1;grid-row:1}
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading>.rename-group-button{grid-column:2;grid-row:1}
+}
+@media(max-width:560px){
+ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading .volume-title p{font-size:11px;line-height:15px;margin-top:3px}
+}
+
+/* Pending bookmarks keep their place until today's achievement fills the paper. */
+.keepsake.is-pending{color:var(--muted)}
+.keepsake.is-pending::before,.keepsake.is-pending:hover::before{background:none}
+.keepsake.is-pending>.keepsake-rule{opacity:.85;stroke-width:1;stroke-dasharray:2 2}
+.keepsake.is-pending .keepsake-leaf{display:none}
+.daily-keepsakes[data-after="true"]{mask-image:linear-gradient(to right,#000 calc(100% - 18px),transparent)}
+.daily-keepsakes[data-before="true"]{mask-image:linear-gradient(to right,transparent,#000 18px)}
+.daily-keepsakes[data-before="true"][data-after="true"]{mask-image:linear-gradient(to right,transparent,#000 18px,#000 calc(100% - 18px),transparent)}

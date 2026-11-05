@@ -9,9 +9,9 @@ const elements=Object.fromEntries(['#demoBanner','#goalsCount','#content'].map(i
 let day='2026-10-29';
 const goal={id:'aerobic',title:'Fazer aeróbico',target:30,days:['2026-10-28'],entries:[],plan:{...planOf({}),start:'2026-10-28'}};
 const state={goals:[goal],groups:[],view:'dreams',homeFilter:'all',demo:false};
-const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,outcomeOf,today:()=>day,
+const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,outcomeOf,today:()=>day,completionDay:g=>g.days.at(-1),
   $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){}},
-  esc:String,icon:()=>'',goalCard:g=>`<article data-goal="${g.id}"></article>`,
+  esc:String,icon:()=>'',goalEmoji:()=>'<svg></svg>',goalCard:g=>`<article data-goal="${g.id}"></article>`,
   fitDreamGalleries(){},fitAmountTrends(){},requestAnimationFrame(){},queueMicrotask(){},checkIncompleteNotice(){}});
 vm.runInContext(renderSource,context);
 const render=()=>vm.runInContext('render()',context);
@@ -40,8 +40,8 @@ const rest={...pending,id:'rest',plan:{...pending.plan,weekdays:[1]}};
 const finished={...pending,id:'finished',target:1,days:['2026-10-30']};
 state.goals=[rest,done,pending,finished];render();
 let html=elements['#content'].innerHTML;
-assert.ok(html.indexOf('data-goal="pending"')<html.indexOf('data-goal="done"'));
-assert.ok(html.indexOf('data-goal="done"')<html.indexOf('data-goal="rest"'));
+assert.ok(html.indexOf('data-goal="rest"')<html.indexOf('data-goal="done"'));
+assert.ok(html.indexOf('data-goal="done"')<html.indexOf('data-goal="pending"'));
 assert.doesNotMatch(html,/data-goal="finished"/);
 assert.match(html,/1 de 2 feitos hoje/);
 assert.equal(elements['#goalsCount'].textContent,1);
@@ -56,7 +56,12 @@ state.homeFilter='all';render();
 assert.match(elements['#content'].innerHTML,/data-goal="rest"/);
 assert.match(source,/homeFilter:'today'/);
 done.days=[];render();assert.equal(elements['#goalsCount'].textContent,2);
-console.log('PASS: pending/done/rest ordering, visible daily completions, scheduled daily totals, undo and immutable storage order.');
+finished.days=[day];render();
+assert.match(elements['#content'].innerHTML,/data-goal="finished"/,'Dream completed today stays visible');
+day='2026-11-02';render();
+assert.doesNotMatch(elements['#content'].innerHTML,/data-goal="finished"/,'Earlier completions remain on shelf');
+day='2026-11-01';
+console.log('PASS: stable ordering, visible daily completions, scheduled daily totals, undo and immutable storage order.');
 console.log('PASS: rescheduled dreams stay off the home and active count until their start date, including grouped dreams, without losing history.');
 
 // Every remaining-count card names what its number measures.
