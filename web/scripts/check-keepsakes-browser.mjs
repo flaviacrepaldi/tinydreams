@@ -62,17 +62,23 @@ for(const width of [320,390,430,1280]){
  const dense=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/keepsakes-many-${width}.png`,Buffer.from(dense.data,'base64'));
  if(width<600){
   const menu=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,targets:[...document.querySelectorAll('.tabs .tab')].map(b=>b.getBoundingClientRect().height)})");
+  assert.equal(await js("[...document.querySelectorAll('.tabs .nav-symbol')].every(s=>s.getBoundingClientRect().width===20&&s.getBoundingClientRect().height===20)"),true,'Menu icons keep their original 20px size');
+  assert.equal(await js("[...document.querySelectorAll('.tabs .tab')].every(b=>getComputedStyle(b).fontSize==='11px'&&getComputedStyle(b).flexDirection==='column')"),true,'Labels keep their original 11px size and stacked layout');
   assert.equal(menu.height,37,'Compact menu uses 37px including border');assert.ok(menu.targets.every(h=>h>=36),'Keep 36px navigation targets in the extra-compact menu');
   assert.equal(await js("[...document.querySelectorAll('.tabs .tab')].some(b=>b.scrollWidth>b.clientWidth)"),false,'Navigation labels fit at narrow widths');
-  await js("document.documentElement.style.setProperty('--bottom-safe-area','34px')");
+  await js("document.documentElement.style.setProperty('--bottom-safe-area','34px');document.documentElement.style.setProperty('--top-safe-area','47px')");
   await new Promise(r=>setTimeout(r,150));
   const safe=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,navTop:document.querySelector('.tabs').getBoundingClientRect().top,workspaceBottom:document.querySelector('#mobileDreams').getBoundingClientRect().bottom})");
   assert.equal(safe.height,71,'Installed-app bottom safe area remains reserved');
   assert.ok(Math.abs(safe.workspaceBottom-safe.navTop)<2,'Chapter viewport ends above the safe-area menu: '+JSON.stringify(safe));
   await js("document.querySelector('.goal').scrollIntoView({block:'end',inline:'nearest'})");
   assert.ok(await js("document.querySelector('.goal .quick-outcomes').getBoundingClientRect().bottom<=document.querySelector('.tabs').getBoundingClientRect().top"),'Bottom card actions remain reachable above menu');
+  await js("document.querySelector('#mobileDreams').scrollTop=35");
+  const logoTop=await js("document.querySelector('.overview-mobile-brand').getBoundingClientRect().top");
+  assert.ok(logoTop>=55,'Logo remains below status-area edge during scroll: '+logoTop);
+  assert.equal(await js("document.querySelector('.overview-mobile-brand .brand-monogram').getBoundingClientRect().width"),38,'Logo size is unchanged');
   const safeShot=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/keepsakes-safe-area-${width}.png`,Buffer.from(safeShot.data,'base64'));
-  await js("document.documentElement.style.removeProperty('--bottom-safe-area')");
+  await js("document.documentElement.style.removeProperty('--bottom-safe-area');document.documentElement.style.removeProperty('--top-safe-area')");
  }
  console.log('PASS: symbol-only keepsakes, completed types, navigation, undo, fixed cards and many seals at '+width+'px');
 }

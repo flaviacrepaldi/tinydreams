@@ -531,3 +531,7 @@ All currently visible dreams have a stable bookmark slot. Pending bookmarks use 
 Mobile bottom navigation uses a 45px base height (44px targets plus the border), with 18px outline symbols, compact label spacing, no extra vertical container padding, and the full bottom safe-area inset. Update viewport/body fallback reservations together; the chapter layout still follows measured navigation height. Cards retain their fixed 582px template.
 
 For the user's second request to shorten the bottom menu, switch each destination to a single horizontal icon/label line: 16px symbols, 10px labels, 4px gap and 36px-high buttons in a 37px base bar. Keep all four labels and the pending badge, preserve bottom safe-area padding, and keep the dream card at 582px.
+
+Correction from the user's screenshot: keep the original navigation content sizes (20px icons, 11px labels, 9px count badge) and stacked layout. Achieve the 37px bar only through zero vertical button padding and zero icon-label gap. Preserve the safe area and fixed cards. Regression checks assert those exact sizes so later menu-height changes cannot silently shrink the content.
+
+On the mobile dream chapter, keep the toolbar sticky at 8px inside the safe-area-protected scroll container, with a solid active-theme background and no backdrop blur. The full-size brand remains below the iPhone status area while the cards scroll. Top and bottom inset simulation verifies this without modifying personal data.

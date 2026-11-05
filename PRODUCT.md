@@ -311,3 +311,9 @@ The user requested reducing bottom navigation height to free a few pixels of dre
 Only habit dreams have pending outlines in the cord. Pending cumulative amounts and one-time lists remain in their galleries without occupying cord slots; once fully completed today they can appear as filled bookmarks.
 
 The user requested a further menu height reduction. The mobile menu now uses a single row of symbol and label inside each destination, a 37px base bar including the border, and 36px-high wide buttons. Preserve the system bottom inset. This supersedes the previous 45px stacked-label menu and its 44px-height navigation target.
+
+The user clarified that only the bar's empty vertical space should shrink, not its icons or letters. Restore 20px icons, 11px labels and the original stacked arrangement, keeping the 37px base bar by removing vertical button padding and icon-label gap. Restore the original 9px count badge. This supersedes the smaller side-by-side menu.
+
+## Logo below the mobile status area
+
+The user reported the upper status-bar blur encroaching on the logo. Keep the home toolbar pinned within the dream scroll container, below the top safe area with an 8px inset, and use a solid theme background without backdrop blur. Preserve the logo's 38px symbol and the card template. The top safe-area token defaults to the system inset; QA simulates a 47px upper inset and scrolls the dream panel.
