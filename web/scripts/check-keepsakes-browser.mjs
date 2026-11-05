@@ -62,11 +62,12 @@ for(const width of [320,390,430,1280]){
  const dense=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/keepsakes-many-${width}.png`,Buffer.from(dense.data,'base64'));
  if(width<600){
   const menu=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,targets:[...document.querySelectorAll('.tabs .tab')].map(b=>b.getBoundingClientRect().height)})");
-  assert.equal(menu.height,45,'Compact menu uses 45px including border');assert.ok(menu.targets.every(h=>h>=44),'Keep 44px navigation touch targets');
+  assert.equal(menu.height,37,'Compact menu uses 37px including border');assert.ok(menu.targets.every(h=>h>=36),'Keep 36px navigation targets in the extra-compact menu');
+  assert.equal(await js("[...document.querySelectorAll('.tabs .tab')].some(b=>b.scrollWidth>b.clientWidth)"),false,'Navigation labels fit at narrow widths');
   await js("document.documentElement.style.setProperty('--bottom-safe-area','34px')");
   await new Promise(r=>setTimeout(r,150));
   const safe=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,navTop:document.querySelector('.tabs').getBoundingClientRect().top,workspaceBottom:document.querySelector('#mobileDreams').getBoundingClientRect().bottom})");
-  assert.equal(safe.height,79,'Installed-app bottom safe area remains reserved');
+  assert.equal(safe.height,71,'Installed-app bottom safe area remains reserved');
   assert.ok(Math.abs(safe.workspaceBottom-safe.navTop)<2,'Chapter viewport ends above the safe-area menu: '+JSON.stringify(safe));
   await js("document.querySelector('.goal').scrollIntoView({block:'end',inline:'nearest'})");
   assert.ok(await js("document.querySelector('.goal .quick-outcomes').getBoundingClientRect().bottom<=document.querySelector('.tabs').getBoundingClientRect().top"),'Bottom card actions remain reachable above menu');

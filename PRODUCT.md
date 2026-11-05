@@ -309,3 +309,5 @@ The user requested outlines for the tydreams that remain. Every visible home dre
 The user requested reducing bottom navigation height to free a few pixels of dream viewport space. Mobile navigation now uses a 45px bar including its border, plus the device's bottom safe-area inset. Preserve 44px button hit targets, readable labels and the 582px cards. The measured menu height continues to define the installed-app chapter viewport.
 
 Only habit dreams have pending outlines in the cord. Pending cumulative amounts and one-time lists remain in their galleries without occupying cord slots; once fully completed today they can appear as filled bookmarks.
+
+The user requested a further menu height reduction. The mobile menu now uses a single row of symbol and label inside each destination, a 37px base bar including the border, and 36px-high wide buttons. Preserve the system bottom inset. This supersedes the previous 45px stacked-label menu and its 44px-height navigation target.
