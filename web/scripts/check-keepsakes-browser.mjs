@@ -24,6 +24,7 @@ for(const width of [320,390,430,1280]){
  await js("document.querySelector('[data-action=find-completed][data-id=reading]').click()");
  if(width<600)assert.ok(await js("{const c=document.querySelector('[data-goal=reading]'),g=c.closest('.goal-grid');Math.abs(c.getBoundingClientRect().left-g.getBoundingClientRect().left)<2}"),'Pending outline also links to its card');
  await js("document.querySelector('[data-action=find-completed][data-id=water]').click()");
+ assert.equal(await js("getComputedStyle(document.querySelector('.overview-tools')).backgroundColor"),'rgba(0, 0, 0, 0)','No opaque strip behind the logo');
  assert.equal(await js("document.querySelector('.volume-emblem')"),null,'Group heading has no book-cover emblem');
  const groupStyle=await js("(()=>{const g=document.querySelector('.big-dream-volume'),s=getComputedStyle(g);return {background:s.backgroundImage,border:s.borderTopColor,before:getComputedStyle(g,'::before').content,after:getComputedStyle(g,'::after').content}})()");
  assert.equal(groupStyle.background,'none');assert.equal(groupStyle.border,'rgba(0, 0, 0, 0)');assert.equal(groupStyle.before,'none');assert.equal(groupStyle.after,'none');
@@ -62,7 +63,7 @@ for(const width of [320,390,430,1280]){
  const dense=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/keepsakes-many-${width}.png`,Buffer.from(dense.data,'base64'));
  if(width<600){
   const menu=await js("({height:document.querySelector('.tabs').getBoundingClientRect().height,targets:[...document.querySelectorAll('.tabs .tab')].map(b=>b.getBoundingClientRect().height)})");
-  assert.equal(await js("[...document.querySelectorAll('.tabs .nav-symbol')].every(s=>s.getBoundingClientRect().width===20&&s.getBoundingClientRect().height===20)"),true,'Menu icons keep their original 20px size');
+  assert.equal(await js("[...document.querySelectorAll('.tabs .nav-symbol')].every(s=>s.getBoundingClientRect().width===24&&s.getBoundingClientRect().height===24)"),true,'Menu icons use the requested larger 24px size');
   assert.equal(await js("[...document.querySelectorAll('.tabs .tab')].every(b=>getComputedStyle(b).fontSize==='11px'&&getComputedStyle(b).flexDirection==='column')"),true,'Labels keep their original 11px size and stacked layout');
   assert.equal(menu.height,37,'Compact menu uses 37px including border');assert.ok(menu.targets.every(h=>h>=36),'Keep 36px navigation targets in the extra-compact menu');
   assert.equal(await js("[...document.querySelectorAll('.tabs .tab')].some(b=>b.scrollWidth>b.clientWidth)"),false,'Navigation labels fit at narrow widths');
@@ -73,10 +74,12 @@ for(const width of [320,390,430,1280]){
   assert.ok(Math.abs(safe.workspaceBottom-safe.navTop)<2,'Chapter viewport ends above the safe-area menu: '+JSON.stringify(safe));
   await js("document.querySelector('.goal').scrollIntoView({block:'end',inline:'nearest'})");
   assert.ok(await js("document.querySelector('.goal .quick-outcomes').getBoundingClientRect().bottom<=document.querySelector('.tabs').getBoundingClientRect().top"),'Bottom card actions remain reachable above menu');
-  await js("document.querySelector('#mobileDreams').scrollTop=35");
+  await js("document.querySelector('#mobileDreams').scrollTop=0");
   const logoTop=await js("document.querySelector('.overview-mobile-brand').getBoundingClientRect().top");
-  assert.ok(logoTop>=55,'Logo remains below status-area edge during scroll: '+logoTop);
+  assert.ok(logoTop>=55,'Logo starts below status-area edge: '+logoTop);
   assert.equal(await js("document.querySelector('.overview-mobile-brand .brand-monogram').getBoundingClientRect().width"),38,'Logo size is unchanged');
+  assert.equal(await js("getComputedStyle(document.querySelector('.overview-tools')).position"),'relative','Transparent header scrolls naturally instead of overlapping the cord and cards');
+  await js("document.querySelector('.goal').scrollIntoView({block:'end',inline:'nearest'})");
   const safeShot=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/keepsakes-safe-area-${width}.png`,Buffer.from(safeShot.data,'base64'));
   await js("document.documentElement.style.removeProperty('--bottom-safe-area');document.documentElement.style.removeProperty('--top-safe-area')");
  }

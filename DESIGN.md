@@ -534,4 +534,8 @@ For the user's second request to shorten the bottom menu, switch each destinatio
 
 Correction from the user's screenshot: keep the original navigation content sizes (20px icons, 11px labels, 9px count badge) and stacked layout. Achieve the 37px bar only through zero vertical button padding and zero icon-label gap. Preserve the safe area and fixed cards. Regression checks assert those exact sizes so later menu-height changes cannot silently shrink the content.
 
-On the mobile dream chapter, keep the toolbar sticky at 8px inside the safe-area-protected scroll container, with a solid active-theme background and no backdrop blur. The full-size brand remains below the iPhone status area while the cards scroll. Top and bottom inset simulation verifies this without modifying personal data.
+On the mobile dream chapter, keep the toolbar sticky at 8px inside the safe-area-protected scroll container, with a transparent background and no backdrop blur. The full-size brand remains below the iPhone status area while the cards scroll. Top and bottom inset simulation verifies this without modifying personal data.
+
+The logo toolbar has no opaque background strip. Bottom navigation symbols are now 24px at the user’s request; labels remain 11px with a 12px line height so the existing 37px bar and safe-area padding stay unchanged.
+
+The transparent logo toolbar now stays in normal flow rather than sticky positioning, avoiding overlap with the bookmark cord or card content while scrolling. This supersedes the pinned-toolbar direction.

@@ -316,4 +316,8 @@ The user clarified that only the bar's empty vertical space should shrink, not i
 
 ## Logo below the mobile status area
 
-The user reported the upper status-bar blur encroaching on the logo. Keep the home toolbar pinned within the dream scroll container, below the top safe area with an 8px inset, and use a solid theme background without backdrop blur. Preserve the logo's 38px symbol and the card template. The top safe-area token defaults to the system inset; QA simulates a 47px upper inset and scrolls the dream panel.
+The user reported the upper status-bar blur encroaching on the logo. Keep the home toolbar pinned within the dream scroll container, below the top safe area with an 8px inset, and keep the toolbar background transparent without backdrop blur. Preserve the logo's 38px symbol and the card template. The top safe-area token defaults to the system inset; QA simulates a 47px upper inset and scrolls the dream panel.
+
+The user removed the opaque logo strip and requested larger bottom-menu symbols. Keep the toolbar transparent; use 24px navigation icons with unchanged 11px labels, a compact 12px label line height, and the existing 37px base bar.
+
+Removing the logo strip also removes sticky positioning: the transparent home toolbar scrolls naturally with its contents, preventing markers or cards from appearing behind the logo. Keep the system top safe area at the start of the chapter.
