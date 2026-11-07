@@ -716,3 +716,8 @@ html[data-celebration-motion=active] .seal-conquered .seal-inner{stroke-dasharra
 
 /* Keep long titles/notes inside the reserved heading rows in every edition. */
 html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peach,.sage) .dream-summary>.dream-summary-title{margin:0}
+
+/* Share the rings’ coordinate system so mobile font metrics cannot offset the number. */
+.practice-seal .seal-number{display:none}
+.streak-square .practice-seal .seal-number{display:block;fill:currentColor;stroke:none;font:600 20px Georgia,serif;font-variant-numeric:lining-nums tabular-nums}
+.streak-square .practice-seal>span{display:none}

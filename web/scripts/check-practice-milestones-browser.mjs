@@ -10,10 +10,14 @@ await cdp('Page.enable');await cdp('Page.navigate',{url:qaUrl});await wait("type
 for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});
  await js(`showDemo();milestoneMemory.clear();state.groups=[];state.goals=[{id:'milestone-water-'+${width},title:'beber mais água',target:21,color:'peach',reward:'',days:Array.from({length:6},(_,i)=>dayBefore(6-i)),failures:[],entries:[],plan:{kind:'habit',completionMode:'streak',start:dayBefore(6),end:'',weekdays:[0,1,2,3,4,5,6],unit:'quenchers',dailyTarget:2,dailyCounter:true,tasks:[],items:[]}}];seedMilestones();render();document.querySelector('.mobile-chapter-link')?.click();document.querySelector('#demoBanner').hidden=true`);
- assert.equal(await js("document.querySelector('.pending-seal>span').textContent"),'7');
+ assert.equal(await js("document.querySelector('.pending-seal')"),null);
  assert.equal(await js("document.querySelector('[data-practice-milestone=\"3\"] .practice-seal>span').textContent"),'3');
  assert.equal(await js("document.querySelector('.streak-caption').textContent.includes('próximo')"),false);
  assert.equal(await js("document.querySelectorAll('.streak-square').length"),14);
+ await js("document.fonts.ready");
+ const numberCenters=await js("[...document.querySelectorAll('.streak-square .seal-number')].map(e=>{const b=e.getBBox(),s=getComputedStyle(e);return{number:e.textContent,x:b.x+b.width/2,y:b.y+b.height/2,visible:s.display!=='none'}})");
+ for(const center of numberCenters){assert.ok(center.visible);assert.ok(Math.abs(center.x-24)<.6&&Math.abs(center.y-24)<1.5,`Off-center milestone at ${width}px: ${JSON.stringify(center)}`)}
+
  assert.equal(await js("[...document.querySelectorAll('.streak-square')].findIndex(c=>c.classList.contains('current'))"),10);
  assert.equal(await js("document.querySelectorAll('[data-practice-future]').length"),3);
  assert.equal(await js("[...document.querySelectorAll('[data-practice-future]')].every(c=>!c.classList.contains('success')&&!c.querySelector('[data-action]'))"),true);
@@ -24,6 +28,9 @@ for(const width of [320,390,430,1280]){
  assert.equal(await js("document.querySelector('#milestoneDialog').open"),true);
  assert.equal(await js("document.querySelector('.practice-achievement .practice-seal>span').textContent"),'7');
  assert.equal(await js("document.querySelector('[data-practice-milestone=\"7\"]').classList.contains('seal-conquered')"),true);
+ assert.equal(await js("document.querySelectorAll('.streak-grid .practice-seal').length"),1);
+ assert.equal(await js("document.querySelector('[data-practice-milestone=\"3\"]')"),null,'Earlier milestones return to ordinary checks');
+
  await new Promise(r=>setTimeout(r,1000));
  await writeFile(`/tmp/practice-milestone-celebration-${width}.png`,Buffer.from((await cdp('Page.captureScreenshot',{format:'png'})).data,'base64'));
  await js("dismissMilestone();document.querySelector('#demoBanner').hidden=true;document.querySelector('#mobileDreams')?.scrollTo(0,0)");

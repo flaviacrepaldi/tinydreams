@@ -546,7 +546,7 @@ Final user adjustment: use 8px vertical padding on both sides of the centered na
 
 ## Double-ring practice milestones
 
-Milestone day circles retain the existing grid dimensions and success color. Replace the check with a serif number, framed by two thin SVG circles; pending seals remain unfilled with a dashed outer ring. The seal is an absolute overlay, so grid, heading, progress and action positions remain stable. Use 3/7/15/21/30 milestones below the target plus the target itself. Preserve actual practice dates and schedule-aware counting. Do not add next-milestone countdown copy. On achievement, inscribe the rings once; the completion scene carries a larger matching numbered seal beside its seasonal artwork. Static seals remain legible when motion is paused or reduced.
+Milestone day circles retain the existing grid dimensions and success color. Replace the check with a serif number, framed by two thin SVG circles; only the most recently achieved milestone retains the numbered seal. Earlier milestones return to ordinary checks, and future dates have no seals. The seal is an absolute overlay, so grid, heading, progress and action positions remain stable. Use 3/7/15/21/30 milestones below the target plus the target itself. Preserve actual practice dates and schedule-aware counting. Do not add next-milestone countdown copy. On achievement, inscribe the rings once; the completion scene carries a larger matching numbered seal beside its seasonal artwork. Static seals remain legible when motion is paused or reduced.
 
 ## Reward gestures and the journey illustration
 
@@ -556,6 +556,6 @@ The journey image reuses an available seasonal illustration in a 4×4 reveal wit
 
 ## Forward-looking practice window
 
-Preserve the 2×7 grid and 582px card. Today occupies position eleven (index ten), followed by three empty future dates. Future milestone numbers remain unfilled and use planned scheduled practice, never stored check-ins. Archive strips end at their actual deadline. Impulse strips center the current full-day interval in the same position and mark pre-start slots as rest. Readable reward ink uses the active accent on dark editions and the active text color on light editions; seal backgrounds remain the theme surface.
+Preserve the 2×7 grid and 582px card. Today occupies position eleven (index ten), followed by three empty future dates. Future dates remain empty; only the most recently earned milestone carries a numbered double-ring seal. Archive strips end at their actual deadline. Impulse strips center the current full-day interval in the same position and mark pre-start slots as rest. Readable reward ink uses the active accent on dark editions and the active text color on light editions; seal backgrounds remain the theme surface.
 
 All-edition layout validation also removes the legacy seasonal margin from the reserved title wrapper. The actual title and its subtitle (2px separation) remain inside the heading rows, so two-line notes do not overlap the daily-state badge. Card dimensions, amulet area, date/progress/action slots and swipe height remain fixed. The reward theme matrix checks this boundary as well as shared title/progress alignment.
