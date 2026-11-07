@@ -29,7 +29,7 @@ for(const width of [320,390,430,1280]){
   if(scenario==='record'){
    assert.equal(await js('rewardSequence(state.goals[0]).record'),true);
    assert.equal(await js("document.querySelector('#milestone h2').textContent"),'seu novo recorde.');
-   assert.equal(await js("document.querySelector('.reward-record b').textContent"),'4');
+   assert.equal(await js("document.querySelector('.reward-record')"),null,'Cards keep the streak phrase without a duplicate record badge');
   }
   if(scenario==='return'){
    assert.equal(await js('rewardSequence(state.goals[0]).resumed'),true);

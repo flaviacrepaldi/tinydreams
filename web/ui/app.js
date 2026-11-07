@@ -368,7 +368,7 @@ function habitStreakGrid(g){
  if(p.impulse){
   const completed=progress(g),first=completed-9,marks=practiceMilestones(g),latest=marks.filter(n=>n<=completed).at(-1);
   const cells=Array.from({length:14},(_,i)=>{const day=first+i,rest=day<1,done=!rest&&day<=completed,current=day===completed+1,future=day>completed+1,label=rest?'antes do início':`dia ${day}: ${done?'24 horas completas':current?'em andamento':'a completar'}`;return `<li class="streak-square ${rest?'rest':done?'success':'unrecorded'} ${current?'current':''}" ${future?'data-practice-future="true"':''} ${done&&day===latest?`data-practice-milestone="${day}"`:''} aria-label="${label}" title="${label}">${rest?icon('cross'):done&&day===latest?practiceSeal(day):done?icon('check'):''}</li>`});
-  return `<div class="habit-streak impulse-streak"><div class="streak-caption"><span>${completed} ${completed===1?'dia completo':'dias completos'}</span>${rewardRecordBadge(g)}</div><ol class="streak-grid" aria-label="dias de 24 horas da sequência atual">${cells.join('')}</ol></div>`;
+  return `<div class="habit-streak impulse-streak"><div class="streak-caption"><span>${completed} ${completed===1?'dia completo':'dias completos'}</span></div><ol class="streak-grid" aria-label="dias de 24 horas da sequência atual">${cells.join('')}</ol></div>`;
  }
  const milestoneDays=practiceMilestoneDays(g),latestDay=[...milestoneDays.keys()].filter(day=>day<=today()).sort().at(-1);
  const start=p.start||[...g.days,...(g.failures||[]),...(g.entries||[]).map(e=>e.day)].sort()[0]||today();
@@ -380,7 +380,7 @@ function habitStreakGrid(g){
   return `<li class="streak-square ${status||'unrecorded'} ${day===today()?'current':''} ${seal?'has-practice-seal':''}" data-practice-day="${day}" ${!archived&&day>today()?'data-practice-future="true"':''} ${number?`data-practice-milestone="${number}"`:''} aria-label="${esc(description)}" title="${esc(description)}">${seal?practiceSeal(seal):status?icon(status==='success'?'check':'cross'):''}</li>`;
  });
  const count=streak(g);
- return `<div class="habit-streak"><div class="streak-caption"><span>${archived?'período encerrado':`${count} ${count===1?'dia':'dias'} sem falhar`}</span>${rewardRecordBadge(g)}</div><ol class="streak-grid" aria-label="${archived?'últimos 14 dias do período':'10 dias anteriores, hoje e os próximos 3 dias'}">${cells.join('')}</ol></div>`;
+ return `<div class="habit-streak"><div class="streak-caption"><span>${archived?'período encerrado':`${count} ${count===1?'dia':'dias'} sem falhar`}</span></div><ol class="streak-grid" aria-label="${archived?'últimos 14 dias do período':'10 dias anteriores, hoje e os próximos 3 dias'}">${cells.join('')}</ol></div>`;
 }
 function amuletCropStyle(edition,color){
  const geometry=edition?.geometry,rect=geometry?.objectBounds?.[{lavender:0,peach:1,sage:2}[color]];
