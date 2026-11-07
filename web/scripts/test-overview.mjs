@@ -13,6 +13,8 @@ const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,
   $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){}},
   esc:String,icon:()=>'',goalEmoji:()=>'<svg></svg>',goalCard:g=>`<article data-goal="${g.id}"></article>`,
   fitDreamGalleries(){},fitAmountTrends(){},requestAnimationFrame(){},queueMicrotask(){},checkIncompleteNotice(){}});
+const rewardSource=await readFile(new URL('../ui/rewards.js',import.meta.url),'utf8');
+vm.runInContext(rewardSource.slice(0,rewardSource.indexOf('function rewardArtSource')),context);
 vm.runInContext(renderSource,context);
 const render=()=>vm.runInContext('render()',context);
 render();

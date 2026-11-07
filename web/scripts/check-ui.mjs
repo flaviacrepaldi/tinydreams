@@ -23,6 +23,8 @@ try{
  await run('scripts/check-chapters-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-measure-celebration-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-practice-milestones-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
+ await run('scripts/check-rewards-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
+ await run('scripts/check-reward-themes-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-keepsakes-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  console.log('PASS: UI publication gate. Screenshots: /tmp/streak-alignment-*.png');
 }finally{

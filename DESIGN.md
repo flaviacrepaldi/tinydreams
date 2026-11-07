@@ -547,3 +547,15 @@ Final user adjustment: use 8px vertical padding on both sides of the centered na
 ## Double-ring practice milestones
 
 Milestone day circles retain the existing grid dimensions and success color. Replace the check with a serif number, framed by two thin SVG circles; pending seals remain unfilled with a dashed outer ring. The seal is an absolute overlay, so grid, heading, progress and action positions remain stable. Use 3/7/15/21/30 milestones below the target plus the target itself. Preserve actual practice dates and schedule-aware counting. Do not add next-milestone countdown copy. On achievement, inscribe the rings once; the completion scene carries a larger matching numbered seal beside its seasonal artwork. Static seals remain legible when motion is paused or reduced.
+
+## Reward gestures and the journey illustration
+
+Use a finite hierarchy: a drawn item check and 500ms contribution gesture; a short local acknowledgment in diaries; merging checks for a finished daily list; inscribed double-ring milestones, record and return honors in the existing seasonal scene; a 700ms seal return to the grid; a single accent-cord drawing on a fully completed day. Never animate the card amulets, move card sections, or add card height. Best-sequence badges use the second reserved caption line/space. Unscheduled and explicitly skipped dates preserve sequence continuity. Regret/undo cancels particles and removes unearned visuals; ordinary rendering never replays a reward.
+
+The journey image reuses an available seasonal illustration in a 4×4 reveal with partially filled pieces, so progress advances even between whole pieces. Details and selected shelf books expose the full image through a disclosure; completion scenes use a small clickable thumbnail within the existing art area. The completed book retains its symbol, creation color slot and a small numbered seal. All new controls retain 44px targets, active theme colors and readable static outcomes. Reduced/manual motion removes travel and merging while preserving the check, day seal, reveal and honor. Preferences contains an isolated eight-scenario rehearsal using demo records only.
+
+## Forward-looking practice window
+
+Preserve the 2×7 grid and 582px card. Today occupies position eleven (index ten), followed by three empty future dates. Future milestone numbers remain unfilled and use planned scheduled practice, never stored check-ins. Archive strips end at their actual deadline. Impulse strips center the current full-day interval in the same position and mark pre-start slots as rest. Readable reward ink uses the active accent on dark editions and the active text color on light editions; seal backgrounds remain the theme surface.
+
+All-edition layout validation also removes the legacy seasonal margin from the reserved title wrapper. The actual title and its subtitle (2px separation) remain inside the heading rows, so two-line notes do not overlap the daily-state badge. Card dimensions, amulet area, date/progress/action slots and swipe height remain fixed. The reward theme matrix checks this boundary as well as shared title/progress alignment.

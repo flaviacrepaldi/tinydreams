@@ -1,0 +1,73 @@
+/* Finite reward gestures never participate in card sizing. */
+.reward-record{position:absolute;right:0;top:0;display:flex;align-items:center;gap:3px;min-height:24px;color:var(--goal,var(--reward-ink,var(--accent)));font-size:11px}
+.reward-record svg{width:15px;height:15px}.streak-caption{position:relative}
+.reward-flight{pointer-events:none;z-index:10;width:22px;height:22px;display:grid;place-items:center;color:var(--surface);background:var(--reward-ink,var(--accent));border-radius:50%}
+.reward-flight>svg{width:14px;height:14px}.reward-seal-flight{width:64px;height:64px;color:var(--reward-ink,var(--accent));background:var(--surface)}
+.reward-seal-flight .practice-seal>svg{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.3}
+.reward-seal-flight .practice-seal>span{font-size:25px}
+.reward-fusion{position:absolute;width:144px;height:144px;right:0;bottom:0;pointer-events:none;color:var(--reward-ink,var(--accent))}
+.fusion-day{position:absolute;left:48px;top:48px;width:48px;height:48px;border:1px solid currentColor;outline:1px solid currentColor;outline-offset:3px;border-radius:50%;display:grid;place-items:center;background:var(--surface)}
+.fusion-day>svg{width:26px;height:26px}.fusion-item{position:absolute;left:64px;top:64px;width:16px;height:16px;display:grid;place-items:center;background:var(--surface);border:1px solid currentColor;border-radius:50%;transform:translate(var(--fusion-x),var(--fusion-y));opacity:0}
+.fusion-item svg{width:12px;height:12px}
+html[data-celebration-motion=active] .fusion-item{animation:reward-fuse 750ms var(--fusion-delay) cubic-bezier(.16,1,.3,1) both}
+html[data-celebration-motion=active] .fusion-day{animation:reward-day-seal 500ms 500ms ease-out both}
+html[data-celebration-motion=active] .reward-check-drawn svg path{stroke-dasharray:32;animation:reward-check 450ms ease-out both}
+html[data-celebration-motion=active] .reward-received{animation:reward-receive 650ms ease-out}
+@keyframes reward-fuse{0%{transform:translate(var(--fusion-x),var(--fusion-y));opacity:1}75%{opacity:1}100%{transform:translate(0,0);opacity:0}}
+@keyframes reward-day-seal{from{box-shadow:inset 0 0 0 0 var(--reward-ink,var(--accent))}to{box-shadow:inset 0 0 0 3px var(--reward-ink,var(--accent))}}
+@keyframes reward-check{from{stroke-dashoffset:32}to{stroke-dashoffset:0}}
+@keyframes reward-receive{40%{filter:brightness(1.4)}100%{filter:brightness(1)}}
+.daily-keepsakes.all-complete .keepsake-cord path{stroke:var(--reward-ink,var(--accent));stroke-width:1.5}
+.daily-keepsakes.all-complete .keepsake{filter:drop-shadow(0 2px 3px color-mix(in srgb,var(--reward-ink,var(--accent)) 25%,transparent))}
+html[data-celebration-motion=active] .reward-cord-new .keepsake-cord path{stroke-dasharray:420;animation:reward-cord 1s ease-out both}
+@keyframes reward-cord{from{stroke-dashoffset:420}to{stroke-dashoffset:0}}
+.reward-journey{margin:18px 0 10px;border-top:1px solid var(--line);padding-top:8px}
+.reward-journey summary{min-height:44px;cursor:pointer;font-size:13px;line-height:22px;padding:10px 0}
+.reward-journey summary>span{float:right;color:var(--muted);font-size:11px}
+.reward-reveal{width:100%;max-width:340px;aspect-ratio:4/3;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:2px;margin:12px auto;background:var(--surface);border:1px solid var(--line);padding:4px}
+.reveal-piece{background:color-mix(in srgb,var(--reward-ink,var(--accent)) 9%,var(--surface));border:1px solid var(--line)}
+.reveal-piece.revealed{background-image:var(--journey-art);background-size:400% 400%;background-position:var(--tile-x) var(--tile-y);border:0}
+.dream-book{position:relative;isolation:isolate}.book-journey-art{position:absolute;inset:0;z-index:-1;background-size:cover;background-position:center;opacity:.18;pointer-events:none}
+.book-journey-seal{position:absolute;right:10px;top:10px;width:28px;height:28px;color:var(--reward-ink,var(--accent))}
+.book-journey-seal .practice-seal>svg{position:absolute;inset:0;width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.2}.book-journey-seal .practice-seal>span{font-size:12px}
+.reward-demo-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reward-demo-options button{min-height:48px;white-space:normal}
+@media(max-width:360px){.reward-record{gap:1px;font-size:10px}.reward-record svg{width:12px}.reward-demo-options{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.reward-fusion *,.reward-check-drawn *,.reward-received,.reward-cord-new *{animation:none!important}}
+html[data-celebration-motion=paused] :is(.reward-fusion *,.reward-check-drawn *,.reward-received,.reward-cord-new *){animation:none!important}
+.spine-journey-mark{position:absolute;bottom:7px;right:5px;width:18px;height:18px;background:var(--surface);color:var(--reward-ink,var(--accent));border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;pointer-events:none}.spine-journey-mark svg{width:12px;height:12px}
+.reveal-piece{position:relative;overflow:hidden}.reveal-piece.revealed:after{content:'';position:absolute;top:0;right:0;bottom:0;width:var(--tile-hidden);background:var(--surface)}
+.reward-journey-peek{position:absolute;left:0;bottom:0;width:96px;height:72px;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:4px;pointer-events:auto;cursor:pointer}
+.reward-journey-peek .reward-reveal{width:100%;height:100%;margin:0;max-width:none;gap:1px;padding:2px;border:0}
+.milestone.final-chapter .reward-journey-peek{width:64px;height:48px;bottom:-5px}
+/* A checked item acknowledges the touch without covering the whole checklist. */
+.item-milestone.reward-item-feedback{position:absolute;inset:auto 16px 16px;transform:none;width:auto;max-height:160px;display:grid;grid-template-columns:56px minmax(0,1fr);align-items:center;gap:12px;padding:12px;text-align:left;box-shadow:0 6px 24px #0003}
+.item-milestone.reward-item-feedback .milestone-enchantment{height:56px;width:56px}
+.item-milestone.reward-item-feedback .potion-sprite{height:56px;width:56px}
+.item-milestone.reward-item-feedback .milestone-aura,.item-milestone.reward-item-feedback .painted-glints{display:none}
+.item-milestone.reward-item-feedback h2{font-family:inherit;font-size:14px;line-height:18px;margin:0 0 4px;text-wrap:initial}
+.item-milestone.reward-item-feedback p{font-size:12px;line-height:16px;margin:0 0 4px}
+.item-milestone.reward-item-feedback .item-completion-count{font-size:11px;margin:0}
+html[data-celebration-motion=active] .item-milestone.reward-item-feedback{animation:reward-acknowledge 250ms ease-out both}
+@keyframes reward-acknowledge{from{opacity:.4;filter:brightness(1.2)}to{opacity:1;filter:brightness(1)}}
+/* Edition atlases contain objects below the room: reveal only the room artwork. */
+.reward-reveal{aspect-ratio:var(--journey-ratio,1.5)}
+.reveal-piece.revealed{background-size:400% var(--journey-sheet-height,400%)}
+.reward-reveal.is-complete{gap:0}
+.reward-journey-peek{height:48px;display:grid;place-items:center;padding:3px}
+.reward-journey-peek .reward-reveal{height:auto;aspect-ratio:var(--journey-ratio,1.5)}
+.book-journey-art{background-position:center top;background-size:auto var(--journey-sheet-height,100%)}
+@media(max-width:360px){
+ .daily-list-dialog .dialog-top{grid-template-columns:minmax(0,1fr) 44px}
+ .daily-list-dialog .dialog-top .progress-heading{grid-column:1}
+ .daily-list-dialog .dialog-top .icon-button{grid-column:2}
+}
+.book-journey-seal .practice-seal>span{font-size:var(--book-number-size,12px)}
+
+/* Light editions keep their accent for decoration and use readable ink on seals. */
+:root{--reward-ink:var(--accent)}
+html[data-paper=true]{--reward-ink:var(--text)}
+.practice-achievement{color:var(--reward-ink)}
+.book-journey-seal{background:var(--surface);border-radius:50%}
+/* Anchor earned seals to the artwork, including short installed/browser viewports. */
+.milestone .milestone-enchantment>.practice-achievement{top:auto;right:0;bottom:0;width:100px;height:100px}
+.milestone.final-chapter .milestone-enchantment>.practice-achievement{top:auto;right:0;bottom:0;width:82px;height:82px}
