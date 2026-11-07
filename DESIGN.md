@@ -543,3 +543,7 @@ The transparent logo toolbar now stays in normal flow rather than sticky positio
 The bottom menu must center its controls in the whole visible bar. Use `--nav-inset: min(8px, var(--bottom-safe-area))`, split equally into top and bottom padding. With a 34px device inset, the bar is 45px tall and has 4px above and below the 36px controls (plus the top border). Assert equal padding and vertical center alignment in QA; do not shrink the 24px symbols or 11px labels. Reserve the same effective height for chapter/body geometry.
 
 Final user adjustment: use 8px vertical padding on both sides of the centered navigation controls (`--nav-inset:16px`). Total bar height is 53px, with the same 24px icons, 11px labels and 36px control content. Device safe-area values must not reintroduce an asymmetric empty lower strip.
+
+## Double-ring practice milestones
+
+Milestone day circles retain the existing grid dimensions and success color. Replace the check with a serif number, framed by two thin SVG circles; pending seals remain unfilled with a dashed outer ring. The seal is an absolute overlay, so grid, heading, progress and action positions remain stable. Use 3/7/15/21/30 milestones below the target plus the target itself. Preserve actual practice dates and schedule-aware counting. Do not add next-milestone countdown copy. On achievement, inscribe the rings once; the completion scene carries a larger matching numbered seal beside its seasonal artwork. Static seals remain legible when motion is paused or reduced.

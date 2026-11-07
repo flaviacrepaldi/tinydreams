@@ -688,3 +688,28 @@ html[data-edition] .dream-overview .big-dream-volume>.group-heading>.rename-grou
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview>.overview-tools{position:relative;top:auto;z-index:auto;background:transparent}
 }
+
+/* Practice milestones live inside the existing day circles; no new layout slots. */
+.streak-square{position:relative}
+.practice-seal{position:absolute;inset:-4px;display:grid;place-items:center;pointer-events:none;color:inherit}
+.streak-square .practice-seal>svg{position:absolute;inset:0;width:100%;height:100%;stroke:currentColor;stroke-width:1.2;fill:none;overflow:visible}
+.practice-seal>span{font:600 17px/1 Georgia,serif;font-variant-numeric:tabular-nums}
+.streak-square.success:has(.practice-seal){box-shadow:inset 0 0 0 3px var(--surface)}
+.streak-square.success .practice-seal{color:var(--surface)}
+.streak-square.success .practice-seal .seal-outer{stroke:var(--goal)}
+.pending-seal{color:var(--muted)}
+.pending-seal .seal-outer{stroke-dasharray:2 3}
+.practice-achievement{position:absolute;right:24px;top:144px;width:100px;height:100px;display:grid;place-items:center;background:var(--surface);color:var(--accent);border-radius:50%;pointer-events:none}
+.practice-achievement .practice-seal{inset:0}
+.practice-achievement .practice-seal>svg{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.4}
+.practice-achievement .practice-seal>span{font-size:44px;align-self:center;margin-top:-8px}
+.practice-achievement>span{position:absolute;bottom:20px;font-size:11px}
+.milestone.final-chapter .practice-achievement{top:52px;width:82px;height:82px}
+.milestone.final-chapter .practice-achievement .practice-seal>span{font-size:34px}
+.milestone.final-chapter .practice-achievement>span{bottom:14px}
+html[data-celebration-motion=active] .has-practice-achievement .practice-achievement{animation:seal-arrival 700ms cubic-bezier(.16,1,.3,1) both}
+html[data-celebration-motion=active] :is(.practice-achievement,.seal-conquered) .seal-outer{stroke-dasharray:139;animation:seal-inscribe 850ms cubic-bezier(.16,1,.3,1) both}
+html[data-celebration-motion=active] .seal-conquered .seal-inner{stroke-dasharray:114;animation:seal-inscribe 650ms 150ms cubic-bezier(.16,1,.3,1) both}
+@keyframes seal-inscribe{from{stroke-dashoffset:139}to{stroke-dashoffset:0}}
+@keyframes seal-arrival{from{transform:scale(.65) rotate(-16deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@media(prefers-reduced-motion:reduce){.practice-achievement,.practice-seal *{animation:none!important}}

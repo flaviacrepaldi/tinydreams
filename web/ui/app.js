@@ -215,7 +215,16 @@ function openCalendarDay(day){
  renderCalendar();
  document.querySelector(`[data-action="calendar-day"][data-day="${day}"]`)?.focus({preventScroll:true});
 }
-function animateProgress(g,previous){celebrateMilestone(g,previous);document.dispatchEvent(new CustomEvent('dreamprogress',{detail:{id:g.id,from:previous/targetOf(g),to:progress(g)/targetOf(g)}}))}
+function animateProgress(g,previous){
+ celebrateMilestone(g,previous);
+ const achievement=progress(g)>previous&&practiceAchievement(g);
+ if(achievement)document.querySelectorAll('[data-goal]').forEach(card=>{
+  if(card.dataset.goal===g.id)card.querySelectorAll('[data-practice-milestone]').forEach(cell=>{
+   if(Number(cell.dataset.practiceMilestone)===achievement)cell.classList.add('seal-conquered');
+  });
+ });
+ document.dispatchEvent(new CustomEvent('dreamprogress',{detail:{id:g.id,from:previous/targetOf(g),to:progress(g)/targetOf(g)}}));
+}
 async function changeDay(id,day=today()){if(state.busy)return;const g=state.goals.find(x=>x.id===id);if(!g)return;const previous=progress(g);state.busy=true;document.querySelectorAll(`[data-id="${id}"]`).forEach(b=>b.disabled=true);try{const was=g.days.includes(day);if(state.demo){g.days=was?g.days.filter(d=>d!==day):[...g.days,day];if(!was)g.failures=(g.failures||[]).filter(d=>d!==day);if(g.days.length<g.target)g.redeemed=0}else{const result=await api('/'+id+'/check','POST',{day,done:!was});Object.assign(g,result)}render();toast(was?'Registro desfeito. Seu caminho continua.':complete(g)?'Seu sonho floresceu!':'Mais um pequeno passo. Ele conta.');animateProgress(g,previous)}catch(e){toast(e.message);render()}finally{state.busy=false}}
 $('#goalForm').addEventListener('submit',async e=>{e.preventDefault();if(state.busy)return;const id=$('#goalId').value,body={title:$('#goalTitle').value.trim(),reward:$('#goalReward').value.trim(),target:Number($('#goalTarget').value),groupId:$('#goalGroup').value||null,color:state.goals.find(g=>g.id===id)?.color||automaticAmulet(state.goals)};try{body.reopen=$('#goalForm').dataset.reopen==='true';body.plan=validatePlan(formPlan());if(body.reopen&&needsIncompleteReview({...state.goals.find(g=>g.id===id),target:body.target,plan:body.plan}))throw Error('Ajuste o prazo ou a meta para voltar a acompanhar este sonho.');if(body.plan.kind==='habit'&&$('#habitMeasure').value==='tasks'&&!body.plan.tasks.length)throw Error('Adicione pelo menos uma tarefa para esta rotina.');body.target=targetOf({...body});if(!body.title)throw Error('Dê um nome ao seu sonho.')}catch(e){$('#formError').textContent=e.message;return}state.busy=true;$('#saveGoal').disabled=true;try{if(state.demo){if(id){const old=state.goals.find(g=>g.id===id);if(planOf(old).incompleteAccepted&&needsIncompleteReview({...old,...body}))body.plan.incompleteAccepted=true;Object.assign(old,body,{group_id:body.groupId,redeemed:0})}else state.goals.push({...body,group_id:body.groupId,id:'demo-'+crypto.randomUUID(),days:[],entries:[],redeemed:0})}else{const g=await api(id?'/'+id:'',id?'PATCH':'POST',body);if(id)Object.assign(state.goals.find(x=>x.id===id),g);else state.goals.push(g);state.real=state.goals}$('#goalDialog').close();render();const saved=id?state.goals.find(g=>g.id===id):state.goals.at(-1);if(id&&saved&&needsIncompleteReview(saved)&&!planOf(saved).incompleteAccepted)reviewDeferred.delete(id);if($('#incompleteDialog').open)renderIncompleteCollection();if(!id&&saved&&pendingPastDays(saved,today()).length){openDetails(saved.id,pendingPastDays(saved,today())[0]);$('#historyDays')?.scrollIntoView({block:'start'})}toast(state.demo?'Exemplo atualizado. Seus dados reais continuam separados.':id?'Seu sonho ganhou novos cuidados.':'O primeiro capítulo está escrito.')}catch(e){$('#formError').textContent=e.message}finally{state.busy=false;$('#saveGoal').disabled=false;checkIncompleteNotice()}});
 let deleteId;
@@ -335,19 +344,40 @@ function fitAmountTrends(){
  });
 }
 window.addEventListener('resize',()=>requestAnimationFrame(fitAmountTrends),{passive:true});
+function practiceMilestones(g){return [...new Set([...[3,7,15,21,30].filter(n=>n<targetOf(g)),targetOf(g)])]}
+function practiceMilestoneDays(g){
+ const p=planOf(g),marks=practiceMilestones(g),result=new Map();let count=0,previous='';
+ for(const day of habitDays(g)){
+  if((g.failures||[]).includes(day))continue;
+  if(completionMode(p)==='streak')count=previous&&practiceDays(previous,day,p.weekdays)-(p.skippedDays||[]).filter(d=>d>=previous&&d<=day&&p.weekdays.includes(weekday(d))).length===2?count+1:1;
+  else count++;
+  if(marks.includes(count))result.set(day,count);
+  previous=day;
+ }
+ return result;
+}
+function practiceSeal(number,pending=false){return `<span class="practice-seal ${pending?'pending-seal':''}" aria-hidden="true"><svg viewBox="0 0 48 48"><circle class="seal-outer" cx="24" cy="24" r="22"/><circle class="seal-inner" cx="24" cy="24" r="18"/></svg><span>${fmt(number)}</span></span>`}
+function practiceAchievement(g){
+ if(planOf(g).kind!=='habit')return 0;
+ const number=planOf(g).impulse?progress(g):practiceMilestoneDays(g).get(today());
+ return practiceMilestones(g).includes(number)?number:0;
+}
+function practiceAchievementScene(g){const number=practiceAchievement(g);return number?`<div class="practice-achievement" role="img" aria-label="marco de ${number} dias conquistado">${practiceSeal(number)}<span>dias</span></div>`:''}
 function habitStreakGrid(g){
  const p=planOf(g);if(p.kind!=='habit')return '';
  if(p.impulse){
-  const completed=progress(g),first=Math.max(1,completed-12);
-  const cells=Array.from({length:14},(_,i)=>{const day=first+i,done=day<=completed,current=day===completed+1,label=`dia ${day}: ${done?'24 horas completas':current?'em andamento':'a completar'}`;return `<li class="streak-square ${done?'success':'unrecorded'} ${current?'current':''}" aria-label="${label}" title="${label}">${done?icon('check'):''}</li>`});
+  const completed=progress(g),first=Math.max(1,completed-12),marks=practiceMilestones(g);
+  const cells=Array.from({length:14},(_,i)=>{const day=first+i,done=day<=completed,current=day===completed+1,label=`dia ${day}: ${done?'24 horas completas':current?'em andamento':'a completar'}`;return `<li class="streak-square ${done?'success':'unrecorded'} ${current?'current':''}" aria-label="${label}" title="${label}">${marks.includes(day)?practiceSeal(day,!done):done?icon('check'):''}</li>`});
   return `<div class="habit-streak impulse-streak"><div class="streak-caption"><span>${completed} ${completed===1?'dia completo':'dias completos'}</span></div><ol class="streak-grid" aria-label="dias de 24 horas da sequência atual">${cells.join('')}</ol></div>`;
  }
+ const milestoneDays=practiceMilestoneDays(g),marks=practiceMilestones(g),currentCount=completionMode(p)==='streak'?habitSequence(g).current:progress(g);
  const start=p.start||[...g.days,...(g.failures||[]),...(g.entries||[]).map(e=>e.day)].sort()[0]||today();
  const archived=isArchivedIncomplete(g),anchor=archived?p.end:today();
  const cells=Array.from({length:14},(_,i)=>{
   const date=dateFrom(anchor);date.setDate(date.getDate()-(13-i));
   const day=localDay(date),rest=day<start||!scheduled(g,day),status=rest?'rest':outcomeOf(g,day),label=`${prettyDay(day)}: ${rest?'sem atividade prevista':status==='success'?'cumprido':status==='failure'?'falha':day===today()?'ainda não registrado hoje':'sem registro'}`;
-  return `<li class="streak-square ${status||'unrecorded'} ${day===today()?'current':''}" aria-label="${esc(label)}" title="${esc(label)}">${status?icon(status==='success'?'check':'cross'):''}</li>`;
+  const number=milestoneDays.get(day),pending=day===today()&&!rest&&!status&&marks.includes(currentCount+1),seal=number||(pending?currentCount+1:0),description=number?label+' · marco de '+number+' dias conquistado':pending?label+' · marco de '+seal+' dias':label;
+  return `<li class="streak-square ${status||'unrecorded'} ${day===today()?'current':''} ${seal?'has-practice-seal':''}" ${number?`data-practice-milestone="${number}"`:''} aria-label="${esc(description)}" title="${esc(description)}">${seal?practiceSeal(seal,pending):status?icon(status==='success'?'check':'cross'):''}</li>`;
  });
  const count=streak(g);
  return `<div class="habit-streak"><div class="streak-caption"><span>${archived?'período encerrado':`${count} ${count===1?'dia':'dias'} sem falhar`}</span></div><ol class="streak-grid" aria-label="últimos 14 dias corridos, do mais antigo ao mais recente">${cells.join('')}</ol></div>`;
@@ -637,7 +667,7 @@ function celebrateDailyListItem(g,entry){
   const panel=document.createElement('section');panel.id='itemMilestone';panel.className='milestone item-milestone';panel.dataset.magic=edition?.atmosphere||'stars';panel.setAttribute('role','status');panel.innerHTML=content;
   $('#progressDialog').append(panel);itemCelebrationTimer=setTimeout(clearItemCelebration,finished?4500:3400);
  }else{
-  const panel=$('#milestone');panel.dataset.goal=g.id;panel.dataset.magic=edition?.atmosphere||'stars';panel.dataset.edition=edition?.id||'';panel.classList.remove('final-chapter');
+  const panel=$('#milestone');panel.dataset.goal=g.id;panel.dataset.magic=edition?.atmosphere||'stars';panel.dataset.edition=edition?.id||'';panel.classList.remove('final-chapter','has-practice-achievement');
   panel.innerHTML=`<button class="icon-button milestone-close" data-action="dismiss-milestone" aria-label="Fechar celebração">×</button>${content}<button class="secondary" data-action="dismiss-milestone">Continuar</button>`;
   panel.hidden=false;showMilestone();clearTimeout(milestoneTimer);milestoneTimer=setTimeout(dismissMilestone,3400);
  }
@@ -778,8 +808,9 @@ function flushMilestones(){
  const edition=window.DreamThemes?.current;
  const motif=edition?.progressSymbol||'star',atmosphere=edition?.atmosphere||'stars';
  const panel=$('#milestone');panel.dataset.goal=g.id;panel.dataset.magic=atmosphere;panel.dataset.edition=edition?.id||'';panel.classList.toggle('final-chapter',m.kind==='dream');
- const enchantment=magicalEmblem(motif,m.kind);
- panel.innerHTML=`<button class="icon-button milestone-close" data-action="dismiss-milestone" aria-label="Fechar celebração">×</button>${enchantment}${m.kind==='dream'?bookMarkup(g):''}<div class="milestone-copy"><h2>${m.kind==='dream'?'Seu tydream virou uma história realizada.':wholeDay?'Tudo de hoje concluído.':randomCongratulations()}</h2><p>${m.kind==='dream'?esc(g.title):wholeDay?`${habits.length} hábitos de hoje concluídos.`:`${esc(g.title)} · ${fmt(progress(g))} de ${fmt(targetOf(g))} <span data-user-content>${esc(unit(g))}</span>`}</p>${m.kind==='dream'&&g.reward?`<p>Recompensa liberada: <span data-user-content>${esc(g.reward)}</span></p>`:''}<button class="secondary" data-action="${m.kind==='dream'?'open-shelf':'dismiss-milestone'}">${m.kind==='dream'?'Ver na minha prateleira':'Continuar'}</button></div>`;
+ const enchantment=magicalEmblem(motif,m.kind),achievement=practiceAchievementScene(g);
+ panel.classList.toggle('has-practice-achievement',!!achievement);
+ panel.innerHTML=`<button class="icon-button milestone-close" data-action="dismiss-milestone" aria-label="Fechar celebração">×</button>${enchantment}${achievement}${m.kind==='dream'?bookMarkup(g):''}<div class="milestone-copy"><h2>${m.kind==='dream'?'Seu tydream virou uma história realizada.':wholeDay?'Tudo de hoje concluído.':randomCongratulations()}</h2><p>${m.kind==='dream'?esc(g.title):wholeDay?`${habits.length} hábitos de hoje concluídos.`:`${esc(g.title)} · ${fmt(progress(g))} de ${fmt(targetOf(g))} <span data-user-content>${esc(unit(g))}</span>`}</p>${m.kind==='dream'&&g.reward?`<p>Recompensa liberada: <span data-user-content>${esc(g.reward)}</span></p>`:''}<button class="secondary" data-action="${m.kind==='dream'?'open-shelf':'dismiss-milestone'}">${m.kind==='dream'?'Ver na minha prateleira':'Continuar'}</button></div>`;
  $('#toast').hidden=true;clearTimeout(toastTimer);panel.hidden=false;showMilestone();clearTimeout(milestoneTimer);if(m.kind!=='dream')milestoneTimer=setTimeout(dismissMilestone,6000);
 }
 document.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(action==='dismiss-milestone')dismissMilestone();if(action==='open-shelf'||action==='back-dreams'){dismissMilestone();state.view=action==='open-shelf'?'shelf':'dreams';render();$('#content').scrollIntoView({block:'start'});document.querySelector(`[data-view="${state.view}"]`).focus()}});
