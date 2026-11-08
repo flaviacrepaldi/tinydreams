@@ -27,24 +27,49 @@ function rewardArt(g){
  const day=complete(g)?completionDay(g):'';
  return (day?window.DreamThemes?.forCreation(day+'T12:00:00Z'):window.DreamThemes?.current)||{};
 }
-function rewardArtSource(g){return rewardArt(g).asset||'/garden.png'}
-function rewardArtGeometry(g){
- const geometry=rewardArt(g).geometry;
- return geometry?{ratio:geometry.sceneRatio,sheet:geometry.height/(geometry.width/geometry.sceneRatio),height:geometry.height,scene:geometry.width/geometry.sceneRatio}:{ratio:1.5,sheet:1,height:1024,scene:1024};
+// Badges are derived from persisted records, including historical corrections.
+const achievementKinds=[
+ {id:'first',name:'primeiro capítulo',symbol:'book',rule:'conclua seu primeiro tydream'},
+ ...[7,15,30].map(n=>({id:'days'+n,name:n+' dias de jornada',symbol:'star',rule:'registre '+n+' dias de prática em um tydream',days:n})),
+ {id:'theme',name:'história realizada',symbol:null,rule:'conclua um tydream nesta edição'},
+ {id:'big',name:'grande sonho realizado',symbol:'target',rule:'conclua todos os tydreams de um Big Dream'}
+];
+function achievementEvents(){
+ const events=[],finished=state.goals.filter(complete).map(g=>({g,day:completionDay(g)})).filter(e=>e.day&&e.day<=today()).sort((a,b)=>a.day.localeCompare(b.day)||a.g.id.localeCompare(b.g.id));
+ const add=(kind,g,day,title=g.title)=>{if(day&&day<=today())events.push({kind,id:g.id,day,title,edition:DreamThemes.forCreation(day+'T12:00:00-03:00')})};
+ if(finished.length)add('first',finished[0].g,finished[0].day);
+ for(const {g,day} of finished)add('theme',g,day);
+ for(const g of state.goals){if(planOf(g).kind!=='habit')continue;
+  const p=planOf(g),days=[...new Set(habitDays(g))].filter(d=>d<=today()&&!(g.failures||[]).includes(d)).sort();
+  for(const n of [7,15,30]){
+   if(p.impulse){
+    const initial=Date.parse(p.impulseStartedAt||(p.start?p.start+'T00:00:00-03:00':g.created_at||'')),now=Date.now();
+    if(Number.isFinite(initial)){const ends=[...(g.failures||[]).map(day=>Date.parse(p.impulseResets?.[day]||day+'T00:00:00-03:00')).filter(t=>Number.isFinite(t)&&t>=initial&&t<=now).sort((a,b)=>a-b),now];let start=initial;
+     for(const end of ends){if(end-start>=n*86400000){const d=new Date(start+n*86400000);add('days'+n,g,new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d));break}start=end}
+    }
+   }
+   else if(days.length>=n)add('days'+n,g,days[n-1]);
+  }
+ }
+ for(const group of state.groups){const members=state.goals.filter(g=>g.group_id===group.id);if(members.length&&members.every(complete))add('big',members[0],members.map(completionDay).sort().at(-1),group.name)}
+ return events.sort((a,b)=>b.day.localeCompare(a.day));
 }
-function rewardReveal(g){
- const fraction=Math.max(0,Math.min(1,progress(g)/targetOf(g))),pieces=Math.floor(fraction*16),asset=rewardArtSource(g),geometry=rewardArtGeometry(g);
- return `<div class="reward-reveal ${fraction===1?'is-complete':''}" role="img" aria-label="gravura da jornada: ${Math.round(fraction*100)}% revelada" style="--journey-art:url('${esc(asset)}');--journey-ratio:${geometry.ratio};--journey-sheet-height:${geometry.sheet*400}%">${Array.from({length:16},(_,i)=>{const part=Math.max(0,Math.min(1,fraction*16-i));return `<span class="reveal-piece ${part>0?'revealed':''}" style="--tile-x:${i%4*100/3}%;--tile-y:${Math.floor(i/4)*geometry.scene/(4*geometry.height-geometry.scene)*100}%;--tile-hidden:${(1-part)*100}%" aria-hidden="true"></span>`}).join('')}</div>`;
+function achievementMedal(kind,edition,locked=false){
+ const k=achievementKinds.find(k=>k.id===kind)||achievementKinds.find(k=>k.id==='theme'),tokens=edition.tokens||{};
+ return `<span class="achievement-medal ${locked?'is-locked':''}" style="--badge-ink:${esc(tokens['--accent']||'var(--accent)')};--badge-paper:${esc(tokens['--surface']||'var(--surface)')}"><span class="achievement-medal-core">${icon(k.symbol||edition.progressSymbol||'star')}${k.days?`<b>${k.days}</b>`:''}</span></span>`;
 }
-function rewardJourney(g,open=false){
- const pieces=Math.floor(Math.max(0,Math.min(1,progress(g)/targetOf(g)))*16);
- return `<details class="reward-journey" ${open?'open':''}><summary>${complete(g)?'sua gravura conquistada':'sua gravura em formação'}<span>${pieces}/16</span></summary>${rewardReveal(g)}</details>`;
+let selectedAchievement='';
+function achievementsMarkup(){
+ const events=achievementEvents(),current=DreamThemes.current,editions=[current,...events.map(e=>e.edition)].filter((e,i,list)=>list.findIndex(x=>x.id===e.id)===i).sort((a,b)=>b.id.localeCompare(a.id));
+ const latest=events[0];
+ return `<div class="shelf-heading"><h2>conquistas</h2><p>pequenas vitórias, guardadas nos mundos por onde você passou.</p></div>${latest?`<div class="achievement-latest">${achievementMedal(latest.kind,latest.edition)}<div><p>sua conquista mais recente</p><h3>${esc(achievementKinds.find(k=>k.id===latest.kind).name)}</h3><p data-user-content>${esc(latest.title)} · ${prettyDay(latest.day)}</p></div></div>`:'<p class="achievement-empty">seu álbum começa com o primeiro passo. cada conquista aparece aqui conforme você avança.</p>'}${editions.map(edition=>`<section class="achievement-edition"><h3>${esc(edition.name)}</h3><p class="muted">${esc(edition.month)} · ${edition.id.slice(0,4)}</p><div class="achievement-grid">${achievementKinds.filter(k=>(k.id!=='first'||!events.some(e=>e.kind==='first')||events.some(e=>e.kind==='first'&&e.edition.id===edition.id))&&(edition.id===current.id||events.some(e=>e.edition.id===edition.id&&e.kind===k.id))).map(k=>{const earned=events.filter(e=>e.edition.id===edition.id&&e.kind===k.id),key=edition.id+':'+k.id,open=selectedAchievement===key;return `<div class="achievement-item"><button class="achievement-button" data-achievement="${key}" aria-expanded="${open}" aria-controls="achievement-${key}" aria-label="${esc(k.name)} · ${earned.length?'conquistado '+earned.length+' vez(es)':'por conquistar'}">${achievementMedal(k.id,edition,!earned.length)}<strong>${esc(k.name)}</strong><span>${earned.length?earned.length>1?earned.length+' conquistas':'conquistado':'por conquistar'}</span></button><div id="achievement-${key}" class="achievement-detail" ${open?'':'hidden'}><p>${esc(k.rule)}.</p>${earned.map(e=>`<p><strong data-user-content>${esc(e.title)}</strong><br>${prettyDay(e.day)}</p>`).join('')}</div></div>`}).join('')}</div></section>`).join('')}`;
 }
-function rewardPeek(g){return `<button type="button" class="reward-journey-peek" data-reward-journey="${esc(g.id)}" aria-label="abrir sua gravura da jornada" title="sua gravura da jornada">${rewardReveal(g)}</button>`}
+function openAchievements(){dismissMilestone(false);document.querySelectorAll('dialog[open]').forEach(d=>d.close());state.view='shelf';collectionView='achievements';render();const heading=document.querySelector('#content h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}document.querySelector('#content').scrollIntoView({block:'start'})}
+function rewardPeek(g){const edition=rewardArt(g),kind=complete(g)?'theme':practiceAchievement(g)?'days'+practiceAchievement(g):'theme';return `<button type="button" class="reward-badge-peek" data-open-achievements aria-label="ver minhas conquistas">${achievementMedal(kind,edition)}</button>`}
 function rewardBookFinish(g){
  const number=targetOf(g),label=number>=1000?new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1}).format(number):fmt(number);
  const seal=practiceSeal(number).replace('>'+fmt(number)+'</span>','>'+esc(label)+'</span>');
- return `<span class="book-journey-art" aria-hidden="true" style="background-image:url('${esc(rewardArtSource(g))}');--journey-sheet-height:${rewardArtGeometry(g).sheet*100}%"></span><span class="book-journey-seal" style="--book-number-size:${label.length>3?9:12}px" aria-label="meta conquistada: ${esc(fmt(number))} ${esc(unit(g))}">${seal}</span>`;
+ return `<span class="book-journey-seal" style="--book-number-size:${label.length>3?9:12}px" aria-label="meta conquistada: ${esc(fmt(number))} ${esc(unit(g))}">${seal}</span>`;
 }
 function rewardHonor(g){
  const r=rewardSequence(g),number=practiceAchievement(g);
@@ -113,12 +138,13 @@ async function rewardDemo(scenario){
  }else if(scenario==='return')g.days=[dayBefore(5),dayBefore(4)];
  else if(scenario==='art')g.days=Array.from({length:11},(_,i)=>dayBefore(i+1));
  state.goals=[g];seedMilestones();render();document.querySelector('.mobile-chapter-link')?.click();
- if(scenario==='art'){openDetails(g.id,today());const journey=$('#progressContent .reward-journey');journey.open=true;journey.scrollIntoView({block:'center'});return}
+ if(scenario==='art'){openAchievements();return}
  if(scenario==='item'||scenario==='fusion'){openDetails(g.id,today(),true);await changeEntry(g.id,{key:today()+':'+(scenario==='fusion'?'veg':'fruit'),day:today(),value:1,done:true});}
  else await saveOutcome(g.id,today(),'success');
 }
 document.addEventListener('click',event=>{
- const journey=event.target.closest('[data-reward-journey]');if(journey){dismissMilestone(false);openDetails(journey.dataset.rewardJourney,today());const detail=$('#progressContent .reward-journey');if(detail){detail.open=true;detail.scrollIntoView({block:'center'})}return;}
+ if(event.target.closest('[data-open-achievements]')){openAchievements();return}
+ const badge=event.target.closest('[data-achievement]');if(badge){selectedAchievement=selectedAchievement===badge.dataset.achievement?'':badge.dataset.achievement;document.querySelectorAll('[data-achievement]').forEach(button=>{const open=selectedAchievement===button.dataset.achievement;document.getElementById('achievement-'+button.dataset.achievement).hidden=!open;button.setAttribute('aria-expanded',String(open))});return;}
  const button=event.target.closest('[data-reward-demo],[data-action="reward-demo-open"]');if(!button)return;
  if(button.dataset.rewardDemo)rewardDemo(button.dataset.rewardDemo);
  else{$('#settingsDialog').close();showDialog($('#rewardDemoDialog'))}

@@ -27,6 +27,7 @@ for(const width of [320,390,430,1280]){
  await js("dismissMilestone();document.querySelector('[data-action=quick-repeat]').click()");await wait('!state.busy');
  assert.equal(await js("document.querySelector('#milestoneDialog').open"),true);
  assert.equal(await js("document.querySelector('.practice-achievement .practice-seal>span').textContent"),'7');
+assert.ok(await js("parseFloat(getComputedStyle(document.querySelector('.practice-achievement .practice-seal>span')).fontSize)<=28"),'Success numerals remain delicate');
  assert.equal(await js("document.querySelector('[data-practice-milestone=\"7\"]').classList.contains('seal-conquered')"),true);
  assert.equal(await js("document.querySelectorAll('.streak-grid .practice-seal').length"),1);
  assert.equal(await js("document.querySelector('[data-practice-milestone=\"3\"]')"),null,'Earlier milestones return to ordinary checks');
@@ -49,7 +50,7 @@ assert.deepEqual(await js(`(()=>{const g={target:6,days:['2026-11-02','2026-11-0
 assert.deepEqual(await js(`(()=>{const g={target:21,days:['2026-11-02','2026-11-04','2026-11-05'],failures:['2026-11-03'],plan:{kind:'habit',completionMode:'streak',weekdays:[0,1,2,3,4,5,6]}};return [...practiceMilestoneDays(g)]})()`),[]);
 // Archived dreams end at their deadline, never project practice beyond it.
 assert.equal(await js(`(()=>{const p={...planOf({}),kind:'habit',completionMode:'period',start:dayBefore(25),end:dayBefore(5),incompleteAccepted:true},g={id:'archived-window',target:21,days:[dayBefore(20)],failures:[],entries:[],plan:p},host=document.createElement('div');host.innerHTML=habitStreakGrid(g);return host.querySelectorAll('[data-practice-future]').length===0&&host.querySelector('.streak-grid').lastElementChild.dataset.practiceDay===p.end})()`),true);
-// Final milestones retain the book celebration and the large numbered seal.
+// Final milestones retain the themed badge and delicate stitched seal.
 await js("dismissMilestone();state.goals[0].id='final-seven';state.goals[0].target=7;state.goals[0].days=state.goals[0].days.filter(d=>d!==today());state.goals[0].entries=[];state.goals[0].plan.dailyTarget=1;milestoneMemory.clear();seedMilestones();render();document.querySelector('[data-action=quick-repeat]').click()");await wait('!state.busy');
 assert.equal(await js("document.querySelector('#milestone').classList.contains('final-chapter')"),true);
 assert.equal(await js("document.querySelector('.practice-achievement .practice-seal>span').textContent"),'7');

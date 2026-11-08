@@ -30,7 +30,7 @@ for(const edition of editions){
    try{
     await js(`rewardDemo('${scenario}');`);await wait('!state.busy');
     await js(`clearTimeout(milestoneTimer);clearTimeout(itemCelebrationTimer);`);
-    const panel=scenario==='item'||scenario==='fusion'?'#itemMilestone':scenario==='art'?'#progressDialog':'#milestone';
+    const panel=scenario==='item'||scenario==='fusion'?'#itemMilestone':scenario==='art'?'.writer-collection':'#milestone';
     if(scenario!=='art'){
      assert.equal(await js(`getComputedStyle(document.querySelector('${panel} .celebration-frame')).backgroundImage.includes(DreamThemes.current.celebrationAsset)`),true,'Wrong seasonal celebration');
      await js(`new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;image.src=DreamThemes.current.celebrationAsset})`);
@@ -40,9 +40,9 @@ for(const edition of editions){
     }
     await settle();
     const dimensions=await js(`(()=>{const panel=document.querySelector('${panel}'),r=panel.getBoundingClientRect(),action=panel.querySelector('.milestone-copy>button'),a=action?.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,overflow:panel.scrollWidth-panel.clientWidth,action:!a||a.bottom<=r.bottom+1}})()`);
-    assert.ok(dimensions.left>=-1&&dimensions.right<=width+1&&dimensions.top>=-1&&dimensions.bottom<=845&&dimensions.overflow<=1&&dimensions.action,JSON.stringify(dimensions));
+    assert.ok(dimensions.left>=-1&&dimensions.right<=width+1&&dimensions.top>=-1&&(scenario==='art'||dimensions.bottom<=845)&&dimensions.overflow<=1&&dimensions.action,JSON.stringify(dimensions));
     assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false);
-    if(['milestone','record','return','day','dream'].includes(scenario))assert.equal(await js(`document.querySelector('.reward-journey-peek').innerHTML.includes(DreamThemes.current.asset||'/garden.png')`),true,'Journey uses wrong edition');
+    if(['milestone','record','return','day','dream'].includes(scenario))assert.equal(await js(`document.querySelector('.reward-badge-peek .achievement-medal').style.getPropertyValue('--badge-ink')===DreamThemes.current.tokens['--accent']`),true,'Badge uses wrong edition');
     if(['milestone','record','return','dream'].includes(scenario)){
      const contrast=await js(`(()=>{const e=document.querySelector('.practice-achievement'),s=getComputedStyle(e);const luminance=c=>{const a=c.match(/[0-9.]+/g).slice(0,3).map(n=>n/255).map(n=>n<=.04045?n/12.92:((n+.055)/1.055)**2.4);return a[0]*.2126+a[1]*.7152+a[2]*.0722},a=luminance(s.color),b=luminance(s.backgroundColor);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05)})()`);
      assert.ok(contrast>=4.5,'Seal contrast '+contrast);

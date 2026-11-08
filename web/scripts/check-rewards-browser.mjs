@@ -37,12 +37,13 @@ for(const width of [320,390,430,1280]){
   }
   if(scenario==='day')assert.equal(await js("document.querySelector('.daily-keepsakes').classList.contains('all-complete')"),true);
   if(scenario==='dream'){
-   assert.equal(await js("document.querySelector('.dream-book .book-journey-seal')!==null"),true);
-   assert.equal(await js("document.querySelectorAll('.reward-journey-peek .revealed').length"),16);
+   assert.equal(await js("document.querySelector('.final-chapter .achievement-medal')!==null"),true);
+   assert.equal(await js("document.querySelectorAll('.reward-badge-peek .achievement-medal').length"),1);
   }
   if(scenario==='art'){
-   assert.equal(await js("document.querySelector('.reward-journey').open"),true);
-   assert.equal(await js("document.querySelectorAll('#progressContent .reward-reveal .revealed').length"),9);
+   assert.equal(await js("collectionView==='achievements'"),true);
+   assert.equal(await js("document.querySelectorAll('.achievement-button').length"),6);
+   assert.equal(await js("document.querySelector('.reward-reveal')"),null);
   }
   await new Promise(r=>setTimeout(r,1000));
   await writeFile(`/tmp/reward-${scenario}-${width}.png`,Buffer.from((await cdp('Page.captureScreenshot',{format:'png'})).data,'base64'));
@@ -81,6 +82,26 @@ for(const reduced of [true,false]){
  await js("rewardDemo('fusion')");
  assert.equal(await js("getComputedStyle(document.querySelector('.fusion-day')).animationName"),'none');
  assert.equal(await js('rewardFlights.size'),0);
+}
+// The new collection supports empty, historical, repeated and corrected achievements.
+for(const width of [320,390,430,1280]){
+ await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});
+ await js(`resetMilestonePanel();state.demo=true;state.groups=[];state.goals=[];selectedAchievement='';openAchievements()`);
+ assert.equal(await js("document.querySelectorAll('.achievement-medal.is-locked').length"),6);
+ assert.equal(await js("document.querySelectorAll('.achievement-edition').length"),1,'Only current theme is shown before achievements');
+ await js(`(()=>{const p={...planOf({}),kind:'habit',start:'',end:'',weekdays:[0,1,2,3,4,5,6],completionMode:'total'};state.groups=[{id:'badge-group',name:'um grande sonho com um nome longo'}];state.goals=[{id:'badge-a',title:'ler um capítulo com calma e guardar uma lembrança desta jornada',target:1,color:'sage',days:[today()],plan:p,group_id:'badge-group'},{id:'badge-b',title:'outro pequeno capítulo',target:1,color:'peach',days:[today()],plan:p,group_id:'badge-group'},{id:'badge-history',title:'uma história de outubro',target:1,color:'sage',days:['2026-10-01'],plan:p},{id:'badge-practice',title:'cultivar uma rotina',target:30,color:'sage',days:Array.from({length:15},(_,i)=>dayBefore(i)),plan:p}];openAchievements()})()`);
+ assert.equal(await js("achievementEvents().filter(e=>e.kind==='theme'&&e.day===today()).length"),2);
+ assert.equal(await js("achievementEvents().filter(e=>e.kind==='big').length"),1);
+ await js(`document.querySelector('[data-achievement="'+DreamThemes.current.id+':theme"]').click()`);
+ assert.equal(await js("document.querySelector('[data-achievement][aria-expanded=true]')!==null"),true);
+ assert.equal(await js("document.querySelectorAll('.achievement-detail:not([hidden])').length"),1);
+ assert.ok(await js("document.querySelector('.achievement-detail:not([hidden])').getBoundingClientRect().width>=Math.min(innerWidth*.6,400)"),'Expanded records use the full collection row');
+ assert.equal(await js("document.querySelector('.reward-reveal')"),null);
+ assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false);
+ await js('document.fonts.ready');
+ await writeFile(`/tmp/achievements-${width}.png`,Buffer.from((await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:true,clip:{x:0,y:0,width,height:await js('document.documentElement.scrollHeight'),scale:1}})).data,'base64'));
+ await js(`state.goals.find(g=>g.id==='badge-b').days=[];renderShelf()`);
+ assert.equal(await js("achievementEvents().some(e=>e.kind==='big')"),false,'Undo removes an unearned group achievement');
 }
 assert.equal(await js('JSON.stringify(state.real)===rewardRealBefore'),true,'Real records unchanged');
 assert.deepEqual(await js('rewardWrites'),[],'Demos never send record mutations');
