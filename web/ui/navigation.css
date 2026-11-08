@@ -742,3 +742,10 @@ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peac
 .analysis-notes summary{cursor:pointer;min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:4px}
 .analysis-empty{padding:16px;background:var(--surface);border-radius:12px}
 @media(max-width:560px){.analytics-view{padding:22px 14px}.analytics-view h2{font-size:25px}.analysis-columns{grid-template-columns:minmax(0,1fr);gap:28px}}
+
+.streak-square.target-finish{border-style:dashed;border-color:var(--goal);color:var(--goal)}
+.target-finish-number{font:400 16px/1 var(--serif);font-variant-numeric:tabular-nums}
+.streak-square.beyond-target{visibility:hidden}
+
+.streak-square.goal-finish{position:relative}
+.streak-square>.finish-rays{position:absolute;inset:-7px;width:calc(100% + 14px);height:calc(100% + 14px);max-width:none;pointer-events:none;stroke:var(--goal);stroke-width:1.8;stroke-linecap:round}

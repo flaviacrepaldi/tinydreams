@@ -66,6 +66,16 @@ Proposta mais recente discutida. Biblioteca cozy é a atmosfera permanente, com 
 
 A estação orienta luz, cores, vegetação e materiais. Cada universo deve ser interpretado pelo refúgio de uma biblioteca cozy, mesmo quando a inspiração vem de trem, jardim ou oceano. A execução visual continua delegada como surpresa. As 12 edições estão implementadas para 2026-10 a 2027-09, com seleção automática por mês; não há geração automática de novos layouts depois desse período.
 
+## Preferências para próximos temas · 08/11/2026
+
+Ideias pedidas pela usuária para quando for criar um novo tema, sem alterar agora a edição atual ou o calendário implementado:
+
+- **Outono:** uma das coisas que ela ama muito. Já aparece nas propostas e nas direções de março, abril e maio; manter como inspiração prioritária para futuras criações.
+- **Era vitoriana:** nova inspiração solicitada para um futuro tema.
+- **Chuva:** um tema centrado na atmosfera chuvosa, na “vibe chuvosa” que ela ama; considerar como inspiração própria, além da chuva já presente na proposta de março.
+
+A edição de oceano de novembro não encantou tanto porque a usuária não tem um grande vínculo com o oceano. Ao criar novos temas, priorizar universos com os quais ela tenha uma conexão afetiva forte, incluindo os três acima. Esta anotação não solicita uma troca imediata de tema.
+
 ## Política de surpresa e texto
 Não enviar imagens futuras no chat. Não carregar artes futuras antecipadamente na página. As prévias em Preferências ficam fechadas e dependem de ação explícita. Manter títulos e subtítulos, com instruções e status funcionais; remover frases decorativas soltas.
 

@@ -373,11 +373,20 @@ function habitStreakGrid(g){
  const milestoneDays=practiceMilestoneDays(g),latestDay=[...milestoneDays.keys()].filter(day=>day<=today()).sort().at(-1);
  const start=p.start||[...g.days,...(g.failures||[]),...(g.entries||[]).map(e=>e.day)].sort()[0]||today();
  const archived=isArchivedIncomplete(g),anchor=archived?p.end:dayBefore(-3);
+ // Project only the remaining scheduled successes; a failure recalculates this
+ // on the next render. Reserved cells after the finish keep the grid stable.
+ let finish=habitCompletionDay(g),remaining=Math.max(0,targetOf(g)-progress(g));
+ if(!finish&&!archived){
+  for(let offset=0;offset<=3;offset++){
+   const day=dayBefore(-offset);
+   if(scheduled(g,day)&&!dayDone(g,day)&&outcomeOf(g,day)!=='failure'&&remaining>0){remaining--;if(!remaining){finish=day;break}}
+  }
+ }
  const cells=Array.from({length:14},(_,i)=>{
   const date=dateFrom(anchor);date.setDate(date.getDate()-(13-i));
   const day=localDay(date),rest=day<start||!scheduled(g,day),status=rest?'rest':outcomeOf(g,day),label=`${prettyDay(day)}: ${rest?'sem atividade prevista':day>today()?'dia futuro, ainda não disponível':status==='success'?'cumprido':status==='failure'?'falha':day===today()?'ainda não registrado hoje':'sem registro'}`;
-  const number=day===latestDay?milestoneDays.get(day):0,seal=number,description=number?label+' · marco de '+number+' dias conquistado':label;
-  return `<li class="streak-square ${status||'unrecorded'} ${day===today()?'current':''} ${seal?'has-practice-seal':''}" data-practice-day="${day}" ${!archived&&day>today()?'data-practice-future="true"':''} ${number?`data-practice-milestone="${number}"`:''} aria-label="${esc(description)}" title="${esc(description)}">${seal?practiceSeal(seal):status?icon(status==='success'?'check':'cross'):''}</li>`;
+  const number=day===latestDay?milestoneDays.get(day):0,seal=number,finishPending=day===finish&&status!=='success',beyond=!!finish&&day>finish,description=finishPending?label+' · completa a meta de '+targetOf(g)+' dias se cumprido':number?label+' · marco de '+number+' dias conquistado':label;
+  return `<li class="streak-square ${status||'unrecorded'} ${day===today()?'current':''} ${seal?'has-practice-seal':''} ${finishPending?'target-finish':''} ${day===finish?'goal-finish':''} ${beyond?'beyond-target':''}" ${beyond?'aria-hidden="true"':''} data-practice-day="${day}" ${!archived&&day>today()?'data-practice-future="true"':''} ${number?`data-practice-milestone="${number}"`:''} aria-label="${esc(description)}" title="${esc(description)}">${day===finish?'<svg class="finish-rays" viewBox="0 0 56 56" fill="none" aria-hidden="true"><path d="M28 0v3m0 50v3M2 28h2m49 0h3M7 7l3 3m36 36 3 3M7 49l3-3m36-36 3-3"/></svg>':''}${seal?practiceSeal(seal):finishPending?`<span class="target-finish-number">${fmt(targetOf(g))}</span>`:status?icon(status==='success'?'check':'cross'):''}</li>`;
  });
  const count=streak(g);
  return `<div class="habit-streak"><div class="streak-caption"><span>${archived?'período encerrado':`${count} ${count===1?'dia':'dias'} sem falhar`}</span></div><ol class="streak-grid" aria-label="${archived?'últimos 14 dias do período':'10 dias anteriores, hoje e os próximos 3 dias'}">${cells.join('')}</ol></div>`;
