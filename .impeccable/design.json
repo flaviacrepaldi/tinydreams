@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T21:21:37.101168+00:00",
+  "generatedAt": "2026-11-08T15:18:10.797964+00:00",
   "title": "Design System: Tiny Dreams",
   "extensions": {
     "colorMeta": {
@@ -16,7 +16,8 @@
           "oklch(72% 0.0419 295.63)",
           "oklch(84% 0.0419 295.63)",
           "oklch(95% 0.0419 295.63)"
-        ]
+        ],
+        "canonical": "#211b31"
       },
       "surface": {
         "role": "neutral",
@@ -30,7 +31,8 @@
           "oklch(72% 0.0405 300.64)",
           "oklch(84% 0.0405 300.64)",
           "oklch(95% 0.0405 300.64)"
-        ]
+        ],
+        "canonical": "#30283e"
       },
       "text": {
         "role": "neutral",
@@ -44,7 +46,8 @@
           "oklch(72% 0.0137 67.66)",
           "oklch(84% 0.0137 67.66)",
           "oklch(95% 0.0137 67.66)"
-        ]
+        ],
+        "canonical": "#f8f0e8"
       },
       "muted": {
         "role": "neutral",
@@ -58,7 +61,8 @@
           "oklch(72% 0.0421 313.13)",
           "oklch(84% 0.0421 313.13)",
           "oklch(95% 0.0421 313.13)"
-        ]
+        ],
+        "canonical": "#c0afca"
       },
       "line": {
         "role": "neutral",
@@ -72,7 +76,8 @@
           "oklch(72% 0.0423 313.73)",
           "oklch(84% 0.0423 313.73)",
           "oklch(95% 0.0423 313.73)"
-        ]
+        ],
+        "canonical": "#514259"
       },
       "accent": {
         "role": "primary",
@@ -86,7 +91,8 @@
           "oklch(72% 0.0678 62.31)",
           "oklch(84% 0.0678 62.31)",
           "oklch(95% 0.0678 62.31)"
-        ]
+        ],
+        "canonical": "#eec4a0"
       },
       "lavender": {
         "role": "secondary",
@@ -100,7 +106,8 @@
           "oklch(72% 0.0655 309.53)",
           "oklch(84% 0.0655 309.53)",
           "oklch(95% 0.0655 309.53)"
-        ]
+        ],
+        "canonical": "#d8c0ec"
       },
       "peach": {
         "role": "secondary",
@@ -114,7 +121,8 @@
           "oklch(72% 0.0692 57.25)",
           "oklch(84% 0.0692 57.25)",
           "oklch(95% 0.0692 57.25)"
-        ]
+        ],
+        "canonical": "#ebbd9c"
       },
       "sage": {
         "role": "secondary",
@@ -128,7 +136,8 @@
           "oklch(72% 0.0405 139.43)",
           "oklch(84% 0.0405 139.43)",
           "oklch(95% 0.0405 139.43)"
-        ]
+        ],
+        "canonical": "#bbcfb6"
       },
       "primary-ink": {
         "role": "neutral",
@@ -142,7 +151,8 @@
           "oklch(72% 0.0455 318.38)",
           "oklch(84% 0.0455 318.38)",
           "oklch(95% 0.0455 318.38)"
-        ]
+        ],
+        "canonical": "#342339"
       },
       "secondary": {
         "role": "neutral",
@@ -156,7 +166,8 @@
           "oklch(72% 0.0452 314.23)",
           "oklch(84% 0.0452 314.23)",
           "oklch(95% 0.0452 314.23)"
-        ]
+        ],
+        "canonical": "#493951"
       },
       "secondary-hover": {
         "role": "neutral",
@@ -170,7 +181,8 @@
           "oklch(72% 0.0558 313.30)",
           "oklch(84% 0.0558 313.30)",
           "oklch(95% 0.0558 313.30)"
-        ]
+        ],
+        "canonical": "#5b4766"
       },
       "primary-hover": {
         "role": "neutral",
@@ -184,7 +196,8 @@
           "oklch(72% 0.0518 65.20)",
           "oklch(84% 0.0518 65.20)",
           "oklch(95% 0.0518 65.20)"
-        ]
+        ],
+        "canonical": "#f7d8bb"
       },
       "danger": {
         "role": "secondary",
@@ -198,7 +211,8 @@
           "oklch(72% 0.0817 10.40)",
           "oklch(84% 0.0817 10.40)",
           "oklch(95% 0.0817 10.40)"
-        ]
+        ],
+        "canonical": "#e4a0a9"
       },
       "danger-ink": {
         "role": "neutral",
@@ -212,7 +226,8 @@
           "oklch(72% 0.0457 337.11)",
           "oklch(84% 0.0457 337.11)",
           "oklch(95% 0.0457 337.11)"
-        ]
+        ],
+        "canonical": "#321b2c"
       },
       "field": {
         "role": "neutral",
@@ -226,7 +241,8 @@
           "oklch(72% 0.0387 302.02)",
           "oklch(84% 0.0387 302.02)",
           "oklch(95% 0.0387 302.02)"
-        ]
+        ],
+        "canonical": "#241c30"
       },
       "field-border": {
         "role": "neutral",
@@ -240,7 +256,8 @@
           "oklch(72% 0.0497 313.33)",
           "oklch(84% 0.0497 313.33)",
           "oklch(95% 0.0497 313.33)"
-        ]
+        ],
+        "canonical": "#62506c"
       },
       "2026-11-bg": {
         "displayName": "2026-11 bg",
@@ -254,7 +271,8 @@
           "oklch(72% 0.0382 221.12)",
           "oklch(84% 0.0382 221.12)",
           "oklch(95% 0.0382 221.12)"
-        ]
+        ],
+        "canonical": "#102d36"
       },
       "2026-11-surface": {
         "displayName": "2026-11 surface",
@@ -268,7 +286,8 @@
           "oklch(72% 0.0447 216.10)",
           "oklch(84% 0.0447 216.10)",
           "oklch(95% 0.0447 216.10)"
-        ]
+        ],
+        "canonical": "#183d46"
       },
       "2026-11-text": {
         "displayName": "2026-11 text",
@@ -282,7 +301,8 @@
           "oklch(72% 0.0159 130.42)",
           "oklch(84% 0.0159 130.42)",
           "oklch(95% 0.0159 130.42)"
-        ]
+        ],
+        "canonical": "#eef4e9"
       },
       "2026-11-muted": {
         "displayName": "2026-11 muted",
@@ -296,7 +316,8 @@
           "oklch(72% 0.0283 205.08)",
           "oklch(84% 0.0283 205.08)",
           "oklch(95% 0.0283 205.08)"
-        ]
+        ],
+        "canonical": "#b4ced1"
       },
       "2026-11-line": {
         "displayName": "2026-11 line",
@@ -310,7 +331,8 @@
           "oklch(72% 0.0460 207.87)",
           "oklch(84% 0.0460 207.87)",
           "oklch(95% 0.0460 207.87)"
-        ]
+        ],
+        "canonical": "#3a6268"
       },
       "2026-11-accent": {
         "displayName": "2026-11 accent",
@@ -324,7 +346,8 @@
           "oklch(72% 0.0601 85.46)",
           "oklch(84% 0.0601 85.46)",
           "oklch(95% 0.0601 85.46)"
-        ]
+        ],
+        "canonical": "#d9c59b"
       },
       "2026-11-goal-lavender": {
         "displayName": "2026-11 goal-lavender",
@@ -338,7 +361,8 @@
           "oklch(72% 0.0433 190.85)",
           "oklch(84% 0.0433 190.85)",
           "oklch(95% 0.0433 190.85)"
-        ]
+        ],
+        "canonical": "#a9d2cf"
       },
       "2026-11-goal-peach": {
         "displayName": "2026-11 goal-peach",
@@ -352,7 +376,8 @@
           "oklch(72% 0.0554 55.14)",
           "oklch(84% 0.0554 55.14)",
           "oklch(95% 0.0554 55.14)"
-        ]
+        ],
+        "canonical": "#e4bea5"
       },
       "2026-11-goal-sage": {
         "displayName": "2026-11 goal-sage",
@@ -366,7 +391,8 @@
           "oklch(72% 0.0490 147.92)",
           "oklch(84% 0.0490 147.92)",
           "oklch(95% 0.0490 147.92)"
-        ]
+        ],
+        "canonical": "#b7d5ba"
       },
       "2026-12-bg": {
         "displayName": "2026-12 bg",
@@ -380,7 +406,8 @@
           "oklch(72% 0.0115 128.91)",
           "oklch(84% 0.0115 128.91)",
           "oklch(95% 0.0115 128.91)"
-        ]
+        ],
+        "canonical": "#292c26"
       },
       "2026-12-surface": {
         "displayName": "2026-12 surface",
@@ -394,7 +421,8 @@
           "oklch(72% 0.0199 127.37)",
           "oklch(84% 0.0199 127.37)",
           "oklch(95% 0.0199 127.37)"
-        ]
+        ],
+        "canonical": "#363b30"
       },
       "2026-12-text": {
         "displayName": "2026-12 text",
@@ -408,7 +436,8 @@
           "oklch(72% 0.0272 83.54)",
           "oklch(84% 0.0272 83.54)",
           "oklch(95% 0.0272 83.54)"
-        ]
+        ],
+        "canonical": "#fcf2df"
       },
       "2026-12-muted": {
         "displayName": "2026-12 muted",
@@ -422,7 +451,8 @@
           "oklch(72% 0.0313 102.99)",
           "oklch(84% 0.0313 102.99)",
           "oklch(95% 0.0313 102.99)"
-        ]
+        ],
+        "canonical": "#cbc9b2"
       },
       "2026-12-line": {
         "displayName": "2026-12 line",
@@ -436,7 +466,8 @@
           "oklch(72% 0.0340 116.01)",
           "oklch(84% 0.0340 116.01)",
           "oklch(95% 0.0340 116.01)"
-        ]
+        ],
+        "canonical": "#626650"
       },
       "2026-12-accent": {
         "displayName": "2026-12 accent",
@@ -450,7 +481,8 @@
           "oklch(72% 0.0763 67.09)",
           "oklch(84% 0.0763 67.09)",
           "oklch(95% 0.0763 67.09)"
-        ]
+        ],
+        "canonical": "#e8bd91"
       },
       "2026-12-goal-lavender": {
         "displayName": "2026-12 goal-lavender",
@@ -464,7 +496,8 @@
           "oklch(72% 0.0494 118.86)",
           "oklch(84% 0.0494 118.86)",
           "oklch(95% 0.0494 118.86)"
-        ]
+        ],
+        "canonical": "#cbd4b0"
       },
       "2026-12-goal-peach": {
         "displayName": "2026-12 goal-peach",
@@ -478,7 +511,8 @@
           "oklch(72% 0.0721 54.10)",
           "oklch(84% 0.0721 54.10)",
           "oklch(95% 0.0721 54.10)"
-        ]
+        ],
+        "canonical": "#efbd9d"
       },
       "2026-12-goal-sage": {
         "displayName": "2026-12 goal-sage",
@@ -492,7 +526,8 @@
           "oklch(72% 0.0550 136.74)",
           "oklch(84% 0.0550 136.74)",
           "oklch(95% 0.0550 136.74)"
-        ]
+        ],
+        "canonical": "#b7d0ad"
       },
       "2027-01-bg": {
         "displayName": "2027-01 bg",
@@ -506,7 +541,8 @@
           "oklch(72% 0.0396 263.64)",
           "oklch(84% 0.0396 263.64)",
           "oklch(95% 0.0396 263.64)"
-        ]
+        ],
+        "canonical": "#202a3e"
       },
       "2027-01-surface": {
         "displayName": "2027-01 surface",
@@ -520,7 +556,8 @@
           "oklch(72% 0.0401 262.98)",
           "oklch(84% 0.0401 262.98)",
           "oklch(95% 0.0401 262.98)"
-        ]
+        ],
+        "canonical": "#2c374c"
       },
       "2027-01-text": {
         "displayName": "2027-01 text",
@@ -534,7 +571,8 @@
           "oklch(72% 0.0241 85.79)",
           "oklch(84% 0.0241 85.79)",
           "oklch(95% 0.0241 85.79)"
-        ]
+        ],
+        "canonical": "#f8f0df"
       },
       "2027-01-muted": {
         "displayName": "2027-01 muted",
@@ -548,7 +586,8 @@
           "oklch(72% 0.0259 255.58)",
           "oklch(84% 0.0259 255.58)",
           "oklch(95% 0.0259 255.58)"
-        ]
+        ],
+        "canonical": "#bfcbdb"
       },
       "2027-01-line": {
         "displayName": "2027-01 line",
@@ -562,7 +601,8 @@
           "oklch(72% 0.0434 263.34)",
           "oklch(84% 0.0434 263.34)",
           "oklch(95% 0.0434 263.34)"
-        ]
+        ],
+        "canonical": "#54617a"
       },
       "2027-01-accent": {
         "displayName": "2027-01 accent",
@@ -576,7 +616,8 @@
           "oklch(72% 0.0801 78.85)",
           "oklch(84% 0.0801 78.85)",
           "oklch(95% 0.0801 78.85)"
-        ]
+        ],
+        "canonical": "#e5c38d"
       },
       "2027-01-goal-lavender": {
         "displayName": "2027-01 goal-lavender",
@@ -590,7 +631,8 @@
           "oklch(72% 0.0465 260.66)",
           "oklch(84% 0.0465 260.66)",
           "oklch(95% 0.0465 260.66)"
-        ]
+        ],
+        "canonical": "#b8cae8"
       },
       "2027-01-goal-peach": {
         "displayName": "2027-01 goal-peach",
@@ -604,7 +646,8 @@
           "oklch(72% 0.0806 78.11)",
           "oklch(84% 0.0806 78.11)",
           "oklch(95% 0.0806 78.11)"
-        ]
+        ],
+        "canonical": "#e5c28c"
       },
       "2027-01-goal-sage": {
         "displayName": "2027-01 goal-sage",
@@ -618,7 +661,8 @@
           "oklch(72% 0.0319 133.34)",
           "oklch(84% 0.0319 133.34)",
           "oklch(95% 0.0319 133.34)"
-        ]
+        ],
+        "canonical": "#c4d1bc"
       },
       "2027-02-bg": {
         "displayName": "2027-02 bg",
@@ -632,7 +676,8 @@
           "oklch(72% 0.0431 326.64)",
           "oklch(84% 0.0431 326.64)",
           "oklch(95% 0.0431 326.64)"
-        ]
+        ],
+        "canonical": "#352235"
       },
       "2027-02-surface": {
         "displayName": "2027-02 surface",
@@ -646,7 +691,8 @@
           "oklch(72% 0.0515 329.38)",
           "oklch(84% 0.0515 329.38)",
           "oklch(95% 0.0515 329.38)"
-        ]
+        ],
+        "canonical": "#493047"
       },
       "2027-02-text": {
         "displayName": "2027-02 text",
@@ -660,7 +706,8 @@
           "oklch(72% 0.0137 46.23)",
           "oklch(84% 0.0137 46.23)",
           "oklch(95% 0.0137 46.23)"
-        ]
+        ],
+        "canonical": "#f9eee9"
       },
       "2027-02-muted": {
         "displayName": "2027-02 muted",
@@ -674,7 +721,8 @@
           "oklch(72% 0.0390 335.45)",
           "oklch(84% 0.0390 335.45)",
           "oklch(95% 0.0390 335.45)"
-        ]
+        ],
+        "canonical": "#d4bacd"
       },
       "2027-02-line": {
         "displayName": "2027-02 line",
@@ -688,7 +736,8 @@
           "oklch(72% 0.0550 340.28)",
           "oklch(84% 0.0550 340.28)",
           "oklch(95% 0.0550 340.28)"
-        ]
+        ],
+        "canonical": "#79576d"
       },
       "2027-02-accent": {
         "displayName": "2027-02 accent",
@@ -702,7 +751,8 @@
           "oklch(72% 0.0796 71.34)",
           "oklch(84% 0.0796 71.34)",
           "oklch(95% 0.0796 71.34)"
-        ]
+        ],
+        "canonical": "#e6bd8c"
       },
       "2027-02-goal-lavender": {
         "displayName": "2027-02 goal-lavender",
@@ -716,7 +766,8 @@
           "oklch(72% 0.0584 324.25)",
           "oklch(84% 0.0584 324.25)",
           "oklch(95% 0.0584 324.25)"
-        ]
+        ],
+        "canonical": "#d9b9db"
       },
       "2027-02-goal-peach": {
         "displayName": "2027-02 goal-peach",
@@ -730,7 +781,8 @@
           "oklch(72% 0.0690 57.27)",
           "oklch(84% 0.0690 57.27)",
           "oklch(95% 0.0690 57.27)"
-        ]
+        ],
+        "canonical": "#edbf9e"
       },
       "2027-02-goal-sage": {
         "displayName": "2027-02 goal-sage",
@@ -744,7 +796,8 @@
           "oklch(72% 0.0433 121.87)",
           "oklch(84% 0.0433 121.87)",
           "oklch(95% 0.0433 121.87)"
-        ]
+        ],
+        "canonical": "#c8d2b3"
       },
       "2027-03-bg": {
         "displayName": "2027-03 bg",
@@ -758,7 +811,8 @@
           "oklch(72% 0.0217 245.85)",
           "oklch(84% 0.0217 245.85)",
           "oklch(95% 0.0217 245.85)"
-        ]
+        ],
+        "canonical": "#202a33"
       },
       "2027-03-surface": {
         "displayName": "2027-03 surface",
@@ -772,7 +826,8 @@
           "oklch(72% 0.0227 240.78)",
           "oklch(84% 0.0227 240.78)",
           "oklch(95% 0.0227 240.78)"
-        ]
+        ],
+        "canonical": "#2b3740"
       },
       "2027-03-text": {
         "displayName": "2027-03 text",
@@ -786,7 +841,8 @@
           "oklch(72% 0.0165 79.35)",
           "oklch(84% 0.0165 79.35)",
           "oklch(95% 0.0165 79.35)"
-        ]
+        ],
+        "canonical": "#f5eee3"
       },
       "2027-03-muted": {
         "displayName": "2027-03 muted",
@@ -800,7 +856,8 @@
           "oklch(72% 0.0140 226.60)",
           "oklch(84% 0.0140 226.60)",
           "oklch(95% 0.0140 226.60)"
-        ]
+        ],
+        "canonical": "#bec9ce"
       },
       "2027-03-line": {
         "displayName": "2027-03 line",
@@ -814,7 +871,8 @@
           "oklch(72% 0.0300 239.58)",
           "oklch(84% 0.0300 239.58)",
           "oklch(95% 0.0300 239.58)"
-        ]
+        ],
+        "canonical": "#566875"
       },
       "2027-03-accent": {
         "displayName": "2027-03 accent",
@@ -828,7 +886,8 @@
           "oklch(72% 0.0662 59.80)",
           "oklch(84% 0.0662 59.80)",
           "oklch(95% 0.0662 59.80)"
-        ]
+        ],
+        "canonical": "#deb493"
       },
       "2027-03-goal-lavender": {
         "displayName": "2027-03 goal-lavender",
@@ -842,7 +901,8 @@
           "oklch(72% 0.0375 271.99)",
           "oklch(84% 0.0375 271.99)",
           "oklch(95% 0.0375 271.99)"
-        ]
+        ],
+        "canonical": "#bdc5df"
       },
       "2027-03-goal-peach": {
         "displayName": "2027-03 goal-peach",
@@ -856,7 +916,8 @@
           "oklch(72% 0.0625 64.35)",
           "oklch(84% 0.0625 64.35)",
           "oklch(95% 0.0625 64.35)"
-        ]
+        ],
+        "canonical": "#dfba98"
       },
       "2027-03-goal-sage": {
         "displayName": "2027-03 goal-sage",
@@ -870,7 +931,8 @@
           "oklch(72% 0.0345 143.88)",
           "oklch(84% 0.0345 143.88)",
           "oklch(95% 0.0345 143.88)"
-        ]
+        ],
+        "canonical": "#b6c9b5"
       },
       "2027-04-bg": {
         "displayName": "2027-04 bg",
@@ -884,7 +946,8 @@
           "oklch(72% 0.0179 92.69)",
           "oklch(84% 0.0179 92.69)",
           "oklch(95% 0.0179 92.69)"
-        ]
+        ],
+        "canonical": "#e8e4d7"
       },
       "2027-04-surface": {
         "displayName": "2027-04 surface",
@@ -898,7 +961,8 @@
           "oklch(72% 0.0196 87.51)",
           "oklch(84% 0.0196 87.51)",
           "oklch(95% 0.0196 87.51)"
-        ]
+        ],
+        "canonical": "#f6f0e2"
       },
       "2027-04-text": {
         "displayName": "2027-04 text",
@@ -912,7 +976,8 @@
           "oklch(72% 0.0217 137.15)",
           "oklch(84% 0.0217 137.15)",
           "oklch(95% 0.0217 137.15)"
-        ]
+        ],
+        "canonical": "#333b30"
       },
       "2027-04-muted": {
         "displayName": "2027-04 muted",
@@ -926,7 +991,8 @@
           "oklch(72% 0.0365 123.28)",
           "oklch(84% 0.0365 123.28)",
           "oklch(95% 0.0365 123.28)"
-        ]
+        ],
+        "canonical": "#616952"
       },
       "2027-04-line": {
         "displayName": "2027-04 line",
@@ -940,7 +1006,8 @@
           "oklch(72% 0.0372 107.24)",
           "oklch(84% 0.0372 107.24)",
           "oklch(95% 0.0372 107.24)"
-        ]
+        ],
+        "canonical": "#b7b79c"
       },
       "2027-04-accent": {
         "displayName": "2027-04 accent",
@@ -954,7 +1021,8 @@
           "oklch(72% 0.0694 72.29)",
           "oklch(84% 0.0694 72.29)",
           "oklch(95% 0.0694 72.29)"
-        ]
+        ],
+        "canonical": "#c4a278"
       },
       "2027-04-goal-lavender": {
         "displayName": "2027-04 goal-lavender",
@@ -968,7 +1036,8 @@
           "oklch(72% 0.0425 149.59)",
           "oklch(84% 0.0425 149.59)",
           "oklch(95% 0.0425 149.59)"
-        ]
+        ],
+        "canonical": "#536b57"
       },
       "2027-04-goal-peach": {
         "displayName": "2027-04 goal-peach",
@@ -982,7 +1051,8 @@
           "oklch(72% 0.0800 45.71)",
           "oklch(84% 0.0800 45.71)",
           "oklch(95% 0.0800 45.71)"
-        ]
+        ],
+        "canonical": "#8b563d"
       },
       "2027-04-goal-sage": {
         "displayName": "2027-04 goal-sage",
@@ -996,7 +1066,8 @@
           "oklch(72% 0.0541 139.44)",
           "oklch(84% 0.0541 139.44)",
           "oklch(95% 0.0541 139.44)"
-        ]
+        ],
+        "canonical": "#597153"
       },
       "2027-05-bg": {
         "displayName": "2027-05 bg",
@@ -1010,7 +1081,8 @@
           "oklch(72% 0.0224 74.08)",
           "oklch(84% 0.0224 74.08)",
           "oklch(95% 0.0224 74.08)"
-        ]
+        ],
+        "canonical": "#e8ddcf"
       },
       "2027-05-surface": {
         "displayName": "2027-05 surface",
@@ -1024,7 +1096,8 @@
           "oklch(72% 0.0233 82.12)",
           "oklch(84% 0.0233 82.12)",
           "oklch(95% 0.0233 82.12)"
-        ]
+        ],
+        "canonical": "#f8efdf"
       },
       "2027-05-text": {
         "displayName": "2027-05 text",
@@ -1038,7 +1111,8 @@
           "oklch(72% 0.0281 39.23)",
           "oklch(84% 0.0281 39.23)",
           "oklch(95% 0.0281 39.23)"
-        ]
+        ],
+        "canonical": "#46342e"
       },
       "2027-05-muted": {
         "displayName": "2027-05 muted",
@@ -1052,7 +1126,8 @@
           "oklch(72% 0.0396 47.92)",
           "oklch(84% 0.0396 47.92)",
           "oklch(95% 0.0396 47.92)"
-        ]
+        ],
+        "canonical": "#795f52"
       },
       "2027-05-line": {
         "displayName": "2027-05 line",
@@ -1066,7 +1141,8 @@
           "oklch(72% 0.0426 68.31)",
           "oklch(84% 0.0426 68.31)",
           "oklch(95% 0.0426 68.31)"
-        ]
+        ],
+        "canonical": "#c3ac94"
       },
       "2027-05-accent": {
         "displayName": "2027-05 accent",
@@ -1080,7 +1156,8 @@
           "oklch(72% 0.0754 50.62)",
           "oklch(84% 0.0754 50.62)",
           "oklch(95% 0.0754 50.62)"
-        ]
+        ],
+        "canonical": "#b78467"
       },
       "2027-05-goal-lavender": {
         "displayName": "2027-05 goal-lavender",
@@ -1094,7 +1171,8 @@
           "oklch(72% 0.0418 352.06)",
           "oklch(84% 0.0418 352.06)",
           "oklch(95% 0.0418 352.06)"
-        ]
+        ],
+        "canonical": "#775a66"
       },
       "2027-05-goal-peach": {
         "displayName": "2027-05 goal-peach",
@@ -1108,7 +1186,8 @@
           "oklch(72% 0.0754 37.56)",
           "oklch(84% 0.0754 37.56)",
           "oklch(95% 0.0754 37.56)"
-        ]
+        ],
+        "canonical": "#8a5545"
       },
       "2027-05-goal-sage": {
         "displayName": "2027-05 goal-sage",
@@ -1122,7 +1201,8 @@
           "oklch(72% 0.0538 122.41)",
           "oklch(84% 0.0538 122.41)",
           "oklch(95% 0.0538 122.41)"
-        ]
+        ],
+        "canonical": "#66714e"
       },
       "2027-06-bg": {
         "displayName": "2027-06 bg",
@@ -1136,7 +1216,8 @@
           "oklch(72% 0.0282 246.76)",
           "oklch(84% 0.0282 246.76)",
           "oklch(95% 0.0282 246.76)"
-        ]
+        ],
+        "canonical": "#212e3a"
       },
       "2027-06-surface": {
         "displayName": "2027-06 surface",
@@ -1150,7 +1231,8 @@
           "oklch(72% 0.0301 235.60)",
           "oklch(84% 0.0301 235.60)",
           "oklch(95% 0.0301 235.60)"
-        ]
+        ],
+        "canonical": "#2b3d48"
       },
       "2027-06-text": {
         "displayName": "2027-06 text",
@@ -1164,7 +1246,8 @@
           "oklch(72% 0.0266 80.25)",
           "oklch(84% 0.0266 80.25)",
           "oklch(95% 0.0266 80.25)"
-        ]
+        ],
+        "canonical": "#f8eddb"
       },
       "2027-06-muted": {
         "displayName": "2027-06 muted",
@@ -1178,7 +1261,8 @@
           "oklch(72% 0.0169 211.04)",
           "oklch(84% 0.0169 211.04)",
           "oklch(95% 0.0169 211.04)"
-        ]
+        ],
+        "canonical": "#bfced1"
       },
       "2027-06-line": {
         "displayName": "2027-06 line",
@@ -1192,7 +1276,8 @@
           "oklch(72% 0.0331 218.64)",
           "oklch(84% 0.0331 218.64)",
           "oklch(95% 0.0331 218.64)"
-        ]
+        ],
+        "canonical": "#506a72"
       },
       "2027-06-accent": {
         "displayName": "2027-06 accent",
@@ -1206,7 +1291,8 @@
           "oklch(72% 0.0820 70.49)",
           "oklch(84% 0.0820 70.49)",
           "oklch(95% 0.0820 70.49)"
-        ]
+        ],
+        "canonical": "#e5ba88"
       },
       "2027-06-goal-lavender": {
         "displayName": "2027-06 goal-lavender",
@@ -1220,7 +1306,8 @@
           "oklch(72% 0.0284 229.24)",
           "oklch(84% 0.0284 229.24)",
           "oklch(95% 0.0284 229.24)"
-        ]
+        ],
+        "canonical": "#b7cdd8"
       },
       "2027-06-goal-peach": {
         "displayName": "2027-06 goal-peach",
@@ -1234,7 +1321,8 @@
           "oklch(72% 0.0723 67.91)",
           "oklch(84% 0.0723 67.91)",
           "oklch(95% 0.0723 67.91)"
-        ]
+        ],
+        "canonical": "#e3bb91"
       },
       "2027-06-goal-sage": {
         "displayName": "2027-06 goal-sage",
@@ -1248,7 +1336,8 @@
           "oklch(72% 0.0496 124.06)",
           "oklch(84% 0.0496 124.06)",
           "oklch(95% 0.0496 124.06)"
-        ]
+        ],
+        "canonical": "#bfcca9"
       },
       "2027-07-bg": {
         "displayName": "2027-07 bg",
@@ -1262,7 +1351,8 @@
           "oklch(72% 0.0277 210.85)",
           "oklch(84% 0.0277 210.85)",
           "oklch(95% 0.0277 210.85)"
-        ]
+        ],
+        "canonical": "#1f3438"
       },
       "2027-07-surface": {
         "displayName": "2027-07 surface",
@@ -1276,7 +1366,8 @@
           "oklch(72% 0.0311 205.40)",
           "oklch(84% 0.0311 205.40)",
           "oklch(95% 0.0311 205.40)"
-        ]
+        ],
+        "canonical": "#2c4548"
       },
       "2027-07-text": {
         "displayName": "2027-07 text",
@@ -1290,7 +1381,8 @@
           "oklch(72% 0.0278 81.47)",
           "oklch(84% 0.0278 81.47)",
           "oklch(95% 0.0278 81.47)"
-        ]
+        ],
+        "canonical": "#f8edda"
       },
       "2027-07-muted": {
         "displayName": "2027-07 muted",
@@ -1304,7 +1396,8 @@
           "oklch(72% 0.0209 185.40)",
           "oklch(84% 0.0209 185.40)",
           "oklch(95% 0.0209 185.40)"
-        ]
+        ],
+        "canonical": "#bed1ce"
       },
       "2027-07-line": {
         "displayName": "2027-07 line",
@@ -1318,7 +1411,8 @@
           "oklch(72% 0.0316 190.62)",
           "oklch(84% 0.0316 190.62)",
           "oklch(95% 0.0316 190.62)"
-        ]
+        ],
+        "canonical": "#587371"
       },
       "2027-07-accent": {
         "displayName": "2027-07 accent",
@@ -1332,7 +1426,8 @@
           "oklch(72% 0.0744 72.49)",
           "oklch(84% 0.0744 72.49)",
           "oklch(95% 0.0744 72.49)"
-        ]
+        ],
+        "canonical": "#d9b486"
       },
       "2027-07-goal-lavender": {
         "displayName": "2027-07 goal-lavender",
@@ -1346,7 +1441,8 @@
           "oklch(72% 0.0366 181.08)",
           "oklch(84% 0.0366 181.08)",
           "oklch(95% 0.0366 181.08)"
-        ]
+        ],
+        "canonical": "#aacbc4"
       },
       "2027-07-goal-peach": {
         "displayName": "2027-07 goal-peach",
@@ -1360,7 +1456,8 @@
           "oklch(72% 0.0663 67.42)",
           "oklch(84% 0.0663 67.42)",
           "oklch(95% 0.0663 67.42)"
-        ]
+        ],
+        "canonical": "#dfba94"
       },
       "2027-07-goal-sage": {
         "displayName": "2027-07 goal-sage",
@@ -1374,7 +1471,8 @@
           "oklch(72% 0.0480 117.90)",
           "oklch(84% 0.0480 117.90)",
           "oklch(95% 0.0480 117.90)"
-        ]
+        ],
+        "canonical": "#c7cfac"
       },
       "2027-08-bg": {
         "displayName": "2027-08 bg",
@@ -1388,7 +1486,8 @@
           "oklch(72% 0.0130 126.13)",
           "oklch(84% 0.0130 126.13)",
           "oklch(95% 0.0130 126.13)"
-        ]
+        ],
+        "canonical": "#2d3029"
       },
       "2027-08-surface": {
         "displayName": "2027-08 surface",
@@ -1402,7 +1501,8 @@
           "oklch(72% 0.0216 129.15)",
           "oklch(84% 0.0216 129.15)",
           "oklch(95% 0.0216 129.15)"
-        ]
+        ],
+        "canonical": "#3a4034"
       },
       "2027-08-text": {
         "displayName": "2027-08 text",
@@ -1416,7 +1516,8 @@
           "oklch(72% 0.0247 91.62)",
           "oklch(84% 0.0247 91.62)",
           "oklch(95% 0.0247 91.62)"
-        ]
+        ],
+        "canonical": "#f4eedc"
       },
       "2027-08-muted": {
         "displayName": "2027-08 muted",
@@ -1430,7 +1531,8 @@
           "oklch(72% 0.0294 120.02)",
           "oklch(84% 0.0294 120.02)",
           "oklch(95% 0.0294 120.02)"
-        ]
+        ],
+        "canonical": "#c5cbb6"
       },
       "2027-08-line": {
         "displayName": "2027-08 line",
@@ -1444,7 +1546,8 @@
           "oklch(72% 0.0376 122.67)",
           "oklch(84% 0.0376 122.67)",
           "oklch(95% 0.0376 122.67)"
-        ]
+        ],
+        "canonical": "#666e56"
       },
       "2027-08-accent": {
         "displayName": "2027-08 accent",
@@ -1458,7 +1561,8 @@
           "oklch(72% 0.0706 83.88)",
           "oklch(84% 0.0706 83.88)",
           "oklch(95% 0.0706 83.88)"
-        ]
+        ],
+        "canonical": "#d6bd8c"
       },
       "2027-08-goal-lavender": {
         "displayName": "2027-08 goal-lavender",
@@ -1472,7 +1576,8 @@
           "oklch(72% 0.0461 112.86)",
           "oklch(84% 0.0461 112.86)",
           "oklch(95% 0.0461 112.86)"
-        ]
+        ],
+        "canonical": "#c7cba9"
       },
       "2027-08-goal-peach": {
         "displayName": "2027-08 goal-peach",
@@ -1486,7 +1591,8 @@
           "oklch(72% 0.0653 72.07)",
           "oklch(84% 0.0653 72.07)",
           "oklch(95% 0.0653 72.07)"
-        ]
+        ],
+        "canonical": "#ddbc94"
       },
       "2027-08-goal-sage": {
         "displayName": "2027-08 goal-sage",
@@ -1500,7 +1606,8 @@
           "oklch(72% 0.0423 127.05)",
           "oklch(84% 0.0423 127.05)",
           "oklch(95% 0.0423 127.05)"
-        ]
+        ],
+        "canonical": "#b8c5a8"
       },
       "2027-09-bg": {
         "displayName": "2027-09 bg",
@@ -1514,7 +1621,8 @@
           "oklch(72% 0.0150 119.12)",
           "oklch(84% 0.0150 119.12)",
           "oklch(95% 0.0150 119.12)"
-        ]
+        ],
+        "canonical": "#e5e8dd"
       },
       "2027-09-surface": {
         "displayName": "2027-09 surface",
@@ -1528,7 +1636,8 @@
           "oklch(72% 0.0147 98.28)",
           "oklch(84% 0.0147 98.28)",
           "oklch(95% 0.0147 98.28)"
-        ]
+        ],
+        "canonical": "#f6f4e9"
       },
       "2027-09-text": {
         "displayName": "2027-09 text",
@@ -1542,7 +1651,8 @@
           "oklch(72% 0.0237 161.69)",
           "oklch(84% 0.0237 161.69)",
           "oklch(95% 0.0237 161.69)"
-        ]
+        ],
+        "canonical": "#34433b"
       },
       "2027-09-muted": {
         "displayName": "2027-09 muted",
@@ -1556,7 +1666,8 @@
           "oklch(72% 0.0269 152.95)",
           "oklch(84% 0.0269 152.95)",
           "oklch(95% 0.0269 152.95)"
-        ]
+        ],
+        "canonical": "#5c6c60"
       },
       "2027-09-line": {
         "displayName": "2027-09 line",
@@ -1570,7 +1681,8 @@
           "oklch(72% 0.0249 145.33)",
           "oklch(84% 0.0249 145.33)",
           "oklch(95% 0.0249 145.33)"
-        ]
+        ],
+        "canonical": "#b0beb0"
       },
       "2027-09-accent": {
         "displayName": "2027-09 accent",
@@ -1584,7 +1696,8 @@
           "oklch(72% 0.0477 331.91)",
           "oklch(84% 0.0477 331.91)",
           "oklch(95% 0.0477 331.91)"
-        ]
+        ],
+        "canonical": "#b598b0"
       },
       "2027-09-goal-lavender": {
         "displayName": "2027-09 goal-lavender",
@@ -1598,7 +1711,8 @@
           "oklch(72% 0.0364 150.59)",
           "oklch(84% 0.0364 150.59)",
           "oklch(95% 0.0364 150.59)"
-        ]
+        ],
+        "canonical": "#5b705f"
       },
       "2027-09-goal-peach": {
         "displayName": "2027-09 goal-peach",
@@ -1612,7 +1726,8 @@
           "oklch(72% 0.0635 41.97)",
           "oklch(84% 0.0635 41.97)",
           "oklch(95% 0.0635 41.97)"
-        ]
+        ],
+        "canonical": "#8c604f"
       },
       "2027-09-goal-sage": {
         "displayName": "2027-09 goal-sage",
@@ -1626,7 +1741,8 @@
           "oklch(72% 0.0225 126.11)",
           "oklch(84% 0.0225 126.11)",
           "oklch(95% 0.0225 126.11)"
-        ]
+        ],
+        "canonical": "#6c7264"
       }
     },
     "typographyMeta": {
@@ -1664,7 +1780,7 @@
       },
       {
         "name": "progress-fill",
-        "value": "width .5s",
+        "value": "width .6s cubic-bezier(.16,1,.3,1)",
         "purpose": "Practice progress update."
       },
       {
@@ -1673,24 +1789,9 @@
         "purpose": "Illustrated charge update."
       },
       {
-        "name": "check-in-enchant",
-        "value": "1.2s ease-out",
-        "purpose": "Brief talisman celebration."
-      },
-      {
         "name": "reward-bloom",
         "value": "1.3s ease-out",
         "purpose": "Brief reward highlight; all animation and transitions disabled for reduced motion."
-      },
-      {
-        "name": "potion-stir",
-        "value": "6.5s ease-in-out infinite",
-        "purpose": "Subtle potion tilt and lift; only while visible and motion is enabled."
-      },
-      {
-        "name": "ghost-drift",
-        "value": "7s ease-in-out infinite",
-        "purpose": "Slow vertical drift, preserving artwork proportions; pauses offscreen."
       },
       {
         "name": "night-magic",
@@ -1698,9 +1799,19 @@
         "purpose": "A quiet October night; pauses hidden/offscreen and respects reduced motion."
       },
       {
-        "name": "chapter-reveal",
-        "value": ".9s ease-out",
-        "purpose": "Future-edition check-in illustration response; disabled with reduced motion."
+        "name": "stationary-amulets",
+        "value": "none",
+        "purpose": "Card amulets remain stationary across editions, including success. Preserve progress brightness and saturation."
+      },
+      {
+        "name": "garden-breeze",
+        "value": "8.5s",
+        "purpose": "October foliage; bounded local lantern light. Pause hidden, offscreen, in dialogs, manual pause or reduced motion."
+      },
+      {
+        "name": "thread-inscribe",
+        "value": "950ms cubic-bezier(.16,1,.3,1)",
+        "purpose": "Single embroidered seal reveal; static when reduced/manual motion is enabled."
       }
     ],
     "breakpoints": [
@@ -1735,8 +1846,8 @@
       "afterRange": "last edition",
       "refresh": "30 seconds while visible; also visibility restoration",
       "birthday": "2027-01-12 heading/subtitle only, actual edition only",
-      "preview": "Closed details; explicit action; in-memory; banner and reset; reload restores current month",
-      "artwork": "Only selected edition PNG is requested; no future preloading; preserve measured geometry",
+      "preview": "No user-facing selector or preview controls. Editions reveal automatically; internal presentation-only QA hook remains.",
+      "artwork": "Only active edition artwork; preserve measured geometry. All card amulets stationary; earned progress changes charge colors and brightness.",
       "data": "Presentation only; no record or practice-date changes",
       "mainChat": "No surprise images or screenshots",
       "editions": [
@@ -1813,6 +1924,66 @@
           "atmosphere": "petals"
         }
       ]
+    },
+    "source": {
+      "path": "DESIGN.md",
+      "sha256": "4b292c6bcbd9da75c72b0be03537b49fbf7988c53a45a6a2064608b87248c9f3",
+      "precedence": "Later explicit corrections in DESIGN.md supersede earlier descriptions. Token primitives remain in DESIGN.md frontmatter."
+    },
+    "currentGuidance": [
+      {
+        "heading": "Latest interaction preferences",
+        "body": "Monthly editions are surprises: Preferences has no edition picker, preview/apply button, or preview banner. Calendar-based automatic selection and the internal QA presentation hook remain. This supersedes the earlier user-facing preview description. Secondary action buttons use a theme-derived background, visible 1px boundary, rounded corners, 44px minimum height, explicit hover/focus/disabled states, and no underline; this includes shelf/history/edit/remove and demo return actions."
+      },
+      {
+        "heading": "Current ghost direction: stationary",
+        "body": "The user stopped the rotating ghost animation. Remove both the ambient orbit and the success-time ghost turn. Keep the layered illustration in a fixed resting pose; progress and reward feedback continue. This supersedes all earlier ghost dive/orbit directions."
+      },
+      {
+        "heading": "Daily priority and completion frame",
+        "body": "Active overview cards remain visible after daily success. Stable sorting places pending actions before completed-today habits, then rest-day habits. A compact status badge in the summary identifies pending/done/rest; a completed card gains an inset line in its existing goal color. Never desaturate, recolor or dim the amulet to indicate daily state. Group headers retain project totals and add today's completed/scheduled habit count. On mobile preserve the viewed dream through reordering; the next forward action from a newly completed card goes to pending work, without changing carousel height.\n\nAmulet objects are stationary across editions and states, including after a successful check. Disable object transforms/animations and their ambient bubble motion while preserving progress charge colors and brightness. This supersedes earlier potion stirring and lantern rocking; independent completion scenes remain unchanged."
+      },
+      {
+        "heading": "TD monogram and seasonal hat",
+        "body": "The fixed brand is a warm, rounded custom td ligature with an independent spark, authored in `web/shared/brand.js`. In the site header it inherits theme text/accent colors and gains one edition-specific hat perched on the t; keep its base geometry and spark unchanged. The SVG is 46 × 49px on desktop and 38 × 41px on mobile, with no logo animation. Hat silhouettes are presentation-only and follow the existing monthly edition lifecycle. Do not reveal future hat/edition artwork in user-facing previews.\n\nThe favicon, opaque 180/192/512px installation PNGs and compact login image contain the plain td-and-spark monogram on the same fixed plum background. Never put the seasonal hat in these smaller identities or change them on month boundaries. The wordmark remains lowercase and readable, with a descriptive accessible home link.\n\nSeasonal card consistency: overview cards use one full-width column with six shared rows, irrespective of the edition's earlier showcase layout. Edition-specific columns cannot place card sections. All editions' amulets gain saturation and brightness with earned progress and stay still. Incomplete archived dreams use their creation edition's artwork with the archive's grayscale treatment."
+      },
+      {
+        "heading": "Perceptible scenic motion in all editions",
+        "body": "October's foliage breeze is now 8.5 seconds, from −0.65° to +1.05°, with small\ntranslations and clearer lantern flame/light variation. This supersedes the\noriginal eleven-second, nearly imperceptible cycle. Preserve the shooting stars.\n\nThe eleven other rooms use source-coordinate effect maps in `ui/magic.js`.\nNative layers add localized candle/lantern light, rising cup steam, window water\nlight/rain, distant reflection, passing mist, daylight or pollen according to\neach illustration. Avoid moving books, furniture or card amulets. Match the\nexisting illustration width of max(viewport, scene height × scene ratio), its\ncentered desktop positioning and 64% mobile crop. All effects share manual,\ndialog, document-visibility, offscreen and reduced-motion controls. Only the\nactive edition mounts its layer; no new raster assets or future-image requests\nare needed for these ambient overlays."
+      },
+      {
+        "heading": "Consistent seasonal destinations",
+        "body": "All four main destinations and both collection subviews share the active edition's sky and ambient layer. Only the home shows the welcome copy. Other destinations expose 96px of scenery below the header (64px mobile), then use opaque themed sheets with a thin boundary and 16px corners for readable content. Desktop navigation uses the same opaque themed surface across tabs; mobile keeps the shared bottom navigation. Today and collection sheets inherit background, text, muted, line and accent tokens, including collection buttons and locked album slots. Preserve the wooden shelf, portrait and paper-book materials. This supersedes the previous Today/Shelf scene suppression and fixed collection shell palette.\n\n### November scenery framing\n\nPreserve the original underwater library artwork. Desktop adds a directional teal shade behind the welcome copy while keeping the ocean side open. At widths up to 560px, the scene uses a 740px-wide atlas at 28% horizontal position so shelves, staircase and ocean share the crop. Leave 88px above the home welcome copy for an unobstructed glimpse of the room, then fade the scene to the theme background before the atlas object row. The scenic animation stage follows the same width and anchor. Other editions keep their existing framing."
+      },
+      {
+        "heading": "Unboxed group headings",
+        "body": "The user approved the preview with simple Big Dream headings on the existing library scenery, removing the enclosing cover, spine, inset outline, cover artwork layer and book emblem. Preserve the current gallery/card geometry and 582px template. Keep each card's own boundary. The 56px cord carries the literary detail through paper bookmark shapes, a fine inset rule, a small existing leaf icon and warm clips. Use active theme tokens; keep only symbols visible and retain accessible dream titles. This supersedes the bound-volume group presentation.\n\nThe user permits reducing the summaries below Big Dream names when space is tight. Mobile summaries use 11px type with a 15px line height and compact spacing; keep the group name prominent and all card dimensions fixed."
+      },
+      {
+        "heading": "Responsive pending bookmarks",
+        "body": "All currently visible dreams have a stable bookmark slot. Pending bookmarks use a dashed outline and theme-muted symbol on transparent paper; completed ones use the existing filled paper style. Keep both clickable and label their state for assistive technology. The strip stays 56px tall with fixed 44px-wide targets at every viewport size, including large collections. Horizontal overflow stays within the strip, with edge fades indicating more bookmarks. Recording/undo preserves its horizontal position and never changes card dimensions.\n\nMobile bottom navigation uses a 45px base height (44px targets plus the border), with 18px outline symbols, compact label spacing, no extra vertical container padding, and the full bottom safe-area inset. Update viewport/body fallback reservations together; the chapter layout still follows measured navigation height. Cards retain their fixed 582px template.\n\nFor the user's second request to shorten the bottom menu, switch each destination to a single horizontal icon/label line: 16px symbols, 10px labels, 4px gap and 36px-high buttons in a 37px base bar. Keep all four labels and the pending badge, preserve bottom safe-area padding, and keep the dream card at 582px.\n\nCorrection from the user's screenshot: keep the original navigation content sizes (20px icons, 11px labels, 9px count badge) and stacked layout. Achieve the 37px bar only through zero vertical button padding and zero icon-label gap. Preserve the safe area and fixed cards. Regression checks assert those exact sizes so later menu-height changes cannot silently shrink the content.\n\nOn the mobile dream chapter, keep the toolbar sticky at 8px inside the safe-area-protected scroll container, with a transparent background and no backdrop blur. The full-size brand remains below the iPhone status area while the cards scroll. Top and bottom inset simulation verifies this without modifying personal data.\n\nThe logo toolbar has no opaque background strip. Bottom navigation symbols are now 24px at the user’s request; labels remain 11px with a 12px line height so the existing 37px bar and safe-area padding stay unchanged.\n\nThe transparent logo toolbar now stays in normal flow rather than sticky positioning, avoiding overlap with the bookmark cord or card content while scrolling. This supersedes the pinned-toolbar direction.\n\nThe bottom menu must center its controls in the whole visible bar. Use `--nav-inset: min(8px, var(--bottom-safe-area))`, split equally into top and bottom padding. With a 34px device inset, the bar is 45px tall and has 4px above and below the 36px controls (plus the top border). Assert equal padding and vertical center alignment in QA; do not shrink the 24px symbols or 11px labels. Reserve the same effective height for chapter/body geometry.\n\nFinal user adjustment: use 8px vertical padding on both sides of the centered navigation controls (`--nav-inset:16px`). Total bar height is 53px, with the same 24px icons, 11px labels and 36px control content. Device safe-area values must not reintroduce an asymmetric empty lower strip."
+      },
+      {
+        "heading": "Reward gestures and the journey illustration",
+        "body": "Use a finite hierarchy: a drawn item check and 500ms contribution gesture; a short local acknowledgment in diaries; merging checks for a finished daily list; inscribed double-ring milestones, record and return honors in the existing seasonal scene; a 700ms seal return to the grid; a single accent-cord drawing on a fully completed day. Never animate the card amulets, move card sections, or add card height. Best-sequence badges use the second reserved caption line/space. Unscheduled and explicitly skipped dates preserve sequence continuity. Regret/undo cancels particles and removes unearned visuals; ordinary rendering never replays a reward.\n\nThe journey image reuses an available seasonal illustration in a 4×4 reveal with partially filled pieces, so progress advances even between whole pieces. Details and selected shelf books expose the full image through a disclosure; completion scenes use a small clickable thumbnail within the existing art area. The completed book retains its symbol, creation color slot and a small numbered seal. All new controls retain 44px targets, active theme colors and readable static outcomes. Reduced/manual motion removes travel and merging while preserving the check, day seal, reveal and honor. Preferences contains an isolated eight-scenario rehearsal using demo records only."
+      },
+      {
+        "heading": "Forward-looking practice window",
+        "body": "Preserve the 2×7 grid and 582px card. Today occupies position eleven (index ten), followed by three empty future dates. Future dates remain empty; only the most recently earned milestone carries a numbered double-ring seal. Archive strips end at their actual deadline. Impulse strips center the current full-day interval in the same position and mark pre-start slots as rest. Readable reward ink uses the active accent on dark editions and the active text color on light editions; seal backgrounds remain the theme surface.\n\nAll-edition layout validation also removes the legacy seasonal margin from the reserved title wrapper. The actual title and its subtitle (2px separation) remain inside the heading rows, so two-line notes do not overlap the daily-state badge. Card dimensions, amulet area, date/progress/action slots and swipe height remain fixed. The reward theme matrix checks this boundary as well as shared title/progress alignment."
+      },
+      {
+        "heading": "Embroidered achievements and success scenes",
+        "body": "Collection adds a Conquistas subview with a latest-achievement row and edition sections. Use open three-column medal groups on mobile and six columns on desktop, with inline expandable conditions and dated earned records. The current edition shows locked outlines; historical editions show only earned badges. Keep labels outside the medal readable in active-theme text; each earned medal preserves its original edition surface/accent. Fine dashed outer/inner seams and the existing outline symbol suggest embroidery without raster assets or texture noise. Numerals use the established serif at regular weight: 16px in the practice grid and 21–28px in success seals. The outer seam reveals once with a short clip animation, disabled for reduced/manual motion. The completed-dream scene removes the duplicate book and presents a larger stitched badge below the seasonal illustration. Existing card geometry, scenery, shelf and writer collection remain intact."
+      }
+    ],
+    "layoutContract": {
+      "cardHeight": "582px",
+      "cardRows": "44px 222px 126px 18px 42px 96px",
+      "headingSubtitleGap": "2px",
+      "practiceGrid": "2 × 7; today at index 10 followed by 3 empty future dates",
+      "navigation": "53px mobile bar: 36px controls, 8px symmetric vertical padding, 1px border; 24px symbols and 11px labels",
+      "groupHeadings": "Unboxed; retain card boundaries and fixed gallery dimensions",
+      "keepsakes": "56px strip; 44px symbol-only bookmark buttons; dashed pending and filled completed states"
     }
   },
   "components": [
@@ -1830,7 +2001,7 @@
       "refersTo": "button-secondary",
       "description": "Secondary button for explicit actions.",
       "html": "<button class=\"ds-secondary\">Secondary button</button>",
-      "css": ".ds-secondary{font-family:var(--sans,\"DM Sans\",sans-serif);transition:background .18s,transform .18s;background:#493951;color:var(--text,#f8f0e8);border:0;border-radius:8px;min-height:44px;padding:11px 19px;font-size:13px;font-weight:650;cursor:pointer}.ds-secondary:hover{background:#5b4766}.ds-secondary:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:5px}"
+      "css": ".ds-secondary{font-family:var(--sans,\"DM Sans\",sans-serif);transition:background .18s,transform .18s;background:var(--bg,#211b31);color:var(--text,#f8f0e8);border:1px solid var(--line,#514259);border-radius:8px;min-height:44px;padding:11px 19px;font-size:13px;font-weight:650;cursor:pointer}.ds-secondary:hover{background:var(--surface,#30283e)}.ds-secondary:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:5px}"
     },
     {
       "name": "Destructive button",
@@ -1846,36 +2017,36 @@
       "refersTo": "field",
       "description": "Readable goal entry with explicit label.",
       "html": "<label class=\"ds-label\" for=\"ds-goal\">O que você quer cultivar?</label><input class=\"ds-field\" id=\"ds-goal\" placeholder=\"Ler um pouquinho todos os dias\">",
-      "css": ".ds-label{display:block;font:12px var(--sans,\"DM Sans\",sans-serif);color:var(--text,#f8f0e8);margin:0 0 7px}.ds-field{font:16px var(--sans,\"DM Sans\",sans-serif);background:#241c30;border:1px solid #62506c;border-radius:7px;color:var(--text,#f8f0e8);padding:10px 12px;min-height:46px}.ds-field::placeholder{color:#b9a4c3}.ds-field:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:5px}"
+      "css": ".ds-label{display:block;font:12px var(--sans,\"DM Sans\",sans-serif);color:var(--text,#f8f0e8);margin:0 0 7px}.ds-field{font:16px var(--sans,\"DM Sans\",sans-serif);background:var(--bg,#211b31);border:1px solid var(--line,#514259);border-radius:7px;color:var(--text,#f8f0e8);padding:10px 12px;min-height:46px}.ds-field::placeholder{color:var(--muted,#c0afca)}.ds-field:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:5px}"
     },
     {
       "name": "View navigation",
       "kind": "nav",
-      "description": "Four labelled icon destinations: desktop tabs and fixed phone navigation through 700px, with safe-area padding and a visible active state.",
-      "html": "<nav class=\"ds-tabs\" aria-label=\"navegação\"><button aria-current=\"page\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"M12 5v15M3 4c4-1 6 0 9 2 3-2 5-3 9-2v15c-4-1-6 0-9 2-3-2-5-3-9-2Z\"/></svg>sonhos</button><button><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"m8 12 3 3 5-6\"/></svg>hoje</button><button><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M7 3v4m10-4v4M3 11h18m-13 4h1m6 0h1\"/></svg>calendário</button><button><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"M3 21h18M5 3h4v15H5zm5 2h4v13h-4zm5-1 4-1 3 14-4 1z\"/></svg>prateleira</button></nav>",
-      "css": ".ds-tabs{display:flex;gap:24px;border-bottom:1px solid var(--line,#514259)}.ds-tabs button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:48px;padding:15px 0 16px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted,#c0afca);font:13px var(--sans,\"DM Sans\",sans-serif);cursor:pointer}.ds-tabs svg{width:19px;height:19px}.ds-tabs button[aria-current]{color:var(--text,#f8f0e8);border-bottom-color:var(--accent,#eec4a0)}.ds-tabs button:hover{color:var(--text,#f8f0e8)}.ds-tabs button:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:5px}@media(max-width:700px){.ds-tabs{position:fixed;inset:auto 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:var(--surface,#30283e);border:0;border-top:1px solid var(--line,#514259)}.ds-tabs button{flex-direction:column;gap:5px;min-height:58px;padding:8px 2px;border:0;border-radius:8px;font-size:11px}.ds-tabs svg{width:22px;height:22px}.ds-tabs button[aria-current]{background:color-mix(in srgb,var(--accent,#eec4a0) 12%,var(--surface,#30283e));border:0}}"
+      "description": "Current four destinations; active themed surface, compact centered mobile controls. Preview snippet stays in normal flow inside the documentation panel.",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"navegação\"><button aria-current=\"page\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M12 5v15M3 4c4-1 6 0 9 2 3-2 5-3 9-2v15c-4-1-6 0-9 2-3-2-5-3-9-2Z\"/></svg>sonhos</button><button><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M3 5h18v16H3zM7 3v4m10-4v4M3 11h18\"/></svg>calendário</button><button><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M3 21h18M5 3h4v15H5zm5 2h4v13h-4zm5-1 4-1 3 14-4 1z\"/></svg>coleção</button><button><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M4 3v17h17M8 16v-5m5 5V7m5 9V4\"/></svg>análises</button></nav>",
+      "css": ".ds-tabs{display:flex;gap:24px;border-bottom:1px solid var(--line,#514259)}.ds-tabs button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:48px;padding:15px 0 16px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted,#c0afca);font:13px var(--sans,\"DM Sans\",sans-serif);cursor:pointer}.ds-tabs svg{width:19px;height:19px}.ds-tabs button[aria-current]{color:var(--text,#f8f0e8);border-bottom-color:var(--accent,#eec4a0)}.ds-tabs button:hover{color:var(--text,#f8f0e8)}.ds-tabs button:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:5px}@media(max-width:700px){.ds-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:8px;background:var(--surface,#30283e);border:0;border-top:1px solid var(--line,#514259)}.ds-tabs button{flex-direction:column;gap:0;min-height:36px;padding:0 2px;border:0;border-radius:8px;font-size:11px;line-height:12px}.ds-tabs svg{width:24px;height:24px}.ds-tabs button[aria-current]{background:color-mix(in srgb,var(--accent,#eec4a0) 12%,var(--surface,#30283e));border:0}}"
     },
     {
       "name": "Goal card",
       "kind": "card",
       "refersTo": "goal-card",
-      "description": "Tonal container with readable progress and reward. Illustration remains in the real asset-backed component.",
+      "description": "Summary preview of the fixed 582px card, not a replacement template. Live cards reserve six rows and use stationary seasonal asset-backed amulets.",
       "html": "<article class=\"ds-card\"><h2>Ler antes de dormir</h2><p><strong>13</strong> dias para sua recompensa</p><div class=\"ds-track\"><span></span></div><p>8 de 21 dias · 38%</p><small>ESPERANDO POR VOCÊ</small><p>Um livro novo, escolhido sem pressa</p></article>",
-      "css": ".ds-card{background:var(--surface,#30283e);color:var(--text,#f8f0e8);padding:24px;border-radius:13px;max-width:310px;font:12px/1.6 var(--sans,\"DM Sans\",sans-serif)}.ds-card h2{font:400 23px/1.25 var(--serif,Fraunces,Georgia,serif);margin:0 0 18px}.ds-card strong{font:400 54px/1 var(--serif,Fraunces,Georgia,serif);color:#d8c0ec}.ds-card small{color:#cbb5dc;letter-spacing:1.7px}.ds-track{height:5px;background:#ffffff12;border-radius:3px}.ds-track span{display:block;width:38%;height:5px;background:#d8c0ec;border-radius:3px}"
+      "css": ".ds-card{background:var(--surface,#30283e);color:var(--text,#f8f0e8);padding:16px;border:1px solid var(--line,#514259);border-radius:10px;max-width:310px;font:12px/1.6 var(--sans,\"DM Sans\",sans-serif)}.ds-card h2{font:400 23px/1.25 var(--serif,Fraunces,Georgia,serif);margin:0 0 18px}.ds-card strong{font:400 54px/1 var(--serif,Fraunces,Georgia,serif);color:var(--goal-lavender,#d8c0ec)}.ds-card small{color:var(--muted,#c0afca);letter-spacing:1.7px}.ds-track{height:5px;background:#ffffff12;border-radius:3px}.ds-track span{display:block;width:38%;height:5px;background:var(--goal-lavender,#d8c0ec);border-radius:3px}"
     },
     {
       "name": "Daily check-in",
       "kind": "button",
       "description": "Outlined action that exposes completed state through text and aria-pressed.",
-      "html": "<button class=\"ds-check\" aria-pressed=\"false\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"m5 12 4 4L19 6\"/></svg>Fiz por mim hoje</button>",
-      "css": ".ds-check{display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;padding:8px 14px;border:1px solid #ffffff25;background:transparent;color:var(--text,#f8f0e8);border-radius:7px;font:12px var(--sans,\"DM Sans\",sans-serif);cursor:pointer}.ds-check:hover{background:#ffffff0a;border-color:#d8c0ec}.ds-check[aria-pressed=true]{color:#d8c0ec;background:#ffffff05;border-color:#ffffff12}.ds-check:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:5px}"
+      "html": "<button class=\"ds-check\" aria-pressed=\"false\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"m5 12 4 4L19 6\"/></svg>fiz hoje</button>",
+      "css": ".ds-check{display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;padding:8px 14px;border:1px solid var(--line,#514259);background:transparent;color:var(--text,#f8f0e8);border-radius:7px;font:12px var(--sans,\"DM Sans\",sans-serif);cursor:pointer}.ds-check:hover{background:var(--surface,#30283e);border-color:var(--goal-lavender,#d8c0ec)}.ds-check[aria-pressed=true]{color:var(--goal-lavender,#d8c0ec);background:var(--surface,#30283e);border-color:var(--line,#514259)}.ds-check:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:5px}"
     },
     {
-      "name": "Calendar day stickers",
+      "name": "Compact calendar day",
       "kind": "custom",
-      "description": "A whole-day target with the same dream symbol shown faint/dashed for planning and colored/checked for saved completion. Failure and partial records retain distinct status and the agenda supplies exact titles.",
-      "html": "<button class=\"ds-calendar-day\" aria-label=\"27 de outubro: Ler · planejado; Água · feito\"><span>27</span><span class=\"ds-marks\"><span class=\"ds-sticker ds-planned\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M12 5v15M3 4c4-1 6 0 9 2 3-2 5-3 9-2v15c-4-1-6 0-9 2-3-2-5-3-9-2Z\"/></svg></span><span class=\"ds-sticker ds-done\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M12 3c-2 4-7 8-7 12a7 7 0 0 0 14 0c0-4-5-8-7-12Z\"/><path d=\"M8 15a4 4 0 0 0 4 4\"/></svg><i>✓</i></span></span></button>",
-      "css": ".ds-calendar-day{display:flex;flex-direction:column;gap:7px;min-width:96px;min-height:96px;padding:8px 5px;border:1px solid var(--line,#514259);border-radius:8px;background:transparent;color:var(--text,#f8f0e8);text-align:left;font:12px var(--sans,\"DM Sans\",sans-serif);cursor:pointer}.ds-calendar-day:hover{background:color-mix(in srgb,var(--accent,#eec4a0) 10%,var(--bg,#201829))}.ds-calendar-day:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:3px}.ds-marks{display:flex;flex-wrap:wrap;gap:5px}.ds-sticker{position:relative;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px}.ds-sticker>svg{width:20px;height:20px}.ds-planned{border:1px dashed color-mix(in srgb,var(--muted,#c0afca) 45%,transparent);color:var(--muted,#c0afca)}.ds-planned>svg{opacity:.35}.ds-done{transform:rotate(5deg);color:var(--goal-peach,#eec4a0);border:1px solid currentColor;background:color-mix(in srgb,var(--goal-peach,#eec4a0) 20%,var(--bg,#201829));box-shadow:0 2px 4px #130e201c}.ds-done i{position:absolute;right:-3px;bottom:-3px;width:12px;height:12px;border-radius:50%;background:var(--bg,#201829);font:11px sans-serif;text-align:center}"
+      "description": "This supersedes wrapping stickers inside day cells. The month uses equal 48px day targets (56px desktop, 44px narrow phones), only date numbers, and theme-accent tint from 6% at zero completion to 38% at full completion. Future and unscheduled empty days are neutral; today has an inset outline, selection adds an underlined numeral and distinct border. Labels expose counts and percentage independently of color. A small discrete scale explains intensity. Below the month, the selected date shows a count and every completed dream as a 58px sticker with its preserved title in a three-column wrapping collection. A disclosure retains all remaining records and existing date editors. Filter and month navigation retain keyboard focus; selecting a date never opens a modal.",
+      "html": "<button class=\"ds-calendar-day\" aria-label=\"27: 1 de 2 sonhos feitos, 50%\">27</button>",
+      "css": ".ds-calendar-day{display:grid;place-items:center;min-width:48px;min-height:48px;border:1px solid var(--line,#514259);border-radius:8px;background:color-mix(in srgb,var(--accent,#eec4a0) 22%,var(--bg,#211b31));color:var(--text,#f8f0e8);font:14px var(--sans,\"DM Sans\",sans-serif);cursor:pointer}.ds-calendar-day:hover{border-color:var(--text,#f8f0e8)}.ds-calendar-day:focus-visible{outline:2px solid var(--accent,#eec4a0);outline-offset:3px}"
     }
   ],
   "narrative": {
@@ -1898,8 +2069,8 @@
         "section": "elevation"
       },
       {
-        "name": "Familiar task navigation",
-        "body": "Keep four labelled destinations across editions and a shared create action. Scenic introduction belongs to the overview; other views use the quiet task surface. Authored interface copy is lowercase, while user-written values retain their exact case. Optional notes, symbol and reward remain available in personalizar sonho. Planned calendar symbols are presentation only: whole-day targets open a multi-dream agenda or a single current/past dream detail; future rows remain read-only.",
+        "name": "Current seasonal destinations",
+        "body": "All four main destinations and both collection subviews share the active edition's sky and ambient layer. Only the home shows the welcome copy. Other destinations expose 96px of scenery below the header (64px mobile), then use opaque themed sheets with a thin boundary and 16px corners for readable content. Desktop navigation uses the same opaque themed surface across tabs; mobile keeps the shared bottom navigation. Today and collection sheets inherit background, text, muted, line and accent tokens, including collection buttons and locked album slots. Preserve the wooden shelf, portrait and paper-book materials. This supersedes the previous Today/Shelf scene suppression and fixed collection shell palette.\n\n### November scenery framing\n\nPreserve the original underwater library artwork. Desktop adds a directional teal shade behind the welcome copy while keeping the ocean side open. At widths up to 560px, the scene uses a 740px-wide atlas at 28% horizontal position so shelves, staircase and ocean share the crop. Leave 88px above the home welcome copy for an unobstructed glimpse of the room, then fade the scene to the theme background before the atlas object row. The scenic animation stage follows the same width and anchor. Other editions keep their existing framing.",
         "section": "layout"
       }
     ],
