@@ -41,7 +41,7 @@ function render(){
  const gs=state.goals;document.body.dataset.view=state.view;
  $('#demoBanner').hidden=!state.demo;$('#goalsCount').textContent=gs.filter(g=>visibleOnHome(g)&&!complete(g)&&homeStatus(g)===0).length;
  document.querySelectorAll('.tab').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);if(b.dataset.view===state.view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
- if(state.view==='shelf')renderShelf();else if(state.view==='today')renderToday();else if(state.view==='calendar')renderCalendar();else renderOverview();
+ if(state.view==='analytics')renderAnalytics();else if(state.view==='shelf')renderShelf();else if(state.view==='today')renderToday();else if(state.view==='calendar')renderCalendar();else renderOverview();
  if($('#incompleteDialog')?.open)renderIncompleteCollection();
  queueMicrotask(checkIncompleteNotice);
 }
@@ -940,3 +940,17 @@ document.querySelectorAll('dialog:not(#milestoneDialog)').forEach(dialog=>{
   if(dialog.id==='incompleteReviewDialog')deferIncompleteReview();else dialog.close();
  });
 });
+
+function renderAnalytics(){
+ const data=analyzeHabits(state.goals,today());
+ const chart=(title,question,rows,advice='Experimente esse formato no próximo tydream e compare depois.')=>{
+  const eligible=rows.filter(r=>r.total>=7&&r.goals>=2);
+  const sorted=[...eligible].sort((a,b)=>a.rate-b.rate);
+  const insight=sorted.length>1&&sorted.at(-1).rate-sorted[0].rate>=5
+   ? `Menos falhas em “${sorted[0].label}”: ${Math.round(sorted[0].rate)}%, contra ${Math.round(sorted.at(-1).rate)}% em “${sorted.at(-1).label}”. ${advice}`
+   : 'Ainda não há uma diferença com histórico suficiente para sugerir um formato. Continue registrando os resultados.';
+  return `<section class="analysis-section"><h3>${title}</h3><p class="muted">${question}</p><div class="analysis-chart" role="list" aria-label="${title}: proporção de falhas registradas">${rows.map(r=>`<div class="analysis-row" role="listitem"><div class="analysis-label"><span>${r.label}</span><strong>${r.rate===null?'sem dados':Math.round(r.rate)+'%'}</strong></div><div class="analysis-track" aria-hidden="true"><span style="width:${r.rate??0}%"></span></div><small>${r.failure} falhas / ${r.total} resultados · ${r.goals} tydreams${r.missing?` · ${r.missing} sem marcação`:''}</small></div>`).join('')}</div><p class="analysis-insight">${insight}</p></section>`;
+ };
+ $('#content').innerHTML=`<section class="analytics-view" aria-labelledby="analyticsTitle"><h2 id="analyticsTitle">o que funciona para você?</h2><p>Pequenos padrões do seu histórico para planejar os próximos tydreams.</p>${!data.habits?'<p class="analysis-empty">Seus gráficos começam com hábitos e listas diárias. Registre os dias feitos e as falhas para descobrir quais planos combinam com você.</p>':''}<p class="analysis-method">Falhas ÷ resultados registrados, até ontem. Quanto menor a barra, menos falhas. Dias sem marcação ficam separados e não entram na taxa.</p><div class="analysis-columns">${chart('tamanho da meta','Metas menores têm proporcionalmente menos falhas? A comparação usa a meta de dias de prática, não o prazo em dias corridos.',data.duration)}${chart('frequência da rotina','Planejar menos dias por semana deixa a rotina mais sustentável?',data.frequency)}${chart('ao longo do sonho','As falhas se concentram no começo ou mais perto do fim? Apenas hábitos com início e término definidos; terços do prazo em dias corridos.',data.phase,'Planeje uma versão mais leve ou um lembrete para a etapa com mais falhas.')}${chart('dias da semana','Em quais dias vale tentar uma rotina mais leve?',data.weekdays,'Considere uma rotina mais leve nos dias com mais falhas.')}</div><details class="analysis-notes"><summary>como interpretar estes padrões</summary><p>Incluímos hábitos e listas diárias, ativos ou encerrados. Quantias, listas únicas e cronômetros de impulso têm medidas diferentes e ficam fora desta comparação. Hoje ainda está em andamento e fica fora.</p><p>Uma sugestão exige pelo menos dois tydreams e sete resultados em cada faixa comparada, com diferença de cinco pontos percentuais. Isso é uma pista do seu histórico, não prova de causa: dificuldade, duração de uso e dias sem registro também podem explicar a diferença. As faixas usam a configuração atual de cada sonho.</p></details><button class="secondary" data-action="analytics-create">criar um tydream</button></section>`;
+}
+document.addEventListener('click',event=>{if(event.target.closest('[data-action="analytics-create"]'))openForm()});

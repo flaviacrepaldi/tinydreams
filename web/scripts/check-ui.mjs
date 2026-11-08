@@ -18,6 +18,7 @@ try{
  const server=start(process.execPath,['scripts/dev.mjs'],{PORT:String(port),TINY_DREAMS_DB:'sqlite',TINY_DREAMS_SQLITE_PATH:join(temp,'qa.sqlite')});
  const chrome=start(process.env.TINY_QA_CHROME||'google-chrome',['--headless','--no-sandbox','--disable-gpu',`--remote-debugging-port=${debug}`,`--user-data-dir=${join(temp,'chrome')}`,'about:blank']);
  await Promise.all([ready(qaUrl+'/version.json',server),ready(debugUrl+'/json/version',chrome)]);
+ await run('scripts/check-analytics-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-streak-alignment-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-edit-dialog-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-chapters-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});

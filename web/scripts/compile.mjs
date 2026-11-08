@@ -15,7 +15,7 @@ assets['/themes.js']={type:'text/javascript; charset=utf-8',data:Buffer.from(`((
 assets['/manifest.webmanifest']={type:'application/manifest+json',data:Buffer.from(JSON.stringify({name:'tiny dreams',short_name:'tiny dreams',start_url:'/',display:'standalone',background_color:'#211b31',theme_color:'#211b31',id:'/',scope:'/',icons:[{src:'/icon-192.png',sizes:'192x192',type:'image/png',purpose:'any'},{src:'/icon-512.png',sizes:'512x512',type:'image/png',purpose:'any'},{src:'/icon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]})).toString('base64')};
 const planner=(await readFile(new URL('shared/planner.js',root),'utf8')).replaceAll('export ','');
 const calendar=(await readFile(new URL('shared/calendar.js',root),'utf8')).replace(/^import .*;\n/gm,'').replaceAll('export ','');
-assets['/planner.js']={type:'text/javascript; charset=utf-8',data:Buffer.from(planner+'\n'+calendar).toString('base64')};
+assets['/planner.js']={type:'text/javascript; charset=utf-8',data:Buffer.from(planner+'\n'+calendar+'\n'+(await readFile(new URL('shared/analytics.js',root),'utf8')).replace(/^import .*;\n/gm,'').replaceAll('export ','')).toString('base64')};
 assets['/navigation.js']={type:'text/javascript; charset=utf-8',data:(await readFile(new URL('ui/navigation.js',root))).toString('base64')};
 assets['/updates.js']={type:'text/javascript; charset=utf-8',data:(await readFile(new URL('ui/updates.js',root))).toString('base64')};
 const writers=(await readFile(new URL('shared/writers.js',root),'utf8')).replace(/^import .*;\n/gm,'').replaceAll('export ','');
