@@ -22,11 +22,12 @@ await js(`(()=>{const base={target:10,color:'sage',days:[],failures:[],entries:[
 
 assert.equal(await js("document.querySelectorAll('.analysis-map-row').length"),12);
 assert.equal(await js("!!document.querySelector('.analysis-dream')"),false,'Do not repeat individual goal-progress percentages');
-assert.ok(await js("document.querySelector('.analysis-history').textContent.includes('3,75 reais registrados')"));
+assert.ok(await js("document.querySelector('.analytics-view').innerText.trim().split(/\\s+/).length<180"),'Default view keeps explanations and audit counts out of the visual overview');
+assert.ok(await js("document.querySelector('.analysis-history .analysis-records').textContent.includes('3,75 reais registrados')"));
 assert.equal(await js("document.querySelectorAll('.analysis-day').length"),7);
 await js("const select=document.querySelector('#analyticsGoal');select.value='daily-list';select.dispatchEvent(new Event('change',{bubbles:true}))");
 assert.equal(await js("document.querySelectorAll('.analysis-map-row').length"),1);
-assert.ok(await js("document.querySelector('.analysis-row-counts').textContent.includes('1 concluídos · 1 falhas · 3 incompletos · 1 sem registro')"),'Separate explicit failures, incomplete lists and missing days');
+assert.ok(await js("document.querySelector('.analysis-history .analysis-records').textContent.includes('1 concluídos · 1 falhas · 3 incompletos · 1 sem registro')"),'Separate explicit failures, incomplete lists and missing days');
 assert.equal(await js("document.querySelectorAll('.analysis-cells .is-partial').length"),4,'Today is shown in progress but outside closed-day counts');
 await js("document.querySelector('#analyticsGoal').value='all';document.querySelector('#analyticsGoal').dispatchEvent(new Event('change',{bubbles:true}))");
 for(const width of [320,390,430,1280]){
@@ -48,7 +49,7 @@ for(const width of [320,390,430,1280]){
  await writeFile('/tmp/analytics-comparisons-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',clip,captureBeyondViewport:true})).data,'base64'));
  await js("document.querySelector('.analysis-comparisons').open=false");
 }
-await js("document.querySelector('.analysis-records').open=true");
+await js("document.querySelector('.analysis-history .analysis-records').open=true");
 assert.equal(await js("document.documentElement.scrollWidth>innerWidth"),false,'Auditable dates fit the page');
 await js("state.goals=state.goals.filter(g=>['amount','list','impulse'].includes(g.id));renderAnalytics()");
 assert.equal(await js("document.querySelectorAll('.analysis-map-row').length"),3);
