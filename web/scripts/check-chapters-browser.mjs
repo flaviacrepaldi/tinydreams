@@ -22,8 +22,15 @@ for(const width of [320,390,430]){
   assert.equal(await js("getComputedStyle(document.querySelector('#mobileDreams')).visibility"),'hidden');
   assert.equal(await js("getComputedStyle(document.querySelector('.mobile-intro-panel')).visibility"),'visible');
   await js("document.querySelector('.mobile-chapter-link').click()");
-  const scenery=await js(`(()=>{const w=getComputedStyle(document.querySelector('#mobileDreams')),s=getComputedStyle(document.querySelector('.sky'));return {workspace:w.backgroundImage,intro:s.backgroundImage}})()`);
-  assert.ok(scenery.workspace.includes('0.38')&&scenery.workspace.includes('0.64'),'Dreams scenery must remain visible beneath its reading veil: '+scenery.workspace);
+  const scenery=await js(`(()=>{
+   const sky=document.querySelector('.sky'),read=()=>{const s=getComputedStyle(sky);return [s.backgroundImage,s.backgroundSize,s.backgroundPosition,s.height]},dreams=read(),workspace=getComputedStyle(document.querySelector('#mobileDreams'));
+   const transparent=workspace.backgroundImage==='none'&&workspace.backgroundColor==='rgba(0, 0, 0, 0)';
+   const others=['calendar','shelf','analytics'].map(view=>{document.body.dataset.view=view;return read()});document.body.dataset.view='dreams';
+   const main=document.querySelector('main');main.dataset.chapter='0';const intro=getComputedStyle(sky).backgroundImage;main.dataset.chapter='1';
+   return {dreams,others,transparent,intro};
+  })()`);
+  assert.equal(scenery.transparent,true,'The second chapter must expose the shared page background');
+  for(const background of scenery.others)assert.deepEqual(scenery.dreams,background,'Dreams must use the same scenery, crop and fade as other tabs');
   assert.ok(scenery.intro.includes('0.48')&&scenery.intro.includes('0.68'),'Introduction must retain its thematic scenery: '+scenery.intro);
   if(height===844){
    await js("document.querySelector('.mobile-chapter-back').click()");
