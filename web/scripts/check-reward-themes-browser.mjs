@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {themeShard} from './ui-check-plan.mjs';
 import {writeFile,readFile,mkdir} from 'node:fs/promises';
 const qaUrl=process.env.TINY_QA_URL||'http://localhost:4177',debugUrl=process.env.TINY_QA_DEBUG_URL||'http://127.0.0.1:9223';
 const target=await (await fetch(debugUrl+'/json/new?'+qaUrl,{method:'PUT'})).json();
@@ -9,8 +10,7 @@ async function wait(expression){const end=Date.now()+10000;while(Date.now()<end)
 await cdp('Page.enable');await cdp('Page.navigate',{url:qaUrl});await wait("typeof state!=='undefined'&&!state.busy");
 const allEditions=JSON.parse(await readFile(new URL('../ui/editions.json',import.meta.url),'utf8'));
 const shard=process.env.TINY_QA_THEME_SHARD;
-assert.ok(shard===undefined||/^[0-2]$/.test(shard),'Invalid theme shard');
-const editions=shard===undefined?allEditions:allEditions.filter((_,i)=>Math.floor(i*3/allEditions.length)===Number(shard));
+const editions=themeShard(allEditions,shard,process.env.TINY_QA_THEME_SHARDS??3);
 const suffix=shard===undefined?'':'-'+shard;
 const directory='/tmp/tiny-reward-themes';await mkdir(directory,{recursive:true});
 const failures=[],captures=[],captureMetadata={};let octoberSeal=null;

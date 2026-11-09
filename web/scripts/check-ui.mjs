@@ -1,15 +1,19 @@
 // Every publication check runs against an isolated database and browser.
 import {spawn} from 'node:child_process';
 import {mkdtemp,rm,readFile,writeFile} from 'node:fs/promises';
-import {tmpdir,availableParallelism} from 'node:os';
+import {tmpdir,availableParallelism,totalmem} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createServer} from 'node:net';
 import assert from 'node:assert/strict';
 import {runPool} from './ui-check-pool.mjs';
+import {uiCheckPlan} from './ui-check-plan.mjs';
 const cwd=fileURLToPath(new URL('../',import.meta.url));
-const workers=Number(process.env.TINY_QA_WORKERS||Math.min(3,availableParallelism()));
-assert.ok(Number.isInteger(workers)&&workers>=1&&workers<=3,'TINY_QA_WORKERS must be 1, 2 or 3');
+const args=process.argv.slice(2);
+assert.ok(args.length===0||(args.length===1&&args[0]==='--smoke'),'Use check-ui.mjs [--smoke]');
+const mode=args.length?'smoke':'full';
+const editions=JSON.parse(await readFile(new URL('../ui/editions.json',import.meta.url),'utf8')).map(e=>e.id);
+const {workers,shards,jobs}=uiCheckPlan({cpus:availableParallelism(),memory:totalmem(),workers:process.env.TINY_QA_WORKERS,editions:editions.length,mode});
 const temp=await mkdtemp(join(tmpdir(),'tiny-ui-'));
 const children=[],lanes=[];
 const began=Date.now();
@@ -31,10 +35,8 @@ async function lane(index){
  return lanes[index]={qaUrl,debugUrl};
 }
 // Separate theme ranges retain every edition/viewport/scenario, with no shared DB or tab.
-const jobs=Array.from({length:3},(_,shard)=>({name:`reward-themes ${shard+1}/3`,script:'check-reward-themes-browser.mjs',env:{TINY_QA_THEME_SHARD:String(shard)}}));
-for(const name of ['streak-alignment','rewards','keepsakes','analytics','edit-dialog','chapters','brand-alignment','measure-celebration','streak-finish','skipped-days','practice-milestones'])jobs.push({name,script:`check-${name}-browser.mjs`});
 try{
- console.log(`UI checks: ${jobs.length} jobs, ${workers} isolated workers`);
+ console.log(`UI checks (${mode}): ${jobs.length} jobs, ${workers} isolated workers`);
  await runPool(jobs,workers,async(job,index)=>{
   const {qaUrl,debugUrl}=await lane(index),started=Date.now();
   console.log(`START ${job.name}`);
@@ -47,14 +49,15 @@ try{
   for(const target of targets)if(target.type==='page')await fetch(debugUrl+'/json/close/'+target.id);
   console.log(`PASS ${job.name} · ${((Date.now()-started)/1000).toFixed(1)}s`);
  });
+ if(mode==='full'){
  const directory='/tmp/tiny-reward-themes';
- const reports=await Promise.all([0,1,2].map(i=>readFile(`${directory}/report-${i}.json`,'utf8').then(JSON.parse)));
- const editions=JSON.parse(await readFile(new URL('../ui/editions.json',import.meta.url),'utf8')).map(e=>e.id);
+ const reports=await Promise.all(Array.from({length:shards},(_,i)=>readFile(`${directory}/report-${i}.json`,'utf8').then(JSON.parse)));
  const checked=reports.flatMap(r=>r.editions);
  assert.deepEqual([...checked].sort(),[...editions].sort(),'Every theme must be checked exactly once');
  const failures=reports.flatMap(r=>r.failures);assert.deepEqual(failures,[]);
  await writeFile(directory+'/report.json',JSON.stringify({editions:checked,widths:[320,390,430,1280],captures:reports.reduce((n,r)=>n+r.captures,0),failures,captureMetadata:Object.assign({},...reports.map(r=>r.captureMetadata))},null,2));
- console.log(`PASS: UI publication gate · ${((Date.now()-began)/1000).toFixed(1)}s. Screenshots: /tmp/streak-alignment-*.png`);
+ }
+ console.log(`PASS: ${mode} UI publication gate · ${((Date.now()-began)/1000).toFixed(1)}s. Screenshots: /tmp/streak-alignment-*.png`);
 }finally{
  const active=children.filter(p=>p.child.exitCode==null&&p.child.signalCode==null);
  for(const p of active)p.child.kill('SIGTERM');
