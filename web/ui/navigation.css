@@ -464,13 +464,13 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 @media(max-width:560px){
  html[data-mobile-book="true"]:has(body[data-view="dreams"]) .sky{
   height:100dvh;
-  background-image:linear-gradient(180deg,color-mix(in srgb,var(--bg) 12%,transparent) 0%,color-mix(in srgb,var(--bg) 36%,transparent) 24%,color-mix(in srgb,var(--bg) 78%,transparent) 48%,color-mix(in srgb,var(--bg) 88%,transparent) 100%),linear-gradient(90deg,color-mix(in srgb,var(--bg) 44%,transparent),transparent),var(--edition-scene,url('/garden.png'));
+  background-image:linear-gradient(180deg,color-mix(in srgb,var(--bg) 12%,transparent) 0%,color-mix(in srgb,var(--bg) 24%,transparent) 24%,color-mix(in srgb,var(--bg) 48%,transparent) 48%,color-mix(in srgb,var(--bg) 68%,transparent) 100%),linear-gradient(90deg,color-mix(in srgb,var(--bg) 44%,transparent),transparent),var(--edition-scene,url('/garden.png'));
   background-size:100% 100%,100% 100%,max(100%,calc(100dvh * var(--scene-ratio,2.5))) auto;
   background-position:center top,center top,28% top;
   background-repeat:no-repeat;
  }
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager>.workspace{
-  background-image:linear-gradient(180deg,color-mix(in srgb,var(--bg) 88%,transparent),color-mix(in srgb,var(--bg) 96%,transparent)),var(--edition-scene,url('/garden.png'));
+  background-image:linear-gradient(180deg,color-mix(in srgb,var(--bg) 38%,transparent),color-mix(in srgb,var(--bg) 64%,transparent)),var(--edition-scene,url('/garden.png'));
   background-size:100% 100%,max(100%,calc(100dvh * var(--scene-ratio,2.5))) auto;
   background-position:center top,72% top;
   background-repeat:no-repeat;

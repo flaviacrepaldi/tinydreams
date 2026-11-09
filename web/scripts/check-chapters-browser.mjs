@@ -22,6 +22,15 @@ for(const width of [320,390,430]){
   assert.equal(await js("getComputedStyle(document.querySelector('#mobileDreams')).visibility"),'hidden');
   assert.equal(await js("getComputedStyle(document.querySelector('.mobile-intro-panel')).visibility"),'visible');
   await js("document.querySelector('.mobile-chapter-link').click()");
+  const scenery=await js(`(()=>{const w=getComputedStyle(document.querySelector('#mobileDreams')),s=getComputedStyle(document.querySelector('.sky'));return {workspace:w.backgroundImage,intro:s.backgroundImage}})()`);
+  assert.ok(scenery.workspace.includes('0.38')&&scenery.workspace.includes('0.64'),'Dreams scenery must remain visible beneath its reading veil: '+scenery.workspace);
+  assert.ok(scenery.intro.includes('0.48')&&scenery.intro.includes('0.68'),'Introduction must retain its thematic scenery: '+scenery.intro);
+  if(height===844){
+   await js("document.querySelector('.mobile-chapter-back').click()");
+   const intro=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/intro-chapter-'+width+'.png',Buffer.from(intro.data,'base64'));
+   await js("document.querySelector('.mobile-chapter-link').click()");
+   const lower=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/lower-chapter-'+width+'.png',Buffer.from(lower.data,'base64'));
+  }
   if(width===390&&height===844){const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/lower-chapter-390.png',Buffer.from(png.data,'base64'))}
  }
  console.log('PASS: lower chapter hides upper chapter through focus, editing and viewport resize at '+width+'px');
