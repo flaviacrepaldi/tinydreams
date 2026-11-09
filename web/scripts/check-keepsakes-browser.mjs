@@ -18,6 +18,7 @@ for(const width of [320,390,430,1280]){
  ];seedMilestones();render();document.querySelector('#demoBanner').hidden=true;document.querySelector('.mobile-chapter-link')?.click();document.querySelector('#mobileDreams').scrollTop=0;})();`);
  await js('document.fonts.ready');await new Promise(r=>setTimeout(r,250));
  assert.equal(await js("document.querySelectorAll('.keepsake').length"),5,'Habits, cumulative amounts and one-time lists get seals');
+ assert.equal(await js("[...document.querySelectorAll('.daily-keepsakes,.keepsake-line')].every(e=>{const s=getComputedStyle(e);return s.backgroundColor==='rgba(0, 0, 0, 0)'&&s.backgroundImage==='none'&&s.backdropFilter==='none'})"),true,'The keepsake cord has no background panel or blur');
  assert.equal(await js("document.querySelector('.daily-keepsakes').textContent.trim()"),'','Symbols only, no visible copy');
  assert.equal(await js("document.querySelectorAll('.keepsake.is-done').length"),4);
  assert.equal(await js("document.querySelectorAll('.keepsake.is-pending').length"),1);

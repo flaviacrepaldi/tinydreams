@@ -22,6 +22,7 @@ try{
  await run('scripts/check-streak-alignment-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-edit-dialog-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-chapters-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
+ await run('scripts/check-brand-alignment-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-measure-celebration-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-streak-finish-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});
  await run('scripts/check-practice-milestones-browser.mjs',{TINY_QA_URL:qaUrl,TINY_QA_DEBUG_URL:debugUrl});

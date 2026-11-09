@@ -426,7 +426,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
  html[data-mobile-book="true"] body[data-view="dreams"]{overflow:hidden}
  html[data-mobile-book="true"] body[data-view="dreams"] main.mobile-chapter-pager{position:fixed;inset:0 0 calc(37px + var(--nav-inset));max-width:none;margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
  .mobile-chapter-pager>.mobile-intro-panel{height:100%;display:flex;flex-direction:column;overflow-y:auto;padding-inline:max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-right))}
- html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.topbar{flex-shrink:0;width:100%;padding-inline:10px;margin:0}
+ html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.topbar{flex-shrink:0;width:100%;padding-inline:0;margin:0}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-intro-panel>.welcome{flex:1;min-height:0;padding:24px 10px 32px}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-pager>.workspace{height:100%;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;background:var(--bg);padding:12px max(12px,env(safe-area-inset-right)) 24px max(12px,env(safe-area-inset-left));scroll-snap-align:none}
  html[data-mobile-book="true"] body[data-view="dreams"] .mobile-chapter-back{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;margin-bottom:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit;font-size:13px}
@@ -454,7 +454,7 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
 
 /* The filter belongs beside its cards, below the iPhone status area. */
 @media(max-width:560px){
- html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools{flex-wrap:nowrap;gap:8px;margin-bottom:8px;align-items:center}
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools{flex-wrap:nowrap;gap:6px;margin-bottom:8px;align-items:center}
  html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools .home-filter{margin-left:auto;padding:2px;gap:2px;border-radius:8px;flex-shrink:0}
  html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools .home-filter button{min-height:36px;padding:6px 10px;font-size:12px;line-height:1.2;border-radius:5px}
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview>.dream-group:last-of-type{margin-bottom:0}
@@ -473,6 +473,10 @@ html[data-celebration-motion=active] #milestoneDialog::backdrop{animation:celebr
   /* Share the page scenery and its crop/fade with the other task tabs. */
   background:transparent;
  }
+ /* Keep the illustrated header quiet behind the daily keepsake cord. */
+ html[data-mobile-book="true"]:has(body[data-view="dreams"] .mobile-chapter-pager[data-chapter="1"]) .sky{opacity:.45}
+ html[data-mobile-book="true"][data-edition="2026-11"]:has(body[data-view="dreams"] .mobile-chapter-pager[data-chapter="1"]) .sky{background-position:center top,left top}
+ html[data-mobile-book="true"][data-edition="2026-11"]:has(body[data-view="dreams"] .mobile-chapter-pager[data-chapter="1"]) .edition-life-stage{left:0;transform:none}
 }
 
 /* Each sliding page owns one closed outline; no shared rule beneath the gallery. */
@@ -506,7 +510,7 @@ html[data-edition] .dream-overview .goal .countdown .impulse-hours,
 .overview-mobile-brand{display:none}
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"] .overview-desktop-title{display:none}
- html[data-mobile-book="true"] body[data-view="dreams"] .overview-mobile-brand{display:flex;align-items:center;gap:8px;font:24px/1.2 var(--serif);white-space:nowrap}
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-mobile-brand{display:flex;align-items:center;white-space:nowrap}
  .overview-mobile-brand .brand-monogram{width:30px;height:32px;flex-shrink:0;color:var(--text);overflow:visible}
  html[data-mobile-book="true"] body[data-view="dreams"] .streak-square{aspect-ratio:auto;height:22px}
  html[data-mobile-book="true"] body[data-view="dreams"] .streak-caption small{flex-basis:100%}
@@ -608,8 +612,7 @@ html[data-edition] .dream-overview .goal .streak-square{width:min(100%,40px);hei
 /* Give the lower home heading and Big Dream binding a little more presence. */
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"] .overview-tools{min-height:52px;margin-bottom:10px}
- html[data-mobile-book="true"] body[data-view="dreams"] .overview-mobile-brand{font-size:26px;gap:9px}
- html[data-mobile-book="true"] body[data-view="dreams"] .overview-mobile-brand .brand-monogram{width:38px;height:40px}
+ html[data-mobile-book="true"] body[data-view="dreams"] .overview-mobile-brand .brand-monogram{width:38px;height:41px}
  html[data-mobile-book="true"] body[data-view="dreams"] .big-dream-volume>.group-heading{padding-block:16px 10px}
 }
 
@@ -748,6 +751,16 @@ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peac
 .streak-square.goal-finish{position:relative}
 .streak-square>.finish-rays{position:absolute;inset:-7px;width:calc(100% + 14px);height:calc(100% + 14px);max-width:none;pointer-events:none;stroke:var(--goal);stroke-width:1.8;stroke-linecap:round}
 
-/* A dated finish shows the deadline independently of earned practice. */
-.deadline-finish-number{font-size:10px;line-height:1;font-variant-numeric:tabular-nums;color:var(--goal)}
-.streak-square.deadline-finish{border-color:var(--goal);color:var(--goal)}
+/* Keep the streak and deadline on one quiet line above the day grid. */
+html[data-edition] .dream-overview .goal .streak-caption{display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:baseline;gap:8px;text-align:left}
+html[data-edition] .dream-overview .goal .streak-caption>span{min-width:0}
+html[data-edition] .dream-overview .goal .streak-caption>.card-progress-deadline{flex-shrink:0;margin-left:auto;white-space:nowrap;font-size:inherit;line-height:inherit}
+html[data-edition] .dream-overview .goal .dream-date-slot>.card-progress-deadline{display:block}
+
+/* The mobile wordmark shares its exact metrics across both home chapters and tabs. */
+@media(max-width:700px){
+ .topbar .brand,.overview-mobile-brand{font:400 26px/1.6 var(--serif);letter-spacing:-.8px;color:var(--text);gap:8px;white-space:nowrap;flex-shrink:0}
+}
+@media(max-width:560px){
+ .topbar{padding-inline:max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-right));gap:6px}
+}

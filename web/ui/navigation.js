@@ -105,7 +105,7 @@
    main.prepend(panel);panel.append(header,tools,welcome);if(navigation)document.body.append(navigation);main.classList.add('mobile-chapter-pager');
    measureNavigation();window.scrollTo({top:0,behavior:'instant'});page=0;main.dataset.chapter='0';main.scrollTop=0;workspace.inert=true;
   }else if(!active()&&panel){
-   const source=workspace.querySelector('.overview-tools');for(const button of header.querySelectorAll('.new-group-button')){button.dataset.action='new-group';button.setAttribute('aria-label','novo big dream');button.title='novo big dream';button.removeAttribute('aria-expanded');button.removeAttribute('aria-controls');if(source)source.append(button)}if(source)source.append(...tools.children);document.querySelector('#dreamCreateMenu')?.hidePopover();
+   const source=workspace.querySelector('.overview-tools');for(const button of header.querySelectorAll('.new-group-button')){button.dataset.action='new-group';button.setAttribute('aria-label','novo big dream');button.title='novo big dream';button.removeAttribute('aria-expanded');button.removeAttribute('aria-controls');if(source)source.append(button);else button.remove()}if(source)source.append(...tools.children);document.querySelector('#dreamCreateMenu')?.hidePopover();
    panel.inert=false;workspace.inert=false;if(navigation)workspace.prepend(navigation);document.body.insertBefore(header,main);main.prepend(welcome);panel.remove();panel=null;
    main.classList.remove('mobile-chapter-pager');delete main.dataset.chapter;main.scrollTop=0;clearTimeout(timer);locked=false;
   }

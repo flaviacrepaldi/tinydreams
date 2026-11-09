@@ -23,14 +23,20 @@ for(const width of [320,390,430]){
   assert.equal(await js("getComputedStyle(document.querySelector('.mobile-intro-panel')).visibility"),'visible');
   await js("document.querySelector('.mobile-chapter-link').click()");
   const scenery=await js(`(()=>{
-   const sky=document.querySelector('.sky'),read=()=>{const s=getComputedStyle(sky);return [s.backgroundImage,s.backgroundSize,s.backgroundPosition,s.height]},dreams=read(),workspace=getComputedStyle(document.querySelector('#mobileDreams'));
+   const sky=document.querySelector('.sky'),read=()=>{const s=getComputedStyle(sky);return {image:s.backgroundImage,size:s.backgroundSize,position:s.backgroundPosition,height:s.height,opacity:Number(s.opacity)}},dreams=read(),workspace=getComputedStyle(document.querySelector('#mobileDreams'));
    const transparent=workspace.backgroundImage==='none'&&workspace.backgroundColor==='rgba(0, 0, 0, 0)';
    const others=['calendar','shelf','analytics'].map(view=>{document.body.dataset.view=view;return read()});document.body.dataset.view='dreams';
-   const main=document.querySelector('main');main.dataset.chapter='0';const intro=getComputedStyle(sky).backgroundImage;main.dataset.chapter='1';
-   return {dreams,others,transparent,intro};
+   const main=document.querySelector('main');main.dataset.chapter='0';const intro=getComputedStyle(sky).backgroundImage,introOpacity=Number(getComputedStyle(sky).opacity);main.dataset.chapter='1';
+   return {dreams,others,transparent,intro,introOpacity,edition:document.documentElement.dataset.edition};
   })()`);
   assert.equal(scenery.transparent,true,'The second chapter must expose the shared page background');
-  for(const background of scenery.others)assert.deepEqual(scenery.dreams,background,'Dreams must use the same scenery, crop and fade as other tabs');
+  for(const background of scenery.others){
+   for(const key of ['image','size','height'])assert.equal(scenery.dreams[key],background[key],'Dreams preserves the shared scenic header');
+   assert.ok(scenery.dreams.opacity<background.opacity,'The background behind keepsakes must be quieter than the other tabs');
+  }
+  assert.ok(scenery.dreams.opacity<=.5,'Scenery must remain subdued behind the cord');
+  if(scenery.edition==='2026-11')assert.equal(scenery.dreams.position,'50% 0%, 0% 0%','November frames the library on the left rather than the water');
+  assert.equal(scenery.introOpacity,1,'The welcome keeps its own atmosphere');
   assert.ok(scenery.intro.includes('0.48')&&scenery.intro.includes('0.68'),'Introduction must retain its thematic scenery: '+scenery.intro);
   if(height===844){
    await js("document.querySelector('.mobile-chapter-back').click()");
