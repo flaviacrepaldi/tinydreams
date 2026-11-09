@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {writeFile,readFile} from 'node:fs/promises';
 const qaUrl=process.env.TINY_QA_URL||'http://localhost:4177',debugUrl=process.env.TINY_QA_DEBUG_URL||'http://127.0.0.1:9223';
 const target=await (await fetch(debugUrl+'/json/new?'+qaUrl,{method:'PUT'})).json();
 const ws=new WebSocket(target.webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));let rpcId=0;const pending=new Map();ws.addEventListener('message',e=>{const r=JSON.parse(e.data);if(r.id){const p=pending.get(r.id);pending.delete(r.id);if(r.error)p.reject(Error(r.error.message));else p.resolve(r.result)}});
@@ -16,33 +16,57 @@ await js(`(()=>{const base={target:10,color:'sage',days:[],failures:[],entries:[
  {...base,id:'list',title:'Exemplo de lista única',plan:{...base.plan,kind:'list',items:[{id:'a'},{id:'b'}]},entries:[{key:'a',day:today(),value:1}]},
  {...base,id:'impulse',title:'Exemplo de impulso',plan:{...base.plan,impulse:true,impulseStartedAt:new Date(Date.now()-36*3600000).toISOString()}},
  {...base,id:'partial',title:'Exemplo de quantidade diária parcial',plan:{...base.plan,dailyTarget:2,unit:'litros'},entries:[{key:'a',day:today(),value:0.5}]},
- {...base,id:'daily-list',title:'Exemplo de lista diária parcial',plan:{...base.plan,dailyList:true,tasks:[{id:'a',weekdays:base.plan.weekdays}]},entries:[{key:today()+':a',day:today(),value:1}]},
+ {...base,id:'daily-list',title:'Exemplo de lista diária parcial',plan:{...base.plan,start:dayBefore(6),dailyList:true,tasks:[{id:'a',weekdays:base.plan.weekdays},{id:'b',weekdays:base.plan.weekdays}]},days:[dayBefore(5)],failures:[dayBefore(6)],entries:[0,1,2,3].map(n=>({key:dayBefore(n)+':a',day:dayBefore(n),value:1}))},
  {...base,id:'counter',title:'Exemplo de contador diário',plan:{...base.plan,dailyCounter:true,dailyTarget:3,unit:'vezes'},entries:[{key:'a',day:today(),value:1}]}
  );render()})()`);
-assert.equal(await js("document.querySelectorAll('.analysis-dream').length"),12);
-assert.ok(await js("document.querySelector('.analysis-overview').textContent.includes('3,75 / 10')"),'Cumulative amount must appear even with no daily check-ins');
-assert.ok(await js("document.querySelector('.analysis-overview').textContent.includes('0,5 litros registrados')"),'Partial measurements are visible');
-assert.equal(await js("document.querySelectorAll('.analysis-activity-row').length"),7);
+
+assert.equal(await js("document.querySelectorAll('.analysis-map-row').length"),12);
+assert.equal(await js("!!document.querySelector('.analysis-dream')"),false,'Do not repeat individual goal-progress percentages');
+assert.ok(await js("document.querySelector('.analysis-history').textContent.includes('3,75 reais registrados')"));
+assert.equal(await js("document.querySelectorAll('.analysis-day').length"),7);
+await js("const select=document.querySelector('#analyticsGoal');select.value='daily-list';select.dispatchEvent(new Event('change',{bubbles:true}))");
+assert.equal(await js("document.querySelectorAll('.analysis-map-row').length"),1);
+assert.ok(await js("document.querySelector('.analysis-row-counts').textContent.includes('1 concluídos · 1 falhas · 3 incompletos · 1 sem registro')"),'Separate explicit failures, incomplete lists and missing days');
+assert.equal(await js("document.querySelectorAll('.analysis-cells .is-partial').length"),4,'Today is shown in progress but outside closed-day counts');
+await js("document.querySelector('#analyticsGoal').value='all';document.querySelector('#analyticsGoal').dispatchEvent(new Event('change',{bubbles:true}))");
 for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});
  await js('document.fonts.ready');await new Promise(r=>setTimeout(r,150));
  assert.equal(await js("document.documentElement.scrollWidth>innerWidth"),false,'No horizontal overflow');
  assert.equal(await js("document.querySelectorAll('.analysis-row').length"),17);
+ assert.equal(await js("document.querySelectorAll('.analysis-cells>.analysis-cell').length"),12*28);
  assert.equal(await js("document.querySelector('.tab[data-view=analytics]').disabled"),false);
  const png=await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:true});
  await writeFile('/tmp/analytics-'+width+'.png',Buffer.from(png.data,'base64'));
- for(const [name,selector] of [['overview','.analysis-overview'],['activity','.analysis-activity']]){
+ for(const [name,selector] of [['history','.analysis-history'],['activity','.analysis-activity']]){
   const clip=await js(`(()=>{const r=document.querySelector('${selector}').getBoundingClientRect();return {x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height,scale:1}})()`);
-  const capture=await cdp('Page.captureScreenshot',{format:'png',clip,captureBeyondViewport:true});
-  await writeFile('/tmp/analytics-'+name+'-'+width+'.png',Buffer.from(capture.data,'base64'));
+  await writeFile('/tmp/analytics-'+name+'-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',clip,captureBeyondViewport:true})).data,'base64'));
  }
- assert.equal(await js("[...document.querySelectorAll('.analysis-dream')].some(e=>e.scrollWidth>e.clientWidth+1)"),false,'Long titles and units must wrap inside the report');
+ await js("document.querySelector('.analysis-comparisons').open=true");
+ assert.equal(await js("document.documentElement.scrollWidth>innerWidth"),false,'Expanded comparisons fit');
+ const clip=await js("(()=>{const r=document.querySelector('.analysis-comparisons').getBoundingClientRect();return {x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height,scale:1}})()");
+ await writeFile('/tmp/analytics-comparisons-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',clip,captureBeyondViewport:true})).data,'base64'));
+ await js("document.querySelector('.analysis-comparisons').open=false");
 }
-await js("state.goals=state.goals.filter(g=>['amount','list','impulse','partial','daily-list','counter'].includes(g.id));render()");
-assert.equal(await js("document.querySelectorAll('.analysis-dream').length"),6,'All non-simple variants remain visible without simple habits');
-assert.equal(await js("!!document.querySelector('.analysis-empty')"),false,'Existing records must not show a first-use empty state');
-assert.ok(await js("document.querySelector('.analysis-overview').textContent.includes('3,75 / 10')"));
+await js("document.querySelector('.analysis-records').open=true");
+assert.equal(await js("document.documentElement.scrollWidth>innerWidth"),false,'Auditable dates fit the page');
+await js("state.goals=state.goals.filter(g=>['amount','list','impulse'].includes(g.id));renderAnalytics()");
+assert.equal(await js("document.querySelectorAll('.analysis-map-row').length"),3);
+assert.equal(await js("!!document.querySelector('.analysis-comparisons')"),false,'Do not show empty habit comparisons for other types');
+assert.equal(await js("!!document.querySelector('.analysis-empty')"),false);
 await js("document.querySelector('[data-action=analytics-create]').click()");
 assert.ok(await js("document.querySelector('#goalDialog').open"));
-console.log('PASS all-type analytics: empty state, charts, responsive widths, enabled navigation and create action');
+await js("document.querySelector('#goalDialog').close()");
+if(process.env.TINY_QA_ANALYTICS_SNAPSHOT){
+ const snapshot=JSON.parse(await readFile(process.env.TINY_QA_ANALYTICS_SNAPSHOT,'utf8'));
+ await js(`state.demo=true;state.goals=${JSON.stringify(snapshot)};analyticsGoal='all';renderAnalytics();window.analyticsSnapshotBefore=JSON.stringify(state.goals)`);
+ for(const width of [320,390,430,1280]){
+  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});
+  await js('document.fonts.ready');
+  assert.equal(await js("document.documentElement.scrollWidth>innerWidth"),false);
+  await writeFile('/tmp/analytics-personal-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
+ }
+ assert.equal(await js('JSON.stringify(state.goals)===analyticsSnapshotBefore'),true,'Snapshot rendering never changes stored records');
+}
+console.log('PASS visual analytics: dated map, partial vs failure regression, unit-preserving activity, filters, auditable dates, no redundant progress and all responsive widths');
 ws.close();
