@@ -16,6 +16,8 @@ Commit and push the workflow to `main` after adding the secret. Subsequent pushe
 
 For routine updates, run `npm run deploy` from the repository root (or `web`). It builds the current source, checks the Pages artifact, and uploads it directly to the existing `tinydreams` project's production branch `main`. No manual folder upload or Git commit is needed. If Wrangler asks for authentication, run `npm run deploy:login` from the repository root, authorize Cloudflare in the browser, then rerun deploy. Existing dashboard bindings and secrets remain dashboard-managed: the command intentionally runs outside `web` so it does not load the local Worker configuration. `npm run deploy -- --help` shows CLI help without building or publishing.
 
+The browser publication gate runs up to three isolated workers, each with a temporary SQLite database and Chrome profile. The full theme matrix is split into three ranges; every theme, viewport and scenario still runs, including returning to an earlier theme. Any failure stops publication. Logs show each check and its duration. On machines with less memory, use `TINY_QA_WORKERS=1 npm run deploy` (or `2`) to limit concurrency without reducing coverage.
+
 Manual upload remains an alternative:
 
 Use Node 24:

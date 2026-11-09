@@ -7,7 +7,11 @@ function cdp(method,params={}){return new Promise((resolve,reject)=>{const n=++r
 async function js(expression){const r=await cdp('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text);return r.result.value}
 async function wait(expression){const end=Date.now()+10000;while(Date.now()<end){if(await js(expression))return;await new Promise(r=>setTimeout(r,100))}throw Error('Timed out: '+expression)}
 await cdp('Page.enable');await cdp('Page.navigate',{url:qaUrl});await wait("typeof state!=='undefined'&&!state.busy");
-const editions=JSON.parse(await readFile(new URL('../ui/editions.json',import.meta.url),'utf8'));
+const allEditions=JSON.parse(await readFile(new URL('../ui/editions.json',import.meta.url),'utf8'));
+const shard=process.env.TINY_QA_THEME_SHARD;
+assert.ok(shard===undefined||/^[0-2]$/.test(shard),'Invalid theme shard');
+const editions=shard===undefined?allEditions:allEditions.filter((_,i)=>Math.floor(i*3/allEditions.length)===Number(shard));
+const suffix=shard===undefined?'':'-'+shard;
 const directory='/tmp/tiny-reward-themes';await mkdir(directory,{recursive:true});
 const failures=[],captures=[],captureMetadata={};let octoberSeal=null;
 await cdp('Runtime.enable');await cdp('Page.bringToFront');await js("document.querySelector('#motionToggle').checked=true;document.querySelector('#motionToggle').dispatchEvent(new Event('change'))");const errors=[];ws.addEventListener('message',event=>{const m=JSON.parse(event.data);if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails.text)});
@@ -20,6 +24,11 @@ async function capture(path,selector){
  if(modal){captureMetadata[path]=await js(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return{x:r.left,y:r.top,width:r.width,height:r.height,viewport:innerWidth}})()`)}
  await writeFile(path,Buffer.from((await cdp('Page.captureScreenshot',modal?{format:'png'}:{format:'png',clip,captureBeyondViewport:true})).data,'base64'));captures.push(path);
 }
+// Every shard checks returning to October after all edition transitions.
+await js(`window.Date=class extends rewardNativeDate{constructor(...args){super(...(args.length?args:[rewardNativeDate.parse('2026-10-15T12:00:00-03:00')]))}static now(){return rewardNativeDate.parse('2026-10-15T12:00:00-03:00')}};DreamThemes.reset();rewardDemo('milestone')`);
+await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+await settle();
+octoberSeal=await js("(()=>{const e=document.querySelector('.potion-sprite');return{width:parseFloat(getComputedStyle(e).width),height:parseFloat(getComputedStyle(e).height),image:getComputedStyle(e.querySelector('.last-frame')).backgroundImage}})()");
 for(const edition of editions){
  await js(`resetMilestonePanel();window.Date=class extends rewardNativeDate{constructor(...args){super(...(args.length?args:[rewardNativeDate.parse('${edition.id}-15T12:00:00-03:00')]))}static now(){return rewardNativeDate.parse('${edition.id}-15T12:00:00-03:00')}};DreamThemes.reset();`);
  assert.equal(await js('DreamThemes.current.id'),edition.id);
@@ -74,14 +83,20 @@ for(const edition of editions){
  await js(`document.querySelector('#motionToggle').checked=true;document.querySelector('#motionToggle').dispatchEvent(new Event('change'));`);
  console.log('CHECKED '+edition.id+' · 4 widths · 8 rewards + 8 mixed cards · reduced/paused motion');
 }
+// Exercise the entire transition sequence even when the full matrix is sharded.
+for(const edition of allEditions){
+ await js(`resetMilestonePanel();window.Date=class extends rewardNativeDate{constructor(...args){super(...(args.length?args:[rewardNativeDate.parse('${edition.id}-15T12:00:00-03:00')]))}static now(){return rewardNativeDate.parse('${edition.id}-15T12:00:00-03:00')}};DreamThemes.reset();rewardDemo('milestone');clearTimeout(milestoneTimer)`);
+ assert.equal(await js('DreamThemes.current.id'),edition.id);
+ await settle();
+}
 // A previously active world must still work after every later world was exercised.
 await js(`window.Date=class extends rewardNativeDate{constructor(...args){super(...(args.length?args:[rewardNativeDate.parse('2026-10-15T12:00:00-03:00')]))}static now(){return rewardNativeDate.parse('2026-10-15T12:00:00-03:00')}};DreamThemes.reset();rewardDemo('milestone')`);
 await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
 await js("clearTimeout(milestoneTimer);document.querySelector('#milestone').getAnimations({subtree:true}).forEach(a=>{if(Number.isFinite(a.effect.getComputedTiming().endTime))a.finish()})");await settle();
 assert.deepEqual(await js("(()=>{const e=document.querySelector('.potion-sprite'),r=e.getBoundingClientRect();return{width:parseFloat(getComputedStyle(e).width),height:parseFloat(getComputedStyle(e).height),image:getComputedStyle(e.querySelector('.last-frame')).backgroundImage}})()"),octoberSeal,'October must render the same when returning after later editions');
-await capture(directory+'/2026-10-return.png','#milestone');
+await capture(directory+'/2026-10-return'+suffix+'.png','#milestone');
 assert.deepEqual(await js('matrixWrites'),[]);assert.equal(await js('JSON.stringify(state.real)===matrixReal'),true);assert.deepEqual(errors,[]);
-await writeFile(directory+'/report.json',JSON.stringify({editions:editions.map(e=>e.id),widths:[320,390,430,1280],captures:captures.length,failures,captureMetadata},null,2));
+await writeFile(directory+'/report'+suffix+'.json',JSON.stringify({editions:editions.map(e=>e.id),widths:[320,390,430,1280],captures:captures.length,failures,captureMetadata},null,2));
 // Per-edition review sheets show all eight reward states and whole cards at 390px.
 for(const edition of editions){
  const files=['item','fusion','milestone','record','return','day','dream','art',...Array.from({length:8},(_,i)=>'card-'+i)];
@@ -90,4 +105,4 @@ for(const edition of editions){
  await cdp('Emulation.setDeviceMetricsOverride',{width:1050,height:1800,deviceScaleFactor:1,mobile:false});await settle();await js("Promise.all([...document.images].map(i=>i.decode()))");
  await capture(directory+'/'+edition.id+'-review.png','#review');
 }
-ws.close();if(failures.length)throw Error('Theme matrix failures: '+JSON.stringify(failures));console.log('PASS: all 12 themes, 4 widths, all reward/card cases and representative screenshots, motion preferences, correct artwork, future cells, layout and personal-record isolation.');
+ws.close();if(failures.length)throw Error('Theme matrix failures: '+JSON.stringify(failures));console.log('PASS: assigned themes, 4 widths, all reward/card cases and representative screenshots, motion preferences, correct artwork, future cells, layout and personal-record isolation.');

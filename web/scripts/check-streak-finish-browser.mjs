@@ -18,7 +18,7 @@ for(const [end,asOf,label] of [
 
 for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});
- await js(`showDemo();state.groups=[];state.goals=[{id:'finish',title:'não aumentar minhas faturas',target:6,color:'sage',reward:'comprar um creme de mãos novo',days:[5,4,3,2,1].map(dayBefore),failures:[],entries:[],plan:{...planOf({}),completionMode:'streak',start:dayBefore(5)}}];seedMilestones();render();document.querySelector('.mobile-chapter-link')?.click();document.querySelector('#demoBanner').hidden=true`);
+ await js(`showDemo();state.homeFilter='all';state.groups=[];state.goals=[{id:'finish',title:'não aumentar minhas faturas',target:6,color:'sage',reward:'comprar um creme de mãos novo',days:[5,4,3,2,1].map(dayBefore),failures:[],entries:[],plan:{...planOf({}),completionMode:'streak',start:dayBefore(5)}}];seedMilestones();render();document.querySelector('.mobile-chapter-link')?.click();document.querySelector('#demoBanner').hidden=true`);
  assert.equal(await js("document.querySelector('.target-finish').dataset.practiceDay"),await js('today()'));
  assert.equal(await js("document.querySelector('.target-finish-number').textContent"),'6');
  assert.equal(await js("document.querySelectorAll('.goal-finish .finish-rays').length"),1,'Final day has visible rays');

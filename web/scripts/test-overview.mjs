@@ -87,14 +87,18 @@ assert.match(countdown({...sample,plan:{...planOf({}),kind:'amount',unit:'págin
 assert.match(countdown({...sample,plan:{...planOf({}),kind:'list',items:[{id:'a'},{id:'b'}]}}).label,/conclusões/);
 console.log('PASS: remaining counts name completions, days, consecutive days, reais or the custom unit, with singular/plural.');
 
-// Skipping today's dream keeps its card as the gallery's restoration anchor.
+// Skipped dreams leave Today and remain available under All for corrections.
 state.homeFilter='today';state.goals=[pending,done];state.groups=[];
 pending.plan={...pending.plan,skippedDays:[day]};render();
-assert.match(elements['#content'].innerHTML,/data-goal="pending"/,'Skipped card remains in today');
+assert.doesNotMatch(elements['#content'].innerHTML,/data-goal="pending"/,'Skipped card leaves today');
+state.homeFilter='all';render();
+assert.match(elements['#content'].innerHTML,/data-goal="pending"/,'Skipped card remains in all');
 assert.equal(elements['#goalsCount'].textContent,1,'Skipped dream no longer counts as pending');
 state.groups=[{id:'health',name:'Saúde'}];pending.group_id='health';render();
-assert.match(elements['#content'].innerHTML,/data-goal="pending"/,'Grouped skipped card also remains');
+assert.match(elements['#content'].innerHTML,/data-goal="pending"/,'Grouped skipped card remains in all');
+state.homeFilter='today';render();
+assert.doesNotMatch(elements['#content'].innerHTML,/data-goal="pending"/,'Grouped skipped card leaves today');
 pending.plan={...pending.plan,skippedDays:[]};render();
 assert.match(elements['#content'].innerHTML,/data-goal="pending"/);
 assert.equal(elements['#goalsCount'].textContent,2,'Undo skip restores pending count');
-console.log('PASS: skipping and undo retain today cards in grouped and ungrouped galleries.');
+console.log('PASS: skipped cards leave today, remain in all, and return to today after undo.');
