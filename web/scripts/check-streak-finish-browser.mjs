@@ -35,6 +35,22 @@ for(const width of [320,390,430,1280]){
  assert.equal(await js("document.querySelector('.target-finish').dataset.practiceDay"),await js('today()'));
  await js("state.goals[0].failures=[today()];render()");
  assert.equal(await js("document.querySelector('.target-finish').dataset.practiceDay"),await js('dayBefore(-1)'),'Recorded failure moves the accumulated goal finish to the next scheduled day');
+ // Every dated habit marks its deadline, independently of its progress rules.
+ for(const variant of ['total','streak','tasks','quantity','counter','impulse']){
+  await js(`(()=>{const g=state.goals[0];g.target=30;g.days=[];g.failures=[today()];g.plan={...planOf({}),kind:'habit',start:dayBefore(5),end:dayBefore(-2),completionMode:'${variant==='streak'?'streak':'total'}',impulse:${variant==='impulse'},impulseStartedAt:new Date(Date.now()-3*86400000).toISOString(),tasks:${variant==='tasks'?"[{id:'one',title:'cuidar de mim',weekdays:[0,1,2,3,4,5,6]}]":"[]"},dailyList:${variant==='tasks'},dailyTarget:${['quantity','counter'].includes(variant)?2:'null'},dailyCounter:${variant==='counter'}};render()})()`);
+  assert.equal(await js("document.querySelector('.deadline-finish').dataset.practiceDay"),await js('dayBefore(-2)'),variant+' uses the deadline despite failure');
+  assert.equal(await js("document.querySelectorAll('.goal-finish .finish-rays').length"),1);
+  assert.equal(await js("document.querySelectorAll('.streak-square').length"),14);
+  assert.equal(await js("document.querySelector('.goal').getBoundingClientRect().height"),582);
+  assert.match(await js("document.querySelector('.deadline-finish').getAttribute('aria-label')"),/último dia do prazo/);
+  await js('document.fonts.ready');
+  const card=await js("(()=>{const r=document.querySelector('.goal').getBoundingClientRect();return{x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height,scale:1}})()");
+  await writeFile('/tmp/streak-deadline-'+variant+'-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',clip:card,captureBeyondViewport:true})).data,'base64'));
+ }
+ await js("state.goals[0].plan.impulse=false;state.goals[0].plan.weekdays=[new Date(today()+'T12:00:00').getDay()];render()");
+ assert.equal(await js("document.querySelector('.deadline-finish').dataset.practiceDay"),await js('dayBefore(-2)'),'An unscheduled deadline still has its marker');
+ await js("state.goals[0].plan.end=dayBefore(-20);render()");
+ assert.equal(await js("document.querySelector('.deadline-finish')"),null,'A distant deadline does not displace the current grid');
 }
-console.log('PASS: 5/6 finish, failure reset, skip, completion, accumulated days and fixed card at four widths');
+console.log('PASS: dated deadlines across all habit variants; 5/6 finish, failure reset, skip, completion, accumulated days and fixed card at four widths');
 ws.close();

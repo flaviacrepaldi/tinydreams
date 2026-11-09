@@ -749,3 +749,7 @@ html[data-edition] .dream-overview .goal[data-amulet-edition]:is(.lavender,.peac
 
 .streak-square.goal-finish{position:relative}
 .streak-square>.finish-rays{position:absolute;inset:-7px;width:calc(100% + 14px);height:calc(100% + 14px);max-width:none;pointer-events:none;stroke:var(--goal);stroke-width:1.8;stroke-linecap:round}
+
+/* A dated finish shows the deadline independently of earned practice. */
+.deadline-finish-number{font-size:10px;line-height:1;font-variant-numeric:tabular-nums;color:var(--goal)}
+.streak-square.deadline-finish{border-color:var(--goal);color:var(--goal)}
