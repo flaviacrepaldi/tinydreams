@@ -703,10 +703,10 @@ html[data-edition] .dream-overview .big-dream-volume>.group-heading>.rename-grou
 .practice-achievement .practice-seal{inset:0}
 .practice-achievement .practice-seal>svg{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.4}
 .practice-achievement .practice-seal>span{font-size:44px;align-self:center;margin-top:-8px}
-.practice-achievement>span{position:absolute;bottom:20px;font-size:11px}
+.practice-achievement>span:not(.practice-seal){position:absolute;bottom:20px;font-size:11px}
 .milestone.final-chapter .practice-achievement{top:52px;width:82px;height:82px}
 .milestone.final-chapter .practice-achievement .practice-seal>span{font-size:34px}
-.milestone.final-chapter .practice-achievement>span{bottom:14px}
+.milestone.final-chapter .practice-achievement>span:not(.practice-seal){bottom:14px}
 html[data-celebration-motion=active] .has-practice-achievement .practice-achievement{animation:seal-arrival 700ms cubic-bezier(.16,1,.3,1) both}
 html[data-celebration-motion=active] :is(.practice-achievement,.seal-conquered) .seal-outer{stroke-dasharray:139;animation:seal-inscribe 850ms cubic-bezier(.16,1,.3,1) both}
 html[data-celebration-motion=active] .seal-conquered .seal-inner{stroke-dasharray:114;animation:seal-inscribe 650ms 150ms cubic-bezier(.16,1,.3,1) both}

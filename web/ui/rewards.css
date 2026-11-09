@@ -86,13 +86,13 @@ html[data-paper=true]{--reward-ink:var(--text)}
 .streak-square .practice-seal>svg{stroke-width:.85}
 .practice-achievement .practice-seal>svg{stroke-width:.8}
 .practice-achievement .practice-seal>span{font-size:28px;font-weight:400;margin-top:-6px}
-.practice-achievement>span{font-size:10px;bottom:23px}
+.practice-achievement>span:not(.practice-seal){font-size:10px;bottom:23px}
 .milestone.final-chapter .practice-achievement .practice-seal>span{font-size:25px}
-.milestone.final-chapter .practice-achievement>span{bottom:18px}
+.milestone.final-chapter .practice-achievement>span:not(.practice-seal){bottom:18px}
 .reward-seal-flight .practice-seal>span{font-size:20px}
 .milestone h2{font-size:clamp(24px,4.8vw,30px);line-height:1.22}
 .milestone .milestone-enchantment>.practice-achievement{width:84px;height:84px;right:4px;bottom:4px}
-.milestone .milestone-enchantment>.practice-achievement>span{bottom:18px}
+.milestone .milestone-enchantment>.practice-achievement>span:not(.practice-seal){top:64%;bottom:auto;line-height:1}
 html[data-celebration-motion=active] :is(.practice-achievement,.seal-conquered) .seal-outer{stroke-dasharray:1.7 2.5;animation:thread-inscribe 950ms cubic-bezier(.16,1,.3,1) both}
 html[data-celebration-motion=active] .reward-badge-peek .achievement-medal{animation:thread-inscribe 950ms cubic-bezier(.16,1,.3,1) both}
 @keyframes thread-inscribe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
@@ -105,7 +105,7 @@ html[data-celebration-motion=active] .reward-badge-peek .achievement-medal{anima
 .milestone.final-chapter .reward-badge-peek .achievement-medal-core>svg{width:40px;height:40px}
 .milestone.final-chapter .milestone-enchantment>.practice-achievement{width:62px;height:62px;right:0;bottom:28px}
 .milestone.final-chapter .practice-achievement .practice-seal>span{font-size:21px}
-.milestone.final-chapter .milestone-enchantment>.practice-achievement>span{bottom:11px;font-size:9px}
+.milestone.final-chapter .milestone-enchantment>.practice-achievement>span:not(.practice-seal){top:64%;bottom:auto;font-size:9px}
 .milestone.final-chapter .milestone-copy{margin-top:18px}
 .achievement-latest h3,.achievement-edition>h3{font-weight:400}
 /* Expanded records use the whole row so dream titles remain readable on phones. */

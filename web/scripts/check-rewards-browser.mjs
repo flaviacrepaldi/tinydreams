@@ -46,6 +46,9 @@ for(const width of [320,390,430,1280]){
    assert.equal(await js("document.querySelector('.reward-reveal')"),null);
   }
   await new Promise(r=>setTimeout(r,1000));
+  if(['record','return','milestone'].includes(scenario)){
+   assert.equal(await js(`(()=>{const seal=document.querySelector('.practice-achievement'),label=seal.querySelector(':scope>span:not(.practice-seal)').getBoundingClientRect(),number=seal.querySelector('.practice-seal>span').getBoundingClientRect(),box=seal.getBoundingClientRect();const radius=box.width*18/48;return label.top>number.bottom&&[[label.left,label.top],[label.right,label.top],[label.left,label.bottom],[label.right,label.bottom]].every(([x,y])=>Math.hypot(x-(box.left+box.width/2),y-(box.top+box.height/2))<radius-2)})()`),true,`${width} ${scenario}: label clears the number and inner stitched circle`);
+  }
   await writeFile(`/tmp/reward-${scenario}-${width}.png`,Buffer.from((await cdp('Page.captureScreenshot',{format:'png'})).data,'base64'));
   if(scenario==='milestone'){
    await js('dismissMilestone()');
