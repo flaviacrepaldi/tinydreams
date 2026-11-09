@@ -766,6 +766,5 @@ html[data-edition] .dream-overview .goal .dream-date-slot>.card-progress-deadlin
 }
 
 /* Unscheduled dates keep their reserved positions without looking like failures. */
-.streak-square.omitted-day{visibility:hidden}
 .streak-square.current.rest-today{border:1px solid var(--goal);outline:0;background:transparent;opacity:.28}
 .streak-square.prestart-day{border:1px solid var(--muted);outline:0;background:transparent;opacity:.12}

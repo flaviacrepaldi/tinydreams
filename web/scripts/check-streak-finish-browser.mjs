@@ -76,7 +76,7 @@ for(const width of [320,390,430,1280]){
  await js("state.goals[0].plan.impulse=false;state.goals[0].plan.weekdays=[new Date(today()+'T12:00:00').getDay()];render()");
  assert.equal(await js("document.querySelector('.deadline-finish').dataset.practiceDay"),await js('dayBefore(-2)'),'An unscheduled deadline still has its marker');
  assert.equal(await js("document.querySelector('.deadline-finish .target-finish-number').textContent"),await js('fmt(targetOf(state.goals[0]))'),'An unscheduled deadline retains its day count');
- await js("state.goals[0].plan.end=dayBefore(-20);render()");
+ await js("state.goals[0].plan.end=dayBefore(-28);render()");
  assert.equal(await js("document.querySelector('.deadline-finish')"),null,'A distant deadline does not displace the current grid');
 }
 console.log('PASS: dated deadlines across all habit variants; 5/6 finish, failure reset, skip, completion, accumulated days and fixed card at four widths');

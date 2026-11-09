@@ -377,13 +377,23 @@ function cardDeadline(g){
 }
 function streakCaption(g,text){return `<div class="streak-caption"><span>${text}</span>${cardDeadline(g)}</div>`}
 function finishNumber(g){return `<span class="target-finish-number">${fmt(targetOf(g))}</span>`}
+// Build a practice sequence: rest/skip dates consume no cell between planned days.
+// Today stays anchored; only dates before the start fill the leading watermark slots.
+function practiceGridDates(g,start,archived=false){
+ const p=planOf(g),shift=(day,n)=>{const date=dateFrom(day);date.setDate(date.getDate()+n);return localDay(date)};
+ const eligible=day=>day<start||!!p.end&&day>p.end||scheduled(g,day)||day===p.end&&!(p.skippedDays||[]).includes(day);
+ const collect=(anchor,count,direction)=>{const days=[];let day=anchor;while(days.length<count){day=shift(day,direction);if(eligible(day))days.push(day)}return days};
+ if(archived)return [...collect(p.end,13,-1).reverse(),p.end];
+ return [...collect(today(),10,-1).reverse(),today(),...collect(today(),3,1)];
+}
 function habitStreakGrid(g){
  const p=planOf(g);if(p.kind!=='habit')return '';
  if(p.impulse){
-  const completed=progress(g),first=completed-9,marks=practiceMilestones(g),latest=marks.filter(n=>n<=completed).at(-1);
-  const cells=Array.from({length:14},(_,i)=>{
-   const day=first+i,rest=day<1,done=!rest&&day<=completed,current=day===completed+1,future=day>completed+1,date=dayBefore(completed+1-day),finish=p.end?date===p.end:day===targetOf(g),beyond=p.end?date>p.end:day>targetOf(g),skipped=(p.skippedDays||[]).includes(date);
-   if(rest||skipped)return `<li class="streak-square rest ${date===today()?'current rest-today':rest&&!skipped||p.start&&date<p.start?'prestart-day':'omitted-day'} ${beyond?'beyond-target':''}" data-practice-day="${date}" ${date!==today()?'aria-hidden="true"':''} ${future?'data-practice-future="true"':''} aria-label="${esc(prettyDay(date)+': '+(skipped?'dia pulado':'sem atividade prevista'))}"></li>`;
+  const completed=progress(g),marks=practiceMilestones(g),latest=marks.filter(n=>n<=completed).at(-1);
+  const dates=practiceGridDates(g,dayBefore(completed));
+  const cells=dates.map(date=>{
+   const day=completed+1-Math.round((dateFrom(today())-dateFrom(date))/86400000),beforeStart=day<1,rest=beforeStart||!scheduled(g,date),done=!rest&&day<=completed,current=day===completed+1,future=day>completed+1,finish=p.end?date===p.end:day===targetOf(g),beyond=p.end?date>p.end:day>targetOf(g),skipped=(p.skippedDays||[]).includes(date);
+   if(rest||skipped)return `<li class="streak-square rest ${date===today()?'current rest-today':beforeStart?'prestart-day':''} ${beyond?'beyond-target':''}" data-practice-day="${date}" ${date!==today()?'aria-hidden="true"':''} ${future?'data-practice-future="true"':''} aria-label="${esc(prettyDay(date)+': '+(skipped?'dia pulado':'sem atividade prevista'))}"></li>`;
    const label=(rest?'antes do início':`dia ${day}: ${done?'24 horas completas':current?'em andamento':'a completar'}`)+(finish?(p.end?' · último dia do prazo, '+prettyDay(p.end):'')+' · meta de '+fmt(targetOf(g))+' dias':'');
    return `<li class="streak-square ${rest?'rest':done?'success':'unrecorded'} ${current?'current':''} ${finish?'goal-finish':''} ${finish&&p.end?'deadline-finish':''} ${finish&&!done?'target-finish':''} ${beyond?'beyond-target':''}" data-practice-day="${date}" ${beyond?'aria-hidden="true"':''} ${future?'data-practice-future="true"':''} ${done&&day===latest?`data-practice-milestone="${day}"`:''} aria-label="${esc(label)}" title="${esc(label)}">${finish?finishRays():''}${finish?(done&&day===latest&&day===targetOf(g)?practiceSeal(day):finishNumber(g)):rest?icon('cross'):done&&day===latest?practiceSeal(day):done?icon('check'):''}</li>`;
   });
@@ -391,26 +401,24 @@ function habitStreakGrid(g){
  }
  const milestoneDays=practiceMilestoneDays(g),latestDay=[...milestoneDays.keys()].filter(day=>day<=today()).sort().at(-1);
  const start=p.start||[...g.days,...(g.failures||[]),...(g.entries||[]).map(e=>e.day)].sort()[0]||today();
- const archived=isArchivedIncomplete(g),anchor=archived?p.end:dayBefore(-3);
+ const archived=isArchivedIncomplete(g),dates=practiceGridDates(g,start,archived);
  // Dated habits mark their fixed deadline. Undated habits project the remaining
  // scheduled successes. Reserved cells after the finish keep the grid stable.
  let finish=p.end||habitCompletionDay(g),remaining=Math.max(0,targetOf(g)-progress(g));
  if(!finish&&!archived){
-  for(let offset=0;offset<=3;offset++){
-   const day=dayBefore(-offset);
+  for(const day of dates.filter(day=>day>=today())){
    if(scheduled(g,day)&&!dayDone(g,day)&&outcomeOf(g,day)!=='failure'&&remaining>0){remaining--;if(!remaining){finish=day;break}}
   }
  }
- const cells=Array.from({length:14},(_,i)=>{
-  const date=dateFrom(anchor);date.setDate(date.getDate()-(13-i));
-  const day=localDay(date),rest=day<start||!scheduled(g,day),status=rest?'rest':outcomeOf(g,day),label=`${prettyDay(day)}: ${rest?'sem atividade prevista':day>today()?'dia futuro, ainda não disponível':status==='success'?'cumprido':status==='failure'?'falha':day===today()?'ainda não registrado hoje':'sem registro'}`;
+ const cells=dates.map(day=>{
+  const rest=day<start||!scheduled(g,day),status=rest?'rest':outcomeOf(g,day),label=`${prettyDay(day)}: ${rest?'sem atividade prevista':day>today()?'dia futuro, ainda não disponível':status==='success'?'cumprido':status==='failure'?'falha':day===today()?'ainda não registrado hoje':'sem registro'}`;
   const number=day===latestDay?milestoneDays.get(day):0,seal=number,finishPending=day===finish&&status!=='success',beyond=!!finish&&day>finish,description=day===p.end?label+' · último dia do prazo · meta de '+fmt(targetOf(g))+' dias':finishPending?label+' · completa a meta de '+targetOf(g)+' dias se cumprido':number?label+' · marco de '+number+' dias conquistado':label;
   const skipped=(p.skippedDays||[]).includes(day);
-  if(rest&&(day!==finish||skipped||day===today()))return `<li class="streak-square rest ${day===today()?'current rest-today':day<start?'prestart-day':'omitted-day'} ${beyond?'beyond-target':''}" data-practice-day="${day}" ${day!==today()?'aria-hidden="true"':''} ${!archived&&day>today()?'data-practice-future="true"':''} aria-label="${esc(prettyDay(day)+': '+(skipped?'dia pulado':'sem atividade prevista'))}"></li>`;
+  if(rest&&(day!==finish||skipped||day===today()))return `<li class="streak-square rest ${day===today()?'current rest-today':day<start?'prestart-day':''} ${beyond?'beyond-target':''}" data-practice-day="${day}" ${day!==today()?'aria-hidden="true"':''} ${!archived&&day>today()?'data-practice-future="true"':''} aria-label="${esc(prettyDay(day)+': '+(skipped?'dia pulado':'sem atividade prevista'))}"></li>`;
   return `<li class="streak-square ${status||'unrecorded'} ${day===today()?'current':''} ${seal?'has-practice-seal':''} ${finishPending?'target-finish':''} ${day===finish?'goal-finish':''} ${day===p.end?'deadline-finish':''} ${beyond?'beyond-target':''}" ${beyond?'aria-hidden="true"':''} data-practice-day="${day}" ${!archived&&day>today()?'data-practice-future="true"':''} ${number?`data-practice-milestone="${number}"`:''} aria-label="${esc(description)}" title="${esc(description)}">${day===finish?finishRays():''}${day===finish?(seal===targetOf(g)?practiceSeal(seal):finishNumber(g)):seal?practiceSeal(seal):status?icon(status==='success'?'check':'cross'):''}</li>`;
  });
  const count=streak(g);
- return `<div class="habit-streak">${streakCaption(g,archived?'período encerrado':`${count} ${count===1?'dia':'dias'} sem falhar`)}<ol class="streak-grid" aria-label="${archived?'últimos 14 dias do período':'10 dias anteriores, hoje e os próximos 3 dias'}">${cells.join('')}</ol></div>`;
+ return `<div class="habit-streak">${streakCaption(g,archived?'período encerrado':`${count} ${count===1?'dia':'dias'} sem falhar`)}<ol class="streak-grid" aria-label="${archived?'últimos 14 dias do período':'10 dias previstos anteriores, hoje e os próximos 3 dias previstos'}">${cells.join('')}</ol></div>`;
 }
 function amuletCropStyle(edition,color){
  const geometry=edition?.geometry,rect=geometry?.objectBounds?.[{lavender:0,peach:1,sage:2}[color]];
