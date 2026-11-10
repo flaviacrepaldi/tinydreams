@@ -12,7 +12,7 @@ await js(`state.demo=true;state.goals=[{id:'shelf-demo',title:'Meu capítulo rea
 await click('[data-action=quick-outcome][data-status=success]');
 await assert("complete(state.goals[0])&&!document.querySelector('#milestone').hidden&&document.querySelector('#milestone').textContent.includes('virou uma história')",'Final completion scene missing');
 await click('[data-action=open-achievements]');await click('[data-action=collection-shelf]');await assert("document.querySelectorAll('.shelf-volume').length===1&&document.querySelector('.book-record').textContent.includes(prettyDay(today()))",'Shelf or completion date missing');
-await click('[data-action=redeem]');await assert('state.goals[0].redeemed===1','Reward redemption failed');
+await assert("!document.querySelector('[data-action=redeem]')",'Unexpected reward redemption control');
 await click('[data-action=details]');await click('[data-outcome=clear]');await click('[data-close=progressDialog]');await assert("!complete(state.goals[0])&&!document.querySelector('.shelf-volume')",'Undo left a false achievement');
 await js("state.view='dreams';render()");await click('[data-action=quick-outcome][data-status=success]');await assert("document.querySelector('#milestone').hidden",'Correcting a result replayed the celebration');
 await js(`state.goals.push({id:'daily-demo',title:'Meu ritual diário',target:10,color:'lavender',reward:'',days:[],entries:[],failures:[]});render()`);await click('[data-action=quick-outcome][data-status=success][data-id=daily-demo]');await assert("!document.querySelector('#milestone').hidden&&document.querySelector('#milestone').textContent.includes('Tudo de hoje')",'Today completion feedback missing');await click('[data-action=dismiss-milestone]');

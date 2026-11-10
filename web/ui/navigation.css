@@ -818,3 +818,9 @@ html[data-edition] .dream-overview .goal .dream-date-slot>.card-progress-deadlin
 .analysis-section>.analysis-caption{font-size:12px;color:var(--muted);margin:0 0 14px}
 .analysis-legend{gap:8px 14px;margin:12px 0 18px}
 .analysis-history,.analysis-activity{margin-top:22px}
+
+/* A finished chapter shares the same template, with one clear destination. */
+html[data-edition] .dream-overview .goal[data-complete="true"] .countdown>span{font-family:var(--serif);font-size:18px;line-height:1.25;color:var(--text);max-width:12ch}
+html[data-edition] .dream-overview .goal[data-complete="true"] .countdown strong{font-size:40px;color:var(--goal)}
+html[data-edition] .dream-overview .goal .completed-shelf-link{width:100%;min-height:44px;flex:0 0 auto;margin:0;gap:8px}
+.completed-shelf-link svg{width:18px;height:18px;flex-shrink:0}

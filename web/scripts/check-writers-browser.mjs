@@ -27,7 +27,7 @@ for(const width of [320,390,768,1440]){
  await assert("getComputedStyle(document.querySelector('.portrait-bookcase')).gridTemplateColumns.split(' ').length===4",'Shelf is not four columns');
  await assert("document.querySelectorAll('.portrait-spine').length===8&&document.querySelectorAll('.spine-art').length===8",'Full portrait missing books');
  await assert('document.documentElement.scrollWidth<=innerWidth','Shelf overflow '+width);
- await click('[data-action=shelf-book]');await wait("!!document.querySelector('.shelf-selected')");await assert("!!document.querySelector('[data-action=redeem]')&&!!document.querySelector('[data-action=details]')",'Book history and reward missing');
+ await click('[data-action=shelf-book]');await wait("!!document.querySelector('.shelf-selected')");await assert("!document.querySelector('[data-action=redeem]')&&!!document.querySelector('[data-action=details]')",'Book history missing or redemption control present');
  await writeFile('/tmp/tiny-groups-review/books-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png'})).data,'base64'));
  await click('[data-action=collection-album]');await wait("!!document.querySelector('.writer-open-album')");
 }

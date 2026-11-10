@@ -8,7 +8,7 @@ export function uiCheckPlan({cpus,memory,workers:override,editions,mode='full'})
  const themes=Array.from({length:shards},(_,shard)=>({name:`reward-themes ${shard+1}/${shards}`,script:'check-reward-themes-browser.mjs',env:{TINY_QA_THEME_SHARD:String(shard),TINY_QA_THEME_SHARDS:String(shards)}}));
  // Start the long animation check alongside the matrix instead of after it.
  const jobs=[{name:'rewards',script:'check-rewards-browser.mjs'},...themes];
- for(const name of ['streak-alignment','keepsakes','brand-alignment','skipped-days','practice-milestones','streak-finish','analytics','edit-dialog','chapters','measure-celebration'])jobs.push({name,script:`check-${name}-browser.mjs`});
+ for(const name of ['completed-card','streak-alignment','keepsakes','brand-alignment','skipped-days','practice-milestones','streak-finish','analytics','edit-dialog','chapters','measure-celebration'])jobs.push({name,script:`check-${name}-browser.mjs`});
  return {workers,shards,jobs};
 }
 

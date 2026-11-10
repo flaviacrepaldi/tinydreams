@@ -24,7 +24,7 @@ for(const workers of [1,2,3,4,5,6]){
  assert.equal(plan.workers,workers);assert.equal(plan.jobs[0].name,'rewards');
  const themes=plan.jobs.filter(job=>job.env);
  assert.deepEqual(themes.flatMap(job=>themeShard(editions,job.env.TINY_QA_THEME_SHARD,job.env.TINY_QA_THEME_SHARDS)),editions,'Every edition runs exactly once at each concurrency');
- assert.equal(new Set(plan.jobs.map(job=>job.script)).size,12,'All browser suites stay in the gate');
+ assert.equal(new Set(plan.jobs.map(job=>job.script)).size,13,'All browser suites stay in the gate');
  assert.ok(Math.max(...themes.map(job=>themeShard(editions,job.env.TINY_QA_THEME_SHARD,job.env.TINY_QA_THEME_SHARDS).length))-Math.min(...themes.map(job=>themeShard(editions,job.env.TINY_QA_THEME_SHARD,job.env.TINY_QA_THEME_SHARDS).length))<=1,'Balanced shards');
 }
 for(const workers of ['',0,7,'NaN','2.5'])assert.throws(()=>uiCheckPlan({workers,editions:12}),/TINY_QA_WORKERS/);
