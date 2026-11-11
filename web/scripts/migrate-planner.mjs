@@ -12,5 +12,7 @@ export async function migratePlanner(db){
   const sql=await readFile(new URL('../drizzle/0003_dream_groups.sql',import.meta.url),'utf8');
   await db.batch(sql.split('--> statement-breakpoint').map(s=>db.prepare(s.trim())));
  }
+ const groupColumns=await db.prepare('PRAGMA table_info(dream_groups)').all();
+ if(!groupColumns.results.some(c=>c.name==='goal_order'))await db.prepare(await readFile(new URL('../drizzle/0004_group_goal_order.sql',import.meta.url),'utf8')).run();
  if(!tables.results.length)await db.prepare(await readFile(new URL('../drizzle/0002_daily_outcomes.sql',import.meta.url),'utf8')).run();
 }

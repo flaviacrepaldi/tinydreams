@@ -41,7 +41,7 @@ export async function api(request,env){
  }
  if(id==='groups'){
   const groupId=action;
-  const list=async()=> (await env.DB.prepare('SELECT id,name,created_at FROM dream_groups WHERE owner=? ORDER BY created_at,id').bind(owner).all()).results;
+  const list=async()=> (await env.DB.prepare('SELECT id,name,created_at,goal_order FROM dream_groups WHERE owner=? ORDER BY created_at,id').bind(owner).all()).results.map(g=>({...g,goalOrder:JSON.parse(g.goal_order)}));
   if(request.method==='GET'&&!groupId)return json(await list());
   if(groupId&&!(await list()).some(g=>g.id===groupId))return json({error:'Este Big Dream não foi encontrado.'},404);
   if(request.method==='DELETE'&&groupId){
@@ -53,9 +53,15 @@ export async function api(request,env){
    const name=body.name.trim(),known=await list();
    if(known.some(g=>g.id!==groupId&&g.name.toLocaleLowerCase('pt-BR')===name.toLocaleLowerCase('pt-BR')))return json({error:'Já existe um Big Dream com esse nome.'},400);
    if(body.goalIds!==undefined&&(!Array.isArray(body.goalIds)||body.goalIds.some(v=>typeof v!=='string')||new Set(body.goalIds).size!==body.goalIds.length))return json({error:'Escolha tydreams válidos para o Big Dream.'},400);
+   if(body.goalOrder!==undefined){
+    if(!groupId||!Array.isArray(body.goalOrder)||body.goalOrder.some(v=>typeof v!=='string')||new Set(body.goalOrder).size!==body.goalOrder.length)return json({error:'Escolha uma ordem válida para os tydreams.'},400);
+    const members=(await goals(env.DB,owner)).filter(g=>g.group_id===groupId);
+    if(body.goalOrder.length!==members.length||body.goalOrder.some(id=>!members.some(g=>g.id===id)))return json({error:'Os tydreams deste Big Dream mudaram. Feche e abra os ajustes para tentar novamente.'},400);
+   }
    const owned=body.goalIds!==undefined?await goals(env.DB,owner):[];
    if(body.goalIds?.some(id=>!owned.some(g=>g.id===id)))return json({error:'Um dos tydreams não foi encontrado.'},400);
    const gid=groupId||crypto.randomUUID(),statements=[groupId?env.DB.prepare('UPDATE dream_groups SET name=? WHERE id=? AND owner=?').bind(name,gid,owner):env.DB.prepare('INSERT INTO dream_groups (id,owner,name,created_at) VALUES (?,?,?,?)').bind(gid,owner,name,new Date().toISOString())];
+   if(body.goalOrder!==undefined)statements.push(env.DB.prepare('UPDATE dream_groups SET goal_order=? WHERE id=? AND owner=?').bind(JSON.stringify(body.goalOrder),gid,owner));
    if(body.goalIds!==undefined){
     statements.push(env.DB.prepare('UPDATE goals SET group_id=NULL WHERE group_id=? AND owner=?').bind(gid,owner));
     for(const goalId of body.goalIds)statements.push(env.DB.prepare('UPDATE goals SET group_id=? WHERE id=? AND owner=?').bind(gid,goalId,owner));

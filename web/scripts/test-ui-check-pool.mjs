@@ -24,7 +24,7 @@ for(const workers of [1,2,3,4,5,6]){
  assert.equal(plan.workers,workers);assert.equal(plan.jobs[0].name,'rewards');
  const themes=plan.jobs.filter(job=>job.env);
  assert.deepEqual(themes.flatMap(job=>themeShard(editions,job.env.TINY_QA_THEME_SHARD,job.env.TINY_QA_THEME_SHARDS)),editions,'Every edition runs exactly once at each concurrency');
- assert.equal(new Set(plan.jobs.map(job=>job.script)).size,13,'All browser suites stay in the gate');
+ assert.equal(new Set(plan.jobs.map(job=>job.script)).size,14,'All browser suites stay in the gate');
  assert.ok(Math.max(...themes.map(job=>themeShard(editions,job.env.TINY_QA_THEME_SHARD,job.env.TINY_QA_THEME_SHARDS).length))-Math.min(...themes.map(job=>themeShard(editions,job.env.TINY_QA_THEME_SHARD,job.env.TINY_QA_THEME_SHARDS).length))<=1,'Balanced shards');
 }
 for(const workers of ['',0,7,'NaN','2.5'])assert.throws(()=>uiCheckPlan({workers,editions:12}),/TINY_QA_WORKERS/);
@@ -39,7 +39,7 @@ console.log('PASS: resource-aware concurrency, complete browser coverage, balanc
 for(const workers of [1,2,3,6]){
  const smoke=uiCheckPlan({cpus:12,memory:16*1024**3,workers,editions:12,mode:'smoke'});
  assert.equal(smoke.workers,Math.min(workers,3));assert.equal(smoke.shards,0);
- assert.deepEqual(smoke.jobs.map(job=>job.name),['streak-alignment','analytics','edit-dialog']);
+ assert.deepEqual(smoke.jobs.map(job=>job.name),['streak-alignment','analytics','edit-dialog','group-order']);
 }
 assert.throws(()=>uiCheckPlan({cpus:12,memory:16*1024**3,editions:12,mode:'skip'}),/Invalid UI check mode/);
 console.log('PASS: quick gate retains mixed cards, carousel gestures, analytics and dialogs; unknown modes cannot bypass checks.');

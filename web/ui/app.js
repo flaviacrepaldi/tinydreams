@@ -54,6 +54,10 @@ function dailyKeepsakes(goals){
  if(!goals.length)return '';
  return `<nav class="daily-keepsakes ${rewardAllToday()?'all-complete':''}" aria-label="Tydreams de hoje"><div class="keepsake-line"><svg class="keepsake-cord" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M1 3 Q200 25 399 3"/></svg>${goals.map(g=>`<button type="button" class="keepsake ${completedToday(g)?'is-done':'is-pending'}" data-action="find-completed" data-id="${esc(g.id)}" aria-label="Ver ${esc(g.title)}, ${completedToday(g)?'concluído hoje':'pendente'}" title="${esc(g.title)}">${goalEmoji(g)}<svg class="keepsake-rule" viewBox="0 0 42 43" fill="none" aria-hidden="true"><path d="M4 5H38V37L21 31 4 37Z"/></svg><span class="keepsake-leaf" aria-hidden="true">${icon('leaf')}</span></button>`).join('')}</div></nav>`;
 }
+function orderedGroupGoals(goals,group){
+ const order=group?.goalOrder||[];
+ return goals.slice().sort((a,b)=>{const ai=order.indexOf(a.id),bi=order.indexOf(b.id);return (ai<0?order.length:ai)-(bi<0?order.length:bi)});
+}
 function renderOverview(){
  const keepsakeLeft=document.querySelector('.daily-keepsakes')?.scrollLeft||0;
  const positions=[...document.querySelectorAll('.dream-overview .goal-grid')].map(grid=>{
@@ -63,9 +67,10 @@ function renderOverview(){
  }).filter(Boolean);
  const active=state.goals.filter(g=>visibleOnHome(g)&&(state.homeFilter==='all'||complete(g)||planOf(g).kind!=='habit'||scheduled(g,today())||dayDone(g,today())));
  const section=(name,goals,group)=>{
+  goals=orderedGroupGoals(goals,group);
   const members=group?state.goals.filter(g=>g.group_id===group.id):state.goals.filter(g=>!state.groups.some(group=>group.id===g.group_id)),finished=members.filter(complete).length;
   const planned=members.filter(g=>planOf(g).kind==='habit'&&scheduled(g,today())&&(!complete(g)||dayDone(g,today()))),done=planned.filter(g=>dayDone(g,today())).length;
-  return `<section class="dream-group ${group?'big-dream-volume':''}"><div class="group-heading"><div class="volume-title"><h2>${esc(name)}</h2><p>${group?`${members.length} ${members.length===1?'tydream':'tydreams'} · ${finished} ${finished===1?'realizado':'realizados'}`:`${goals.length} ${goals.length===1?'tydream em andamento':'tydreams em andamento'}`}</p>${planned.length?`<p class="group-today-progress">${done} de ${planned.length} feitos hoje</p>`:''}</div>${group?`<button class="text-button rename-group-button" data-action="edit-group" data-group="${esc(group.id)}" aria-label="renomear big dream ${esc(name)}" title="renomear big dream">${icon('edit')}</button>`:''}</div>${goals.length?`<div class="goal-grid" tabindex="0" role="region" aria-label="Tydreams de ${esc(name)}">${goals.map(goalCard).join('')}</div>`:`<p class="group-empty">${members.length?(state.homeFilter==='all'?'nenhum tydream pendente neste grupo. consulte seus registros em hoje ou calendário.':'nenhum tiny dream para hoje neste grupo.'):'Escolha este Big Dream ao criar ou editar um tiny dream.'}</p>`}</section>`;
+  return `<section class="dream-group ${group?'big-dream-volume':''}"><div class="group-heading"><div class="volume-title"><h2>${esc(name)}</h2><p>${group?`${members.length} ${members.length===1?'tydream':'tydreams'} · ${finished} ${finished===1?'realizado':'realizados'}`:`${goals.length} ${goals.length===1?'tydream em andamento':'tydreams em andamento'}`}</p>${planned.length?`<p class="group-today-progress">${done} de ${planned.length} feitos hoje</p>`:''}</div>${group?`<button class="text-button rename-group-button" data-action="edit-group" data-group="${esc(group.id)}" aria-label="ajustes do big dream ${esc(name)}" title="ajustes do big dream">${icon('edit')}</button>`:''}</div>${goals.length?`<div class="goal-grid" tabindex="0" role="region" aria-label="Tydreams de ${esc(name)}">${goals.map(goalCard).join('')}</div>`:`<p class="group-empty">${members.length?(state.homeFilter==='all'?'nenhum tydream pendente neste grupo. consulte seus registros em hoje ou calendário.':'nenhum tiny dream para hoje neste grupo.'):'Escolha este Big Dream ao criar ou editar um tiny dream.'}</p>`}</section>`;
  };
  const ungrouped=active.filter(g=>!state.groups.some(group=>group.id===g.group_id));
  $('#content').innerHTML=`<div class="dream-overview"><div class="overview-tools"><h2><span class="overview-desktop-title">Big Dreams</span><span class="overview-mobile-brand"><svg class="brand-monogram" viewBox="0 0 128 136" aria-hidden="true">${document.querySelector('.topbar .brand-monogram')?.innerHTML||''}</svg><span>tiny dreams<span class="brand-dot">.</span></span></span></h2><div class="home-filter" role="group" aria-label="mostrar tiny dreams"><button type="button" data-action="home-filter" data-filter="today" aria-pressed="${state.homeFilter!=='all'}">hoje</button><button type="button" data-action="home-filter" data-filter="all" aria-pressed="${state.homeFilter==='all'}">todos</button></div><button class="icon-button new-group-button" data-action="new-group" aria-label="novo big dream" title="novo big dream"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div>${dailyKeepsakes(active)}${!state.goals.length&&!state.groups.length?`<div class="empty"><h2>Seu próximo capítulo começa aqui.</h2><p>Crie seu primeiro tydream ou um Big Dream para reunir seus sonhos.</p><div class="empty-actions"><button class="primary" data-action="new">criar meu primeiro tiny dream</button><button class="text-button" data-action="demo">Explorar um exemplo</button></div></div>`:`${state.groups.map(group=>section(group.name,active.filter(g=>g.group_id===group.id),group)).join('')}${ungrouped.length?section(state.groups.length?'sem big dream':'meus tydreams',ungrouped):''}${!active.length&&state.goals.length&&!state.groups.length?`<p class="muted">${state.homeFilter==='all'?'nenhum tydream pendente. consulte seus registros em hoje ou calendário.':'nenhum tiny dream para hoje. selecione todos para ver os demais.'}</p>`:''}<button class="secondary overview-add" data-action="new">novo tiny dream</button>`}</div>`;
@@ -158,12 +163,23 @@ function fitDreamGalleries(){
   });
  });
 }
+function renderGroupOrder(ids){
+ $('#groupOrder').innerHTML=ids.map((id,i)=>{const g=state.goals.find(g=>g.id===id);return `<div class="group-order-row" data-id="${esc(id)}"><span>${esc(g.title)}</span><button type="button" class="icon-button" data-move="-1" aria-label="Subir ${esc(g.title)}" ${i===0?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 14 6-6 6 6"/></svg></button><button type="button" class="icon-button" data-move="1" aria-label="Descer ${esc(g.title)}" ${i===ids.length-1?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 10 6 6 6-6"/></svg></button></div>`}).join('')||'<p class="muted">Este Big Dream ainda não tem tydreams.</p>';
+}
+$('#groupOrder').addEventListener('click',event=>{
+ const button=event.target.closest('[data-move]');if(!button)return;
+ const ids=[...$('#groupOrder').children].map(row=>row.dataset.id),id=button.closest('[data-id]').dataset.id,index=ids.indexOf(id),next=index+Number(button.dataset.move);
+ if(next<0||next>=ids.length)return;
+ [ids[index],ids[next]]=[ids[next],ids[index]];renderGroupOrder(ids);
+ $('#groupOrder').querySelector(`[data-id="${CSS.escape(id)}"] [data-move="${button.dataset.move}"]`).focus();
+});
 function openGroup(id){
  const group=state.groups.find(g=>g.id===id);
- $('#groupId').value=group?.id||'';$('#groupName').value=group?.name||'';$('#groupFormTitle').textContent=group?'renomear big dream':'Criar um Big Dream';$('#groupError').textContent='';
+ $('#groupId').value=group?.id||'';$('#groupName').value=group?.name||'';$('#groupFormTitle').textContent=group?'ajustes do big dream':'Criar um Big Dream';$('#groupError').textContent='';
  $('#groupMembers').innerHTML=state.goals.length?state.goals.map(g=>{const current=state.groups.find(group=>group.id===g.group_id);return `<label class="group-member"><input type="checkbox" value="${esc(g.id)}" ${group&&g.group_id===group.id?'checked':''}><span><strong>${esc(g.title)}</strong><small>${complete(g)?'Realizado · ':''}${current?esc(current.name):'Sem Big Dream'}</small></span></label>`}).join(''):'<p class="muted">Você pode criar o grupo agora e adicionar tydreams depois.</p>';
  $('#groupMembers').closest('fieldset').hidden=!!group;
- $('#saveGroup').textContent=group?'salvar nome':'criar big dream';
+ $('#groupOrderSection').hidden=!group;renderGroupOrder(group?orderedGroupGoals(state.goals.filter(g=>g.group_id===id),group).map(g=>g.id):[]);
+ $('#saveGroup').textContent=group?'salvar alterações':'criar big dream';
  $('#deleteGroup').hidden=!group;$('#groupDeleteConfirm').hidden=true;showDialog($('#groupDialog'));
 }
 $('#groupForm').addEventListener('submit',async event=>{
@@ -173,7 +189,8 @@ $('#groupForm').addEventListener('submit',async event=>{
  if(state.groups.some(g=>g.id!==id&&g.name.toLocaleLowerCase('pt-BR')===name.toLocaleLowerCase('pt-BR'))){$('#groupError').textContent='Já existe um Big Dream com esse nome.';return}
  state.busy=true;$('#saveGroup').disabled=true;$('#groupError').textContent='';
  try{
-  const group=state.demo?{id:id||'demo-group-'+crypto.randomUUID(),name}:await api('/groups'+(id?'/'+id:''),id?'PATCH':'POST',id?{name}:{name,goalIds});
+  const goalOrder=[...document.querySelectorAll('#groupOrder .group-order-row')].map(row=>row.dataset.id);
+  const group=state.demo?{id:id||'demo-group-'+crypto.randomUUID(),name,...(id?{goalOrder}:{})}:await api('/groups'+(id?'/'+id:''),id?'PATCH':'POST',id?{name,goalOrder}:{name,goalIds});
   if(id)Object.assign(state.groups.find(g=>g.id===id),group);else state.groups.push(group);
   if(!id)for(const g of state.goals){if(goalIds.includes(g.id))g.group_id=group.id}
   if(!state.demo)state.realGroups=state.groups;

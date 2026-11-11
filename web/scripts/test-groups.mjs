@@ -37,8 +37,15 @@ try{
  assert.equal((await call('/groups/'+second.id,'PATCH',{name:'Projeto pessoal',goalIds:['legacy','missing']})).status,400);
  assert.equal((await call('/groups/'+second.id,'PATCH',{name:'Projeto pessoal',goalIds:['legacy','legacy']})).status,400);
  assert.equal((await call()).data.find(g=>g.id==='legacy').group_id,second.id,'Invalid selection must be atomic');
- await call('/groups/'+second.id,'PATCH',{name:'Meu Big Dream'});
+ const extra=(await call('','POST',{...dream,groupId:second.id})).data;
+ const order=[extra.id,'legacy'];
+ assert.equal((await call('/groups/'+second.id,'PATCH',{name:'Meu Big Dream',goalOrder:order})).status,200);
+ for(const goalOrder of [['legacy'],['legacy','legacy'],['legacy',g.id],['legacy','missing'],42])assert.equal((await call('/groups/'+second.id,'PATCH',{name:'Invalid',goalOrder})).status,400);
+ assert.deepEqual((await call('/groups')).data.find(g=>g.id===second.id).goalOrder,order);
+ assert.equal((await call('/groups/'+second.id,'PATCH',{name:'Other',goalOrder:order},'another-owner')).status,404);
+
  DB=localDB(path);assert.equal((await call('/groups')).data.find(g=>g.id===second.id).name,'Meu Big Dream','Persist after reconnect');
+ assert.deepEqual((await call('/groups')).data.find(g=>g.id===second.id).goalOrder,order,'Order persists after reconnect');
  assert.equal((await call('/'+g.id,'PATCH',{...dream,groupId:null})).data.group_id,null);
  assert.equal((await call('/groups/'+second.id,'DELETE')).status,200);
  saved=(await call()).data.find(g=>g.id==='legacy');assert.equal(saved.group_id,null);assert.equal(saved.redeemed,1);assert.deepEqual(saved.days,['2026-01-01']);
