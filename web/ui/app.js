@@ -164,14 +164,51 @@ function fitDreamGalleries(){
  });
 }
 function renderGroupOrder(ids){
- $('#groupOrder').innerHTML=ids.map((id,i)=>{const g=state.goals.find(g=>g.id===id);return `<div class="group-order-row" data-id="${esc(id)}"><span>${esc(g.title)}</span><button type="button" class="icon-button" data-move="-1" aria-label="Subir ${esc(g.title)}" ${i===0?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 14 6-6 6 6"/></svg></button><button type="button" class="icon-button" data-move="1" aria-label="Descer ${esc(g.title)}" ${i===ids.length-1?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 10 6 6 6-6"/></svg></button></div>`}).join('')||'<p class="muted">Este Big Dream ainda não tem tydreams.</p>';
+ $('#groupOrder').innerHTML=ids.map(id=>{const g=state.goals.find(g=>g.id===id);return `<div class="group-order-row" data-id="${esc(id)}"><span>${esc(g.title)}</span><button type="button" class="icon-button group-order-handle" aria-label="Reposicionar ${esc(g.title)}" aria-describedby="groupOrderHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 6h1m6 0h1M8 12h1m6 0h1M8 18h1m6 0h1"/></svg></button></div>`}).join('')||'<p class="muted">Este Big Dream ainda não tem tydreams.</p>';
+ $('#groupOrderStatus').textContent='';
 }
-$('#groupOrder').addEventListener('click',event=>{
- const button=event.target.closest('[data-move]');if(!button)return;
- const ids=[...$('#groupOrder').children].map(row=>row.dataset.id),id=button.closest('[data-id]').dataset.id,index=ids.indexOf(id),next=index+Number(button.dataset.move);
- if(next<0||next>=ids.length)return;
- [ids[index],ids[next]]=[ids[next],ids[index]];renderGroupOrder(ids);
- $('#groupOrder').querySelector(`[data-id="${CSS.escape(id)}"] [data-move="${button.dataset.move}"]`).focus();
+function announceGroupPosition(row){
+ const rows=[...$('#groupOrder').children];
+ $('#groupOrderStatus').textContent=`${row.querySelector('span').textContent}: posição ${rows.indexOf(row)+1} de ${rows.length}.`;
+}
+$('#groupOrder').addEventListener('keydown',event=>{
+ const handle=event.target.closest('.group-order-handle');if(!handle||!['ArrowUp','ArrowDown'].includes(event.key))return;
+ event.preventDefault();const row=handle.closest('.group-order-row'),other=event.key==='ArrowUp'?row.previousElementSibling:row.nextElementSibling;
+ if(!other)return;
+ if(event.key==='ArrowUp')other.before(row);else other.after(row);
+ handle.focus();announceGroupPosition(row);
+});
+$('#groupOrder').addEventListener('pointerdown',event=>{
+ const handle=event.target.closest('.group-order-handle');
+ if(!handle||event.button!==0||state.busy)return;
+ event.preventDefault();handle.focus();
+ const row=handle.closest('.group-order-row'),list=$('#groupOrder'),dialog=$('#groupDialog'),original=[...list.children],startY=event.clientY,startTop=row.getBoundingClientRect().top;
+ let y=startY,frame;
+ list.setPointerCapture(event.pointerId);row.classList.add('is-dragging');
+ const update=()=>{
+  row.style.transform='';
+  const others=[...list.children].filter(item=>item!==row);
+  const next=others.find(item=>{const r=item.getBoundingClientRect();return y<r.top+r.height/2});
+  if(next)list.insertBefore(row,next);else list.append(row);
+  row.style.transform=`translateY(${startTop+y-startY-row.getBoundingClientRect().top}px)`;
+ };
+ const tick=()=>{
+  const r=dialog.getBoundingClientRect();
+  if(y<r.top+64)dialog.scrollTop-=8;else if(y>r.bottom-64)dialog.scrollTop+=8;
+  update();frame=requestAnimationFrame(tick);
+ };
+ const move=e=>{if(e.pointerId===event.pointerId){y=e.clientY;update()}};
+ const finish=e=>{
+  if(e.pointerId!==event.pointerId)return;
+  cancelAnimationFrame(frame);list.removeEventListener('pointermove',move);list.removeEventListener('pointerup',finish);list.removeEventListener('pointercancel',cancel);list.removeEventListener('lostpointercapture',cancel);
+  row.classList.remove('is-dragging');row.style.transform='';
+  if(list.hasPointerCapture(event.pointerId))list.releasePointerCapture(event.pointerId);
+  if(e.type==='pointercancel'||e.type==='lostpointercapture')list.replaceChildren(...original);
+  handle.focus({preventScroll:true});announceGroupPosition(row);
+ };
+ const cancel=e=>finish(e);
+ list.addEventListener('pointermove',move);list.addEventListener('pointerup',finish);list.addEventListener('pointercancel',cancel);list.addEventListener('lostpointercapture',cancel);
+ frame=requestAnimationFrame(tick);
 });
 function openGroup(id){
  const group=state.groups.find(g=>g.id===id);
