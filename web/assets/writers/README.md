@@ -5,3 +5,5 @@ Ten original interpretive portraits generated with OpenAI image generation for t
 Art direction: vertical 4:5 head-and-shoulders portrait, warm sepia gouache and pencil on ivory paper, restrained botanical corners, no text, frame, UI or watermark. The same continuous image is divided across a 4-column, 2-row bookcase. Original generated PNGs are retained in the local Codex generated_images directory; these are copies for the app.
 
 Portrait access goes through the authenticated API. A partial set permits the current image; the full biography and name appear only after eight completed tydreams. The explicit demonstration exposes only the first portrait. Do not add direct public routes or preload locked images.
+
+Delivery uses WebP portraits at the original 1122 × 1402 resolution, quality 85. PNG source copies remain here for future recompression; only WebP files are packaged for delivery. Authenticated portrait URLs and unlock rules are unchanged.

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {mkdtempSync,rmSync} from 'node:fs';
+import {mkdtempSync,rmSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {api} from '../worker/api.js';
@@ -7,8 +7,15 @@ import {writerAlbum} from '../shared/writers.js';
 import {localDB} from './sqlite.mjs';
 import {migratePlanner} from './migrate-planner.mjs';
 const dir=mkdtempSync(join(tmpdir(),'tiny-writers-')),DB=localDB(join(dir,'test.sqlite'));
+// Keep every delivered portrait below the image budget that fixes shelf loading.
+for(let i=1;i<=10;i++){
+ const id=String(i).padStart(2,'0'),bytes=readFileSync(new URL('../assets/writers/'+id+'.webp',import.meta.url));
+ assert.equal(bytes.toString('ascii',0,4),'RIFF');
+ assert.equal(bytes.toString('ascii',8,12),'WEBP');
+ assert.ok(bytes.length<400*1024,`Portrait ${id} exceeds the 400 KiB loading budget`);
+}
 const artwork=[];
-const env={DB,ASSETS:{fetch:async request=>{artwork.push(new URL(request.url).pathname);return new Response('portrait',{headers:{'Content-Type':'image/png'}})}}};
+const env={DB,ASSETS:{fetch:async request=>{artwork.push(new URL(request.url).pathname);return new Response(readFileSync(new URL('../assets'+new URL(request.url).pathname,import.meta.url)),{headers:{'Content-Type':'image/webp'}})}}};
 async function call(path='',method='GET',body,owner='album-owner'){
  return api(new Request('https://test/api/goals'+path,{method,headers:owner?{'oai-authenticated-user-id':owner}:{},...(body?{body:JSON.stringify(body)}:{})}),env);
 }
@@ -25,7 +32,7 @@ try{
   if(i===7){album=await (await call('/album')).json();assert.equal(album.slots.filter(s=>s.unlocked).length,1);assert.equal(album.slots[0].name,'Machado de Assis');assert.ok(album.slots.slice(1).every(s=>!s.name&&!s.portrait));}
  }
  album=await (await call('/album')).json();assert.equal(album.slots.filter(s=>s.unlocked).length,2);
- const r=await call('/portraits/02');assert.equal(r.status,200);assert.equal(r.headers.get('Cache-Control'),'private, no-store');assert.equal(artwork.at(-1),'/writers/02.png');
+ const r=await call('/portraits/02');assert.equal(r.status,200);assert.equal(r.headers.get('Content-Type'),'image/webp');assert.equal(r.headers.get('Cache-Control'),'private, no-store');assert.equal(artwork.at(-1),'/writers/02.webp');assert.deepEqual(Buffer.from(await r.arrayBuffer()),readFileSync(new URL('../assets/writers/02.webp',import.meta.url)));
  assert.equal((await call('/portraits/03')).status,404);
  assert.equal((await call('/portraits/01','GET',null,'other-owner')).status,404);assert.equal((await (await call('/album','GET',null,'other-owner')).json()).total,0);
  await call('/'+ids[15]+'/check','POST',{day:'2026-01-01',done:false});album=await (await call('/album')).json();assert.equal(album.total,15);assert.ok(!album.slots[1].unlocked&&!album.slots[1].name);

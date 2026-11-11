@@ -50,7 +50,7 @@ export async function api(request,env){
   const demo=action==='demo',index=Number(action)-1;
   if(!demo&&(!/^(0[1-9]|10)$/.test(action||'')||(await goals(env.DB,owner)).filter(complete).length<=index*8))return json({error:'Retrato ainda não revelado.'},404);
   if(!env.ASSETS)return json({error:'Retrato temporariamente indisponível.'},503);
-  const image=await env.ASSETS.fetch(new Request(new URL('/writers/'+(demo?'01':action)+'.png',request.url)));
+  const image=await env.ASSETS.fetch(new Request(new URL('/writers/'+(demo?'01':action)+'.webp',request.url)));
   const headers=new Headers(image.headers);headers.set('Cache-Control','private, no-store');headers.set('X-Content-Type-Options','nosniff');
   return new Response(image.body,{status:image.status,headers});
  }

@@ -27,7 +27,7 @@ const entry = (await readFile(new URL('pages/entry.js', root), 'utf8')).replace(
 await writeFile(new URL('_worker.js', output), app + '\n' + login + '\n' + auth + '\n' + entry);
 for (const directory of ['editions', 'writers', 'celebrations']) {
   await cp(new URL('assets/' + directory + '/', root), new URL(directory + '/', output), {
-    recursive:true, filter: path => !path.includes('.') || path.endsWith('.png')
+    recursive:true, filter: path => !path.includes('.') || (directory === 'writers' ? path.endsWith('.webp') : path.endsWith('.png'))
   });
 }
 await writeFile(new URL('_routes.json', output), JSON.stringify({version:1, include:['/*'], exclude:[]}));
