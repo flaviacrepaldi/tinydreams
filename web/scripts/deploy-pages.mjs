@@ -23,5 +23,6 @@ if(args[0]==='--help'){
   run([fileURLToPath(new URL('scripts/build-pages.mjs',webRoot))],'Pages build');
   run([fileURLToPath(new URL('scripts/test-pages.mjs',webRoot))],'Pages validation');
   run([fileURLToPath(new URL('scripts/check-ui.mjs',webRoot)),'--smoke'],'Quick browser publication checks');
+  run([fileURLToPath(new URL('scripts/migrate-remote.mjs',webRoot))],'Application database migration');
   run([wrangler,'pages','deploy',fileURLToPath(new URL('dist-pages/',webRoot)),'--project-name','tinydreams','--branch','main','--commit-dirty=true'],'Cloudflare upload');
 }
