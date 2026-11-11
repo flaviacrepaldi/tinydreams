@@ -18,6 +18,12 @@ async function call(path='',method='GET',body,owner='groups-owner'){
 }
 const dream={title:'Outro tydream',reward:'',target:4,color:'lavender'};
 try{
+ // Reproduce the published pre-order schema, without running any CLI migration.
+ await DB.prepare('ALTER TABLE dream_groups DROP COLUMN goal_order').run();
+ await DB.prepare("INSERT INTO dream_groups(id,owner,name,created_at) VALUES ('upgrade','groups-owner','Existente','2026-01-01')").run();
+ const upgraded=await Promise.all([call('/groups'),call('/groups')]);
+ for(const response of upgraded){assert.equal(response.status,200);assert.deepEqual(response.data[0].goalOrder,[]);assert.equal(response.data[0].name,'Existente')}
+ await DB.prepare("DELETE FROM dream_groups WHERE id='upgrade'").run();
  await migratePlanner(DB);await migratePlanner(DB);
  assert.equal((await call()).data[0].days.length,1);assert.equal((await call()).data[0].redeemed,1);assert.equal((await call()).data[0].group_id,null);
  assert.deepEqual((await call('/groups')).data,[]);

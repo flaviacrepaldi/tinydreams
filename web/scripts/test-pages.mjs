@@ -44,6 +44,12 @@ try {
   assert.equal(previewLogin.status,404);
   const leaked=(await DB.prepare('SELECT * FROM td_auth_sessions').all()).results;
   assert.equal(leaked.length,1);assert.ok(!cookie.includes(leaked[0].token_hash));
+  await DB.prepare('ALTER TABLE dream_groups DROP COLUMN goal_order').run();
+  assert.equal((await call('/api/goals/groups')).status,401);
+  assert.ok(!(await DB.prepare('PRAGMA table_info(dream_groups)').all()).results.some(c=>c.name==='goal_order'),'Anonymous requests cannot trigger migration');
+  const groups=await call('/api/goals/groups',{cookie});
+  assert.equal(groups.status,200);assert.deepEqual(await groups.json(),[]);
+  assert.ok((await DB.prepare('PRAGMA table_info(dream_groups)').all()).results.some(c=>c.name==='goal_order'),'Published worker upgrades through its bound database');
   const created=await call('/api/goals',{method:'POST',cookie,headers:{'Content-Type':'application/json','oai-authenticated-user-id':'attacker'},body:JSON.stringify({title:'Auth fixture',reward:'',target:2,color:'sage'})});
   assert.equal(created.status,201);
   const records=(await DB.prepare('SELECT owner FROM goals').all()).results;

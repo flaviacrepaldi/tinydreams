@@ -2,6 +2,21 @@ import {validDay,planOf,validatePlan,scheduled,tasksOn,progress,targetOf,complet
 import {writerAlbum} from '../shared/writers.js';
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
 const saoPauloDay=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+// Use the application's D1 binding so Pages-only deploy tokens do not need D1 API access.
+const groupSchemaReady=new WeakMap();
+async function ensureGroupOrderColumn(db){
+ if(!groupSchemaReady.has(db)){
+  const ready=(async()=>{
+   const hasColumn=async()=>(await db.prepare('PRAGMA table_info(dream_groups)').all()).results.some(c=>c.name==='goal_order');
+   if(await hasColumn())return;
+   try{await db.prepare("ALTER TABLE dream_groups ADD COLUMN goal_order TEXT NOT NULL DEFAULT '[]'").run()}
+   catch(error){if(!await hasColumn())throw error} // Another isolate may have applied it first.
+  })();
+  groupSchemaReady.set(db,ready);
+  ready.catch(()=>groupSchemaReady.delete(db));
+ }
+ await groupSchemaReady.get(db);
+}
 async function goals(db,owner,id){
  // Read outcomes and successes in one snapshot so a correction never appears in both states.
  const [rows,days,entries,failures]=await db.batch([
@@ -40,6 +55,7 @@ export async function api(request,env){
   return new Response(image.body,{status:image.status,headers});
  }
  if(id==='groups'){
+  await ensureGroupOrderColumn(env.DB);
   const groupId=action;
   const list=async()=> (await env.DB.prepare('SELECT id,name,created_at,goal_order FROM dream_groups WHERE owner=? ORDER BY created_at,id').bind(owner).all()).results.map(g=>({...g,goalOrder:JSON.parse(g.goal_order)}));
   if(request.method==='GET'&&!groupId)return json(await list());

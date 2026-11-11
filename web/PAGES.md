@@ -40,7 +40,7 @@ Upload **only `web/dist-pages`** using the Pages dashboard folder upload. For th
 5. Save the settings, then deploy the newly generated `dist-pages` folder to **Production**. Settings changes require a new deployment.
 6. Open `https://tinydreams.pages.dev` in a private browser window. You should be redirected to `/login`. Enter the password. Confirm your existing dreams are present, then check a reversible change and reload. Preferences includes **Sair da conta**; logging out revokes that browser's session.
 
-The app creates only two additive authentication tables (`td_auth_sessions` and `td_auth_attempts`) in the bound D1 on first login. It does not alter existing dreams or rewrite ownership. The original app schema must already be up to date; the deployment command applies additive application migrations after validation and before upload, stopping if migration fails. Manual dashboard uploads require running `node web/scripts/migrate-remote.mjs` first.
+The app creates only two additive authentication tables (`td_auth_sessions` and `td_auth_attempts`) in the bound D1 on first login. It does not alter existing dreams or rewrite ownership. The original app schema through Big Dreams (0003) must already be present. The ordering column is added idempotently on the first authenticated groups request through the application D1 binding, preserving existing rows. Local and CI Pages deployment tokens need no D1 API permission. The optional `node web/scripts/migrate-remote.mjs` command remains available for explicit application migrations with a D1-authorized local session.
 
 ## Authentication behavior
 
