@@ -11,6 +11,23 @@ await js(`showDemo();state.groups=[{id:'one',name:'Cuidados'},{id:'two',name:'Ro
 // A record of three days used to add a second star/count beside the streak phrase.
 assert.equal(await js(`(()=>{const g={...state.goals[0],days:[dayBefore(2),dayBefore(1),today()]};return rewardSequence(g).best>=3&&!habitStreakGrid(g).includes('reward-record')&&habitStreakGrid(g).includes('3 dias sem falhar')})()`),true,'Keep only the streak phrase when a historical record exists');
 assert.equal(await js(`(()=>{const g={...state.goals[3],plan:{...state.goals[3].plan,impulseStartedAt:new Date(Date.now()-4*86400000).toISOString()}};return rewardSequence(g).best>=3&&!habitStreakGrid(g).includes('reward-record')&&habitStreakGrid(g).includes('dias completos')})()`),true,'Impulse cards also omit the duplicate star/count');
+// Pointer hover and programmatic focus must not paint a selection state.
+await cdp('DOM.enable');await cdp('CSS.enable');
+await cdp('Emulation.setDeviceMetricsOverride',{width:1280,height:844,deviceScaleFactor:1,mobile:false});
+await js('document.fonts.ready');
+const {root}=await cdp('DOM.getDocument');
+for(const selector of ['#newGoalButton','.goal .small-button','.goal .check-button','.keepsake','.home-filter button']){
+ const {nodeId}=await cdp('DOM.querySelector',{nodeId:root.nodeId,selector});
+ assert.ok(nodeId,`Missing pointer regression target: ${selector}`);
+ const paint=()=>js(`(()=>{const el=document.querySelector(${JSON.stringify(selector)}),s=getComputedStyle(el);return [s.backgroundColor,s.color,s.borderColor,s.transform,s.boxShadow,s.outlineStyle]})()`);
+ await cdp('CSS.forcePseudoState',{nodeId,forcedPseudoClasses:[]});const baseline=await paint();
+ await cdp('CSS.forcePseudoState',{nodeId,forcedPseudoClasses:['hover']});
+ await new Promise(r=>setTimeout(r,250));
+ assert.deepEqual(await paint(),baseline,`Hover paints selection: ${selector}`);
+ await cdp('CSS.forcePseudoState',{nodeId,forcedPseudoClasses:['focus','focus-visible']});
+ assert.equal((await paint()).at(-1),'none',`Focus ring remains: ${selector}`);
+ await cdp('CSS.forcePseudoState',{nodeId,forcedPseudoClasses:[]});
+}
 for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});await js('document.fonts.ready');if(width<600)await js("document.querySelector('.mobile-chapter-link')?.click()");await js('new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))');
  if(width<600){
