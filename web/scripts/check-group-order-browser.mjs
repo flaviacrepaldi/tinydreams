@@ -10,6 +10,8 @@ await cdp('Page.enable');await cdp('Page.navigate',{url:qaUrl});await wait("type
 
 await js(`showDemo();state.homeFilter='all';state.groups=[{id:'order',name:'Meus cuidados'}];state.goals.forEach((g,i)=>{g.group_id='order';g.title=i===0?'Um título longo para conferir a ordem dos meus cuidados na tela inicial':g.title});render()`);
 const original=await js('state.goals.map(g=>g.id)');
+await js(`state.goals.push({...state.goals[0],id:'order-completed',title:'Já concluído',target:1,days:[dayBefore(2)],plan:{...planOf({}),kind:'habit',completionMode:'total'}},{...state.goals[0],id:'order-archived',title:'Encerrado incompleto',days:[],plan:{...planOf({}),start:'2020-01-01',end:'2020-01-02',incompleteAccepted:true}});render()`);
+const hidden=['order-completed','order-archived'];
 
 async function drag(from,to,touch){
  const points=await js(`(()=>{const rows=[...document.querySelectorAll('#groupOrder .group-order-row')],a=rows[${from}].querySelector('button').getBoundingClientRect(),b=rows[${to}].getBoundingClientRect();return{x:a.left+a.width/2,y:a.top+a.height/2,end:b.top+b.height/2+${to>from?8:-8}}})()`);
@@ -28,6 +30,8 @@ for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:touch});
  await cdp('Emulation.setTouchEmulationEnabled',{enabled:touch});
  await js(`openGroup('order')`);
+ assert.deepEqual(await js("[...document.querySelectorAll('#groupOrder .group-order-row')].map(r=>r.dataset.id)"),original,'Only active dreams appear');
+ assert.equal(await js("document.querySelector('#groupOrder svg path').getAttribute('d')"),'M5 9h14M5 15h14');
  await drag(0,1,touch);
  const expected=[original[1],original[0],...original.slice(2)];
  assert.deepEqual(await js("[...document.querySelectorAll('#groupOrder .group-order-row')].map(r=>r.dataset.id)"),expected);
@@ -36,15 +40,20 @@ for(const width of [320,390,430,1280]){
  await js('document.fonts.ready');
  const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/group-order-'+width+'.png',Buffer.from(png.data,'base64'));
  await js("document.querySelector('#groupForm').requestSubmit()");await wait("!document.querySelector('#groupDialog').open");
- assert.deepEqual(await js('state.groups[0].goalOrder'),expected);
+ assert.deepEqual(await js('state.groups[0].goalOrder'),[...expected,...hidden]);
  assert.deepEqual(await js("[...document.querySelectorAll('.big-dream-volume .goal')].map(g=>g.dataset.goal)"),expected);
  await js(`openGroup('order')`);await drag(1,0,touch);
  await js("document.querySelector('#groupForm').requestSubmit()");await wait("!document.querySelector('#groupDialog').open");
- assert.deepEqual(await js('state.groups[0].goalOrder'),original);
+ assert.deepEqual(await js('state.groups[0].goalOrder'),[...original,...hidden]);
 }
 await js(`openGroup('order');document.querySelector('#groupOrder button').focus()`);
 await cdp('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowDown',code:'ArrowDown'});
 assert.deepEqual(await js("[...document.querySelectorAll('#groupOrder .group-order-row')].map(r=>r.dataset.id)"),[original[1],original[0],...original.slice(2)]);
 await js("document.querySelector('#groupDialog').close();openGroup('order')");
 assert.deepEqual(await js("[...document.querySelectorAll('#groupOrder .group-order-row')].map(r=>r.dataset.id)"),original,'Cancel discards draft');
-console.log('PASS: actual touch/mouse drag forward/backward, keyboard, save, reopen, cancel and wrapped titles at 320/390/430/1280px.');ws.close();
+await js("document.querySelector('#groupDialog').close();openGroup()");
+assert.equal(await js("document.querySelectorAll('#groupMembers input').length"),original.length,'New group selection only includes active dreams');
+await js("document.querySelector('#groupDialog').close();state.goals=state.goals.filter(g=>g.id.startsWith('order-'));openGroup('order')");
+assert.equal(await js("document.querySelectorAll('#groupOrder .group-order-row').length"),0);
+assert.match(await js("document.querySelector('#groupOrder').textContent"),/não tem tydreams ativos/);
+console.log('PASS: active-only rows, completed/archive preservation, two-line handle, empty state; actual touch/mouse drag forward/backward, keyboard, save, reopen, cancel and wrapped titles at 320/390/430/1280px.');ws.close();

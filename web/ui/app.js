@@ -164,7 +164,7 @@ function fitDreamGalleries(){
  });
 }
 function renderGroupOrder(ids){
- $('#groupOrder').innerHTML=ids.map(id=>{const g=state.goals.find(g=>g.id===id);return `<div class="group-order-row" data-id="${esc(id)}"><span>${esc(g.title)}</span><button type="button" class="icon-button group-order-handle" aria-label="Reposicionar ${esc(g.title)}" aria-describedby="groupOrderHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 6h1m6 0h1M8 12h1m6 0h1M8 18h1m6 0h1"/></svg></button></div>`}).join('')||'<p class="muted">Este Big Dream ainda não tem tydreams.</p>';
+ $('#groupOrder').innerHTML=ids.map(id=>{const g=state.goals.find(g=>g.id===id);return `<div class="group-order-row" data-id="${esc(id)}"><span>${esc(g.title)}</span><button type="button" class="icon-button group-order-handle" aria-label="Reposicionar ${esc(g.title)}" aria-describedby="groupOrderHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M5 9h14M5 15h14"/></svg></button></div>`}).join('')||'<p class="muted">Este Big Dream não tem tydreams ativos.</p>';
  $('#groupOrderStatus').textContent='';
 }
 function announceGroupPosition(row){
@@ -213,9 +213,9 @@ $('#groupOrder').addEventListener('pointerdown',event=>{
 function openGroup(id){
  const group=state.groups.find(g=>g.id===id);
  $('#groupId').value=group?.id||'';$('#groupName').value=group?.name||'';$('#groupFormTitle').textContent=group?'ajustes do big dream':'Criar um Big Dream';$('#groupError').textContent='';
- $('#groupMembers').innerHTML=state.goals.length?state.goals.map(g=>{const current=state.groups.find(group=>group.id===g.group_id);return `<label class="group-member"><input type="checkbox" value="${esc(g.id)}" ${group&&g.group_id===group.id?'checked':''}><span><strong>${esc(g.title)}</strong><small>${complete(g)?'Realizado · ':''}${current?esc(current.name):'Sem Big Dream'}</small></span></label>`}).join(''):'<p class="muted">Você pode criar o grupo agora e adicionar tydreams depois.</p>';
+ $('#groupMembers').innerHTML=state.goals.some(g=>!complete(g)&&!isArchivedIncomplete(g))?state.goals.filter(g=>!complete(g)&&!isArchivedIncomplete(g)).map(g=>{const current=state.groups.find(group=>group.id===g.group_id);return `<label class="group-member"><input type="checkbox" value="${esc(g.id)}" ${group&&g.group_id===group.id?'checked':''}><span><strong>${esc(g.title)}</strong><small>${complete(g)?'Realizado · ':''}${current?esc(current.name):'Sem Big Dream'}</small></span></label>`}).join(''):'<p class="muted">Você pode criar o grupo agora e adicionar tydreams depois.</p>';
  $('#groupMembers').closest('fieldset').hidden=!!group;
- $('#groupOrderSection').hidden=!group;renderGroupOrder(group?orderedGroupGoals(state.goals.filter(g=>g.group_id===id),group).map(g=>g.id):[]);
+ $('#groupOrderSection').hidden=!group;renderGroupOrder(group?orderedGroupGoals(state.goals.filter(g=>g.group_id===id&&!complete(g)&&!isArchivedIncomplete(g)),group).map(g=>g.id):[]);
  $('#saveGroup').textContent=group?'salvar alterações':'criar big dream';
  $('#deleteGroup').hidden=!group;$('#groupDeleteConfirm').hidden=true;showDialog($('#groupDialog'));
 }
@@ -227,6 +227,7 @@ $('#groupForm').addEventListener('submit',async event=>{
  state.busy=true;$('#saveGroup').disabled=true;$('#groupError').textContent='';
  try{
   const goalOrder=[...document.querySelectorAll('#groupOrder .group-order-row')].map(row=>row.dataset.id);
+  if(id)goalOrder.push(...orderedGroupGoals(state.goals.filter(g=>g.group_id===id&&!goalOrder.includes(g.id)),state.groups.find(g=>g.id===id)).map(g=>g.id));
   const group=state.demo?{id:id||'demo-group-'+crypto.randomUUID(),name,...(id?{goalOrder}:{})}:await api('/groups'+(id?'/'+id:''),id?'PATCH':'POST',id?{name,goalOrder}:{name,goalIds});
   if(id)Object.assign(state.groups.find(g=>g.id===id),group);else state.groups.push(group);
   if(!id)for(const g of state.goals){if(goalIds.includes(g.id))g.group_id=group.id}
