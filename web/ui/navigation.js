@@ -8,7 +8,7 @@
     today:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
     shelf:'<path d="M3 21h18M5 3h4v15H5zm5 2h4v13h-4zm5-1 4-1 3 14-4 1z"/>'
   });
-  const navIcons={dreams:'book',today:'today',calendar:'calendar',shelf:'shelf',analytics:'analytics'};
+  const navIcons={dreams:'book',today:'today',calendar:'calendar',shelf:'shelf',wishlist:'star',analytics:'analytics'};
   document.querySelectorAll('.tab').forEach(button => {
     button.insertAdjacentHTML('afterbegin', icon(navIcons[button.dataset.view], 'nav-symbol'));
   });

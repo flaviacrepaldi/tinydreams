@@ -13,7 +13,7 @@ async function capture(name,width,height=900){await cdp('Emulation.setDeviceMetr
 try {
  await cdp('Page.enable');await cdp('Runtime.enable');await cdp('Network.enable');await cdp('Network.setCacheDisabled',{cacheDisabled:true});await cdp('Page.navigate',{url:base});await wait('typeof calendarState==="function" && typeof state!=="undefined" && !state.busy');
  await js(`showDemo();const p={kind:'habit',start:'2026-10-01',end:'2026-10-31',weekdays:[0,1,2,3,4,5,6],tasks:[],items:[],notes:'',unit:''};state.goals=[{id:'qa-read',title:'Ler Machado de Assis',reward:'Um LIVRO especial',color:'lavender',target:31,days:['2026-10-26'],entries:[],failures:['2026-10-25'],plan:{...p,emoji:'📖',notes:'Meu ACORDO pessoal'}},{id:'qa-water',title:'Beber ÁGUA',reward:'',color:'peach',target:31,days:['2026-10-26'],entries:[{key:'partial',day:'2026-10-27',value:1}],failures:[],plan:{...p,emoji:'💧',dailyTarget:2,unit:'L'}},{id:'qa-list',title:'Livros do MÊS',color:'sage',target:2,days:[],entries:[],failures:[],plan:{...p,kind:'list',items:[{id:'book-one',title:'O Hobbit',date:'2026-10-28'},{id:'book-two',title:'DUNA',date:'2026-10-30'}]}}];state.groups=[{id:'qa-group',name:'Minha BIBLIOTECA'}];state.goals[0].group_id='qa-group';seedMilestones();render()`);
- await wait('document.querySelectorAll(".nav-symbol").length===4');
+ await wait('document.querySelectorAll(".nav-symbol").length===5');
  await js("Promise.all(['/garden.png','/talismans.png','/ghost-jar-v2.png','/ghost-spirit-v2.png'].map(src=>{const image=new Image();image.src=src;return image.decode()}))");await capture('overview-desktop',1440,1000);await capture('overview-mobile',390,844);
  await assert('document.querySelector(".goal h2").textContent==="Ler Machado de Assis"','User title casing changed');
  await assert('document.querySelector(".group-heading h2").textContent==="Minha BIBLIOTECA"','User group casing changed');
@@ -34,5 +34,5 @@ try {
  await js('DreamThemes.preview("2027-04")');await click('[data-view=calendar]');await capture('calendar-light',390,844);await js('DreamThemes.reset()');
  await assert('state.goals[0].days.length===1 && state.goals[0].title==="Ler Machado de Assis"','Navigation mutated personal fixture');
  if(errors.length)throw Error(errors.join('\n'));
- console.log('PASS: four-view navigation, mobile/desktop/320px layouts, lowercase interface with preserved custom text, planned/done/failed/partial stickers, day agenda, historical date, future read-only, filter, month controls, create/edit, shelf/album, settings, light theme and unchanged records.');
+ console.log('PASS: five-view navigation, mobile/desktop/320px layouts, lowercase interface with preserved custom text, planned/done/failed/partial stickers, day agenda, historical date, future read-only, filter, month controls, create/edit, shelf/album, settings, light theme and unchanged records.');
 } finally {await cdp('Page.close');ws.close();}

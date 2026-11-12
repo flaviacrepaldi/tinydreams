@@ -17,6 +17,13 @@ export function impulseElapsed(g,now=Date.now()){
  return {start,seconds:Math.max(0,Math.floor((now-start)/1000))};
 }
 export function validatePlan(p){
+ if(p?.wishlistReward!=null){
+  const r=p.wishlistReward;
+  if(r?.budget!=null&&!['any','small','medium','high','large'].includes(r.budget))throw Error('Escolha um limite de valor válido para a recompensa.');
+  if(!r||typeof r!=='object'||Array.isArray(r)||!['none','manual','random-now','random-complete'].includes(r.mode)||r.itemId!=null&&(typeof r.itemId!=='string'||!/^[-\w]{1,80}$/.test(r.itemId))||r.title!=null&&(typeof r.title!=='string'||r.title.length>160)||r.link!=null&&(typeof r.link!=='string'||r.link.length>2000))throw Error('Escolha uma recompensa válida da wishlist.');
+  if(['manual','random-now'].includes(r.mode)&&!r.itemId)throw Error('Selecione ou sorteie um item da wishlist.');
+ }
+
  if(p?.agreement!=null&&(typeof p.agreement!=='string'||p.agreement.length>2000))throw Error('Use até 2000 caracteres para seu combinado.');
  if(p?.impulseStartedAt!=null&&!Number.isFinite(Date.parse(p.impulseStartedAt)))throw Error('Confira a data e hora de início.');
  if(p?.impulseResets!=null&&(typeof p.impulseResets!=='object'||Array.isArray(p.impulseResets)||Object.entries(p.impulseResets).some(([day,time])=>!validDay(day)||typeof time!=='string'||!Number.isFinite(Date.parse(time)))))throw Error('Confira os horários das recaídas.');
@@ -124,3 +131,9 @@ export function pastPracticeDays(g,asOf){
  return days;
 }
 export const pendingPastDays = (g,asOf) => pastPracticeDays(g,asOf).filter(day=>!outcomeOf(g,day));
+
+// An optional budget excludes unclassified wishes; an unrestricted draw includes them.
+export function wishlistValueClass(item){return item.amount!=null?(item.amount<=50?'small':item.amount<=200?'medium':item.amount<=500?'high':'large'):(item.valueClass||'')}
+export function eligibleWishlist(items,budget='any'){
+ const rank={small:1,medium:2,high:3,large:4};return items.filter(w=>!w.completed&&(budget==='any'||rank[wishlistValueClass(w)]&&rank[wishlistValueClass(w)]<=rank[budget]));
+}
