@@ -21,6 +21,7 @@ for(const width of [320,390,430,1280]){
  assert.equal(await js("[...document.querySelectorAll('.daily-keepsakes,.keepsake-line')].every(e=>{const s=getComputedStyle(e);return s.backgroundColor==='rgba(0, 0, 0, 0)'&&s.backgroundImage==='none'&&s.backdropFilter==='none'})"),true,'The keepsake cord has no background panel or blur');
  assert.equal(await js("document.querySelector('.daily-keepsakes').textContent.trim()"),'','Symbols only, no visible copy');
  assert.equal(await js("document.querySelectorAll('.keepsake.is-done').length"),4);
+ assert.equal(await js("document.querySelectorAll('.keepsake-leaf').length"),0,'Bookmarks do not add a decorative completion leaf');
  assert.equal(await js("document.querySelectorAll('.keepsake.is-pending').length"),1);
  await js("document.querySelector('[data-action=find-completed][data-id=reading]').click()");
  if(width<600)assert.ok(await js("{const c=document.querySelector('[data-goal=reading]'),g=c.closest('.goal-grid');Math.abs(c.getBoundingClientRect().left-g.getBoundingClientRect().left)<2}"),'Pending outline also links to its card');

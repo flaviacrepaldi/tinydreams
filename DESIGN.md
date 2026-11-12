@@ -570,6 +570,4 @@ When a non-impulse habit can reach its remaining target within the visible windo
 
 The final-day circle also carries eight short static rays in the dream color, around the dashed forecast and the earned final seal. Keep them outside the circle without moving neighboring dates or changing grid geometry.
 
-## Transparent rounded action controls
-
-The user requested smaller interface type and transparent, fully rounded outlined buttons throughout the app and login. Centralize action styling in `web/ui/controls.css`, including selected controls: use accent ink/outline rather than filled backgrounds. Navigation retains its measured height and uses an inset outline. Illustrated book/portrait/medal/bookmark controls and calendar data cells keep their object/data appearance. Reduce dream titles to 22px while preserving their 28px line height, subtitle gap and fixed 582px card geometry. Wishlist item titles use 16px on mobile, 21px desktop. Keep the smallest metadata readable and form inputs at 16px for iPhone use.
+Icon-only controls use transparent circular outlines and consistent 18px glyphs. Within dream card menus every control uses the same 36px circle, including the diary. Text buttons, navigation and typography keep their existing styles.

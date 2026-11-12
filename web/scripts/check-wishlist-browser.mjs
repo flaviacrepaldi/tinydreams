@@ -35,12 +35,13 @@ try{
   const nav=await js("[...document.querySelectorAll('.tabs .tab')].map(b=>{const r=b.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width}})");
   const actions=await js("[...document.querySelectorAll('.wish-actions button')].map(b=>{const r=b.getBoundingClientRect();return {icon:!!b.querySelector('svg'),label:b.getAttribute('aria-label'),text:b.textContent.trim(),width:r.width,height:r.height}})");
   assert.ok(actions.every(b=>b.icon&&b.label&&b.text===''&&b.width>=44&&b.height>=44),'Icon-only wishlist actions retain names and 44px targets '+width);
+  const iconStyle=await js("[...document.querySelectorAll('.wish-actions button')].map(b=>{const s=getComputedStyle(b),i=b.querySelector('svg').getBoundingClientRect();return {bg:s.backgroundColor,radius:s.borderRadius,border:s.borderTopWidth,w:i.width,h:i.height}})");
+  assert.ok(iconStyle.every(s=>s.bg==='rgba(0, 0, 0, 0)'&&s.radius==='50%'&&s.border==='1px'&&s.w===18&&s.h===18),'Icon buttons share transparent circles and consistent glyph size');
+  assert.notEqual(await js("getComputedStyle(document.querySelector('.wish-heading .primary')).backgroundColor"),'rgba(0, 0, 0, 0)','Text actions retain their filled appearance');
   if(width<600){
    const compact=await js("(()=>{const row=document.querySelector('.wish-item'),title=row.querySelector('h3'),link=row.querySelector('.wish-mobile-link');return {height:row.getBoundingClientRect().height,title:parseFloat(getComputedStyle(title).fontSize),link:!!link&&getComputedStyle(link).display!=='none',scroll:row.scrollHeight-row.clientHeight}})()");
-   assert.ok(compact.height<=205&&compact.title===16&&compact.link&&compact.scroll<=1,'Long wishlist item stays compact without hiding content '+JSON.stringify({width,...compact}));
+   assert.ok(compact.height<=205&&compact.title===18&&compact.link&&compact.scroll<=1,'Long wishlist item stays compact without hiding content '+JSON.stringify({width,...compact}));
   }
-  const controls=await js("[...document.querySelectorAll('.wish-actions button,.wish-heading button,.wish-filters button,.tabs .tab')].map(b=>{const s=getComputedStyle(b);return {background:s.backgroundColor,radius:parseFloat(s.borderRadius),border:parseFloat(s.borderTopWidth),outline:s.outlineStyle}})");
-  assert.ok(controls.every(b=>b.background==='rgba(0, 0, 0, 0)'&&b.radius>=20&&(b.border>=1||b.outline==='solid')),'Shared transparent rounded outlines '+JSON.stringify({width,controls}));
   assert.equal(nav.length,5);assert.ok(nav.every(n=>n.width>=44&&n.left>=0&&n.right<=width+1),'Navigation does not fit '+width);
   assert.equal(await js("getComputedStyle(document.querySelector('.welcome')).display"),'none');
  }

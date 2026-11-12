@@ -54,7 +54,7 @@ function completedToday(g){
 function dailyKeepsakes(goals){
  goals=goals.filter(g=>planOf(g).kind==='habit'||completedToday(g));
  if(!goals.length)return '';
- return `<nav class="daily-keepsakes ${rewardAllToday()?'all-complete':''}" aria-label="Tydreams de hoje"><div class="keepsake-line"><svg class="keepsake-cord" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M1 3 Q200 25 399 3"/></svg>${goals.map(g=>`<button type="button" class="keepsake ${completedToday(g)?'is-done':'is-pending'}" data-action="find-completed" data-id="${esc(g.id)}" aria-label="Ver ${esc(g.title)}, ${completedToday(g)?'concluído hoje':'pendente'}" title="${esc(g.title)}">${goalEmoji(g)}<svg class="keepsake-rule" viewBox="0 0 42 43" fill="none" aria-hidden="true"><path d="M4 5H38V37L21 31 4 37Z"/></svg><span class="keepsake-leaf" aria-hidden="true">${icon('leaf')}</span></button>`).join('')}</div></nav>`;
+ return `<nav class="daily-keepsakes ${rewardAllToday()?'all-complete':''}" aria-label="Tydreams de hoje"><div class="keepsake-line"><svg class="keepsake-cord" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true"><path d="M1 3 Q200 25 399 3"/></svg>${goals.map(g=>`<button type="button" class="keepsake ${completedToday(g)?'is-done':'is-pending'}" data-action="find-completed" data-id="${esc(g.id)}" aria-label="Ver ${esc(g.title)}, ${completedToday(g)?'concluído hoje':'pendente'}" title="${esc(g.title)}">${goalEmoji(g)}<svg class="keepsake-rule" viewBox="0 0 42 43" fill="none" aria-hidden="true"><path d="M4 5H38V37L21 31 4 37Z"/></svg></button>`).join('')}</div></nav>`;
 }
 function orderedGroupGoals(goals,group){
  const order=group?.goalOrder||[];

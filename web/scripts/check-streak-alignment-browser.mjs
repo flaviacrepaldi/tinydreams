@@ -25,7 +25,7 @@ for(const selector of ['#newGoalButton','.goal .small-button','.goal .check-butt
  await new Promise(r=>setTimeout(r,250));
  assert.deepEqual(await paint(),baseline,`Hover paints selection: ${selector}`);
  await cdp('CSS.forcePseudoState',{nodeId,forcedPseudoClasses:['focus','focus-visible']});
- assert.deepEqual(await paint(),baseline,`Focus changes the permanent control outline: ${selector}`);
+ assert.equal((await paint()).at(-1),'none',`Focus ring remains: ${selector}`);
  await cdp('CSS.forcePseudoState',{nodeId,forcedPseudoClasses:[]});
 }
 for(const width of [320,390,430,1280]){
@@ -50,8 +50,10 @@ for(const width of [320,390,430,1280]){
  assert.ok(circles.every(c=>Math.abs(c.width-c.height)<1&&c.width<=40.1&&c.radius==='50%'),`Streak days are not circles: ${JSON.stringify(circles)}`);
  const artLayout=await js("[...document.querySelectorAll('.goal')].map(c=>{const a=c.querySelector('.amulet-frame').getBoundingClientRect(),t=c.querySelector('.countdown').getBoundingClientRect(),d=c.querySelector('.dream-daily-slot').getBoundingClientRect();return {w:a.width,h:a.height,gap:a.left-t.right,bottom:a.bottom-d.top}})");
  assert.ok(artLayout.every(v=>v.w===116&&v.h===124&&v.gap>=-1&&v.bottom<=-7),`Amulet overlap: ${JSON.stringify(artLayout)}`);
+ const menuIcons=await js("[...document.querySelectorAll('.goal-menu button')].map(b=>{const r=b.getBoundingClientRect(),i=b.querySelector('svg').getBoundingClientRect(),s=getComputedStyle(b);return {w:r.width,h:r.height,iw:i.width,ih:i.height,bg:s.backgroundColor,radius:s.borderRadius}})");
+ assert.ok(menuIcons.length>0&&menuIcons.every(b=>b.w===36&&b.h===36&&b.iw===18&&b.ih===18&&b.bg==='rgba(0, 0, 0, 0)'&&b.radius==='50%'),'Card icon controls must have matching circles and glyphs: '+JSON.stringify(menuIcons));
  const titleGaps=await js("[...document.querySelectorAll('.goal')].map(c=>{const t=c.querySelector('h2'),s=c.querySelector('.dream-summary-subtitle');return {gap:s.getBoundingClientRect().top-t.getBoundingClientRect().bottom,size:parseFloat(getComputedStyle(t).fontSize),line:parseFloat(getComputedStyle(t).lineHeight),inset:parseFloat(getComputedStyle(t).paddingLeft)}})");
- assert.ok(titleGaps.every(v=>v.gap>=0&&v.gap<=3&&v.size===22&&v.line>=28&&v.inset>=2),JSON.stringify(titleGaps));
+ assert.ok(titleGaps.every(v=>v.gap>=0&&v.gap<=3&&v.size===24&&v.line>=28&&v.inset>=2),JSON.stringify(titleGaps));
  const geometry=await js("[...document.querySelectorAll('.goal')].map(c=>{const r=c.getBoundingClientRect();return {height:r.height,title:c.querySelector('h2').getBoundingClientRect().top-r.top,subtitle:c.querySelector('.dream-summary-subtitle').getBoundingClientRect().top-r.top,progress:c.querySelector('.dream-progress').getBoundingClientRect().top-r.top}})");
  for(const key of ['height','title','progress'])assert.ok(Math.max(...geometry.map(v=>v[key]))-Math.min(...geometry.map(v=>v[key]))<2,`Inconsistent ${key}: ${JSON.stringify(geometry)}`);
 

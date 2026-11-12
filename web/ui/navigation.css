@@ -653,8 +653,6 @@ html[data-edition] .dream-overview .big-dream-volume>.group-heading>.rename-grou
 .keepsake::before{background:linear-gradient(110deg,color-mix(in srgb,var(--text) 83%,var(--accent)),color-mix(in srgb,var(--text) 94%,var(--accent)) 55%,color-mix(in srgb,var(--text) 83%,var(--accent)))}
 .keepsake::after{width:5px;left:19px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 65%,var(--bg)),var(--accent) 45%,color-mix(in srgb,var(--accent) 65%,var(--bg)))}
 .keepsake>.keepsake-rule{position:absolute;inset:3px 1px 0;width:42px;height:43px;margin:0;stroke:currentColor;stroke-width:.6;opacity:.4;pointer-events:none}
-.keepsake-leaf{position:absolute;left:5px;top:8px;opacity:.55;pointer-events:none}
-.keepsake-leaf svg{display:block;width:7px;height:9px;margin:0;transform:rotate(-20deg)}
 @media(max-width:560px){
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading{grid-template-columns:minmax(0,1fr) 44px;padding:4px 12px 2px 20px}
  html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.goal-grid>.goal{border-radius:10px;box-shadow:none}
@@ -671,7 +669,6 @@ html[data-edition] .dream-overview .big-dream-volume>.group-heading>.rename-grou
 .keepsake.is-pending{color:var(--muted)}
 .keepsake.is-pending::before{background:none}
 .keepsake.is-pending>.keepsake-rule{opacity:.85;stroke-width:1;stroke-dasharray:2 2}
-.keepsake.is-pending .keepsake-leaf{display:none}
 .daily-keepsakes[data-after="true"]{mask-image:linear-gradient(to right,#000 calc(100% - 18px),transparent)}
 .daily-keepsakes[data-before="true"]{mask-image:linear-gradient(to right,transparent,#000 18px)}
 .daily-keepsakes[data-before="true"][data-after="true"]{mask-image:linear-gradient(to right,transparent,#000 18px,#000 calc(100% - 18px),transparent)}
