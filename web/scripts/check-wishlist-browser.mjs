@@ -10,6 +10,12 @@ const click=selector=>js(`document.querySelector(${JSON.stringify(selector)}).cl
 const shot=async name=>{await js('document.fonts.ready;new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))');await writeFile('/tmp/wishlist-'+name+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'))};
 try{
  await cdp('Page.enable');await cdp('Page.navigate',{url:qaUrl});await wait("typeof state!=='undefined'&&!state.busy&&typeof renderWishlist==='function'");
+ await js(`(()=>{const probe=document.createElement('div');probe.id='currencyQA';probe.innerHTML='<p>de r$ 10 a R$ 20</p><p data-user-content>Meu Texto r$ 40</p><input placeholder="Valor em R$" value="r$ digitado">';document.body.append(probe)})()`);
+ await wait('document.querySelector("#currencyQA p").textContent==="de R$ 10 a R$ 20"');
+ assert.equal(await js('document.querySelector("#currencyQA [data-user-content]").textContent'),'Meu Texto R$ 40');
+ assert.equal(await js('document.querySelector("#currencyQA input").value'),'r$ digitado','Formatting must not change entered values');
+ assert.equal(await js('document.querySelector("#currencyQA input").placeholder'),'valor em R$');
+ await js('document.querySelector("#currencyQA").remove()');
  assert.deepEqual(await js("[...document.querySelectorAll('.tabs [data-view]')].map(b=>b.dataset.view)"),['dreams','shelf','wishlist','analytics','calendar'],'Calendar follows analytics');
  await click('[data-view=wishlist]');await wait('!!document.querySelector(".wish-empty")');
  await shot('empty');
@@ -27,6 +33,12 @@ try{
   await shot(width);
   assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false,'Page overflow '+width);
   const nav=await js("[...document.querySelectorAll('.tabs .tab')].map(b=>{const r=b.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width}})");
+  const actions=await js("[...document.querySelectorAll('.wish-actions button')].map(b=>{const r=b.getBoundingClientRect();return {icon:!!b.querySelector('svg'),label:b.getAttribute('aria-label'),text:b.textContent.trim(),width:r.width,height:r.height}})");
+  assert.ok(actions.every(b=>b.icon&&b.label&&b.text===''&&b.width>=44&&b.height>=44),'Icon-only wishlist actions retain names and 44px targets '+width);
+  if(width<600){
+   const compact=await js("(()=>{const row=document.querySelector('.wish-item'),title=row.querySelector('h3'),link=row.querySelector('.wish-mobile-link');return {height:row.getBoundingClientRect().height,title:parseFloat(getComputedStyle(title).fontSize),link:!!link&&getComputedStyle(link).display!=='none',scroll:row.scrollHeight-row.clientHeight}})()");
+   assert.ok(compact.height<=205&&compact.title===18&&compact.link&&compact.scroll<=1,'Long wishlist item stays compact without hiding content '+JSON.stringify({width,...compact}));
+  }
   assert.equal(nav.length,5);assert.ok(nav.every(n=>n.width>=44&&n.left>=0&&n.right<=width+1),'Navigation does not fit '+width);
   assert.equal(await js("getComputedStyle(document.querySelector('.welcome')).display"),'none');
  }
@@ -55,10 +67,10 @@ try{
  const otherWish=await js("(async()=>{await api('/wishlist','POST',{title:'Uma viagem cara',amount:650});return (await api('/wishlist','POST',{title:'Outro passeio',valueClass:'small'})).id})()");
  await js('wishlistMode=null;renderWishlist()');await wait('!!document.querySelector(".wish-value")');
  for(const width of [320,390,430,1280]){
-  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});await js('scrollTo(0,0)');await shot('prices-'+width);assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false,'Price labels overflow '+width);
+  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});await js('scrollTo(0,0)');await shot('prices-'+width);if(width<600){const sizes=await js("[...document.querySelectorAll('.wish-item')].map(e=>e.getBoundingClientRect().height)");assert.ok(sizes.every(h=>h<=155),'Ordinary wishlist rows stay compact '+JSON.stringify({width,sizes}))}assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false,'Price labels overflow '+width);
   if(width<600){await js('scrollTo(0,document.documentElement.scrollHeight)');await js('new Promise(r=>requestAnimationFrame(r))');const fits=await js("(()=>{const actions=[...document.querySelectorAll('.wish-actions')],r=actions.at(-1).getBoundingClientRect(),nav=document.querySelector('.tabs').getBoundingClientRect();return r.bottom<=nav.top})()");assert.equal(fits,true,'Last wish actions must scroll above bottom navigation '+width);await shot('prices-bottom-'+width)}
  }
- await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await click('[data-wish=new]');await js("document.querySelector('#wishTitle').value='Uma ideia para depois';document.querySelector('#wishAmount').value='245';document.querySelector('#wishAmount').dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('#wishAmount').scrollIntoView({block:'center'})");await shot('price-form');assert.equal(await js('document.querySelector("#wishValueClass").value'),'high');await click('[data-wish=cancel]');
+ await cdp('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await click('[data-wish=new]');await js("document.querySelector('#wishTitle').value='Uma ideia para depois';document.querySelector('#wishAmount').value='245';document.querySelector('#wishAmount').dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('#wishAmount').scrollIntoView({block:'center'})");await shot('price-form');assert.equal(await js('document.querySelector("#wishValueClass").value'),'high');assert.equal(await js('document.querySelector(".wishlist-panel").textContent.includes("r$")'),false,'All visible currency labels use uppercase R$');await click('[data-wish=cancel]');
  await js(`openForm(${JSON.stringify(gid)});document.querySelector('#goalExtras').open=true`);await wait('!wishRewardBusy');
  await choose('random-now');await js("document.querySelector('#wishRewardBudget').value='small';document.querySelector('#wishRewardBudget').dispatchEvent(new Event('change',{bubbles:true}))");await wait('!wishRewardBusy&&wishRewardConfig?.itemId');
  assert.ok([firstWish,otherWish].includes(await js('wishRewardConfig.itemId')));

@@ -32,17 +32,17 @@
     const button=event.target.closest('[data-calendar-goal]');if(!button)return;
     $('#calendarDayDialog').close();openDetails(button.dataset.calendarGoal,button.dataset.day);
   });
-  // User titles, notes, units and form values retain exactly the authored casing.
+  // Preserve user casing and input values; normalize the displayed currency symbol to R$.
   const userContent='[data-user-content],input,textarea,script,style,.goal h2,.group-heading h2,.group-member strong,.today-info h3,#progressTitle,.task-summary-title,.plan-item strong,.plan-notes,.reward-name,.dream-book h3,.shelf-selected h3,.spine-caption,#calendarGoal option:not([value="all"]),#goalGroup option:not([value=""])';
   function lowercaseNode(node) {
     if(node.nodeType===Node.TEXT_NODE){
-      if(!node.parentElement || node.parentElement.closest(userContent))return;
-      const value=node.data.toLocaleLowerCase('pt-BR');if(value!==node.data)node.data=value;
+      if(!node.parentElement || node.parentElement.closest('input,textarea,script,style'))return;
+      const value=(node.parentElement.closest(userContent)?node.data:node.data.toLocaleLowerCase('pt-BR')).replace(/r\$/gi,'R$');if(value!==node.data)node.data=value;
       return;
     }
     if(node.nodeType!==Node.ELEMENT_NODE)return;
-    if(node.hasAttribute('placeholder'))node.setAttribute('placeholder',node.getAttribute('placeholder').toLocaleLowerCase('pt-BR'));
-    if(node.matches(userContent))return;
+    if(node.hasAttribute('placeholder'))node.setAttribute('placeholder',node.getAttribute('placeholder').toLocaleLowerCase('pt-BR').replace(/r\$/gi,'R$'));
+    if(node.matches('input,textarea,script,style'))return;
     for(const child of node.childNodes)lowercaseNode(child);
   }
   lowercaseNode(document.body);
