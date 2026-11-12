@@ -246,6 +246,9 @@ html[data-celebration-motion=active] .painted-glints>span{animation:painted-twin
 .daily-list-dialog .dialog-top .progress-heading{grid-column:2}
 
 /* Crossfade stationary watercolor poses instead of jumping the atlas background. */
+/* July's atlas has a stray sliver at the top of its train frames. Keep it
+   outside the painted window for both animated and still celebrations. */
+html[data-edition="2027-07"] .potion-sprite{clip-path:inset(2% 0 0)}
 .celebration-frame{display:none;position:absolute;inset:0;opacity:0;background-image:var(--celebration-art);background-size:400% 400%;background-repeat:no-repeat}
 html[data-celebration-motion=active] .potion-sprite{background-image:none}
 html[data-celebration-motion=active] .celebration-frame{display:block;animation:painted-frame 240ms linear both}

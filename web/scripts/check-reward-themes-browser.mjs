@@ -48,6 +48,11 @@ for(const edition of editions){
      await js(`document.querySelector('${panel}').getAnimations({subtree:true}).forEach(a=>{if(Number.isFinite(a.effect.getComputedTiming().endTime))a.finish()})`);
     }
     await settle();
+    if(edition.id==='2027-07'&&scenario==='fusion'){
+     const screenshot=await cdp('Page.captureScreenshot',{format:'png'});
+     const cleanTop=await js(`(async()=>{const sprite=document.querySelector('#itemMilestone .potion-sprite').getBoundingClientRect(),panel=getComputedStyle(document.querySelector('#itemMilestone')),expected=panel.backgroundColor.match(/[0-9.]+/g).slice(0,3).map(Number),image=new Image();image.src='data:image/png;base64,${screenshot.data}';await image.decode();const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);for(let x=Math.ceil(sprite.left+20);x<sprite.right-20;x++){const pixel=ctx.getImageData(x,Math.ceil(sprite.top+1),1,1).data;if(expected.some((c,i)=>Math.abs(c-pixel[i])>3))return false}return true})()`);
+     assert.ok(cleanTop,'July train must not show an atlas fragment above the illustration at '+width);
+    }
     const dimensions=await js(`(()=>{const panel=document.querySelector('${panel}'),r=panel.getBoundingClientRect(),action=panel.querySelector('.milestone-copy>button'),a=action?.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,overflow:panel.scrollWidth-panel.clientWidth,action:!a||a.bottom<=r.bottom+1}})()`);
     assert.ok(dimensions.left>=-1&&dimensions.right<=width+1&&dimensions.top>=-1&&(scenario==='art'||dimensions.bottom<=845)&&dimensions.overflow<=1&&dimensions.action,JSON.stringify(dimensions));
     assert.equal(await js('document.documentElement.scrollWidth>innerWidth'),false);
@@ -56,7 +61,7 @@ for(const edition of editions){
      const contrast=await js(`(()=>{const e=document.querySelector('.practice-achievement'),s=getComputedStyle(e);const luminance=c=>{const a=c.match(/[0-9.]+/g).slice(0,3).map(n=>n/255).map(n=>n<=.04045?n/12.92:((n+.055)/1.055)**2.4);return a[0]*.2126+a[1]*.7152+a[2]*.0722},a=luminance(s.color),b=luminance(s.backgroundColor);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05)})()`);
      assert.ok(contrast>=4.5,'Seal contrast '+contrast);
     }
-    if(width===390||width===320&&scenario==='milestone'||width===1280&&scenario==='dream')await capture(folder+'/'+scenario+'.png',panel);
+    if(width===390||width===320&&scenario==='milestone'||width===1280&&scenario==='dream'||edition.id==='2027-07'&&scenario==='fusion')await capture(folder+'/'+scenario+'.png',panel);
     if(edition.id==='2026-10'&&width===390&&scenario==='milestone')octoberSeal=await js("(()=>{const e=document.querySelector('.potion-sprite'),r=e.getBoundingClientRect();return{width:parseFloat(getComputedStyle(e).width),height:parseFloat(getComputedStyle(e).height),image:getComputedStyle(e.querySelector('.last-frame')).backgroundImage}})()");
    }catch(error){failures.push({edition:edition.id,width,scenario,error:error.message});console.log('FAIL '+JSON.stringify(failures.at(-1)));}
   }
