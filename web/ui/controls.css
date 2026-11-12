@@ -1,0 +1,40 @@
+@layer action-controls {
+/* Shared action controls. Illustrated objects and data cells keep their own materials. */
+html :is(button,a.text-button,a.secondary):not(:is(.portrait-spine,.writer-album-slot,.keepsake,.achievement-button,.reward-badge-peek,.calendar-day,.calendar-achievement)){
+ background:transparent!important;
+ border:1px solid var(--line)!important;
+ border-radius:999px!important;
+ color:var(--text)!important;
+ font-size:12px!important;
+}
+html :is(button,a.text-button,a.secondary):not(:is(.portrait-spine,.writer-album-slot,.keepsake,.achievement-button,.reward-badge-peek,.calendar-day,.calendar-achievement)):is(.active,[aria-pressed="true"],[aria-selected="true"],.done,.earned){
+ border-color:var(--accent)!important;
+ color:var(--accent)!important;
+}
+html button.tab.tab,html .home-filter button[data-action]{
+ border:0!important;
+ outline:1px solid var(--line)!important;
+ outline-offset:-1px!important;
+}
+html button.tab.tab.active,html .home-filter button[data-action][aria-pressed="true"]{outline-color:var(--accent)!important}
+html button.tab.tab,html .home-filter button[data-action]{font-size:11px!important}
+html button.icon-button.icon-button{font-size:22px!important}
+html .tabs .tab .nav-symbol{flex-shrink:0}
+}
+body{font-size:14px}
+h1{font-size:clamp(36px,4.6vw,56px)}
+.intro,.form-description,.plan-notes{font-size:13px}
+html[data-edition] .dream-overview .goal h2{font-size:22px!important;line-height:28px!important}
+.wishlist-panel h2,.shelf-heading h2,.dialog-top h2{font-size:28px}
+.wish-copy h3,.wish-form h3,.wish-empty h3{font-size:21px}
+.calendar-heading h2,.analytics-view h2{font-size:26px}
+/* Keep form entry legible and prevent automatic iPhone zoom. */
+html :is(input,select,textarea){font-size:16px!important}
+@media(max-width:700px){
+ .wishlist-panel h2,.shelf-heading h2,.dialog-top h2{font-size:25px}
+ .calendar-heading h2,.analytics-view h2{font-size:23px}
+ .wish-copy h3{font-size:16px;line-height:1.35}
+ .wish-copy p{font-size:12px}
+ .wish-actions{gap:6px;margin-left:0}
+}
+@media(min-width:701px){html .tabs .tab{padding-inline:12px}}

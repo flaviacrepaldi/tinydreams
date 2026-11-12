@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {writeFile,readFile} from 'node:fs/promises';
 const qaUrl=process.env.TINY_QA_URL||'http://localhost:4177',debugUrl=process.env.TINY_QA_DEBUG_URL||'http://127.0.0.1:9223';
 const target=await (await fetch(debugUrl+'/json/new?'+qaUrl,{method:'PUT'})).json();
 const ws=new WebSocket(target.webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));let rpcId=0;const pending=new Map();ws.addEventListener('message',e=>{const r=JSON.parse(e.data);if(r.id){const p=pending.get(r.id);pending.delete(r.id);if(r.error)p.reject(Error(r.error.message));else p.resolve(r.result)}});
@@ -21,6 +21,9 @@ for(const width of [320,390,430,1280]){
    if(width<600&&view==='intro')await js("document.querySelector('.mobile-chapter-back').click()");
    else if(width<600&&view==='dreams')await js("document.querySelector('.mobile-chapter-link').click()");
    await js('document.fonts.ready.then(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))))');
+   const controlFailures=await js(`(()=>{const skip='.portrait-spine,.writer-album-slot,.keepsake,.achievement-button,.reward-badge-peek,.calendar-day,.calendar-achievement';return [...document.querySelectorAll('button,a.text-button,a.secondary')].filter(b=>!b.matches(skip)&&b.getBoundingClientRect().width>0&&b.getBoundingClientRect().height>0).map(b=>{const s=getComputedStyle(b);return {name:b.getAttribute('aria-label')||b.textContent.slice(0,40),background:s.backgroundColor,image:s.backgroundImage,radius:parseFloat(s.borderRadius),border:parseFloat(s.borderTopWidth),outline:s.outlineStyle}}).filter(b=>b.background!=='rgba(0, 0, 0, 0)'||b.image!=='none'||b.radius<20||!(b.border>=1||b.outline==='solid'))})()`);
+   assert.deepEqual(controlFailures,[],`Transparent round control style in ${view} at ${width}px`);
+
    const geometry=await js(`(()=>{
     const b=document.querySelector('${width<600&&view==='dreams'?'.overview-mobile-brand':'.topbar .brand'}'),s=getComputedStyle(b),box=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}};
     const filter=${width<600&&view==='dreams'?"document.querySelector('.overview-tools .home-filter')":"null"};
@@ -39,4 +42,16 @@ for(const width of [320,390,430,1280]){
  console.log('PASS: identical logo geometry, typography and artwork across intro, home, calendar, shelf, analytics and return at '+width+'px, including top safe area');
 }
 await js("document.documentElement.style.removeProperty('--top-safe-area')");
+// Render the actual standalone login template through an isolated intercepted route.
+const loginHTML=(await readFile(new URL('../pages/login.html',import.meta.url),'utf8')).replaceAll('{{MESSAGE}}','');
+await cdp('Fetch.enable',{patterns:[{urlPattern:'*/login-qa',requestStage:'Request'}]});
+ws.addEventListener('message',event=>{const m=JSON.parse(event.data);if(m.method==='Fetch.requestPaused')cdp('Fetch.fulfillRequest',{requestId:m.params.requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'text/html; charset=utf-8'}],body:Buffer.from(loginHTML).toString('base64')}).catch(()=>{})});
+await cdp('Page.navigate',{url:qaUrl+'/login-qa'});await wait('!!document.querySelector("button[type=submit]")');
+for(const width of [320,390,430,1280]){
+ await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});await js('document.fonts.ready');
+ const login=await js("(()=>{const s=getComputedStyle(document.querySelector('button[type=submit]'));return {background:s.backgroundColor,radius:parseFloat(s.borderRadius),border:parseFloat(s.borderTopWidth),overflow:document.documentElement.scrollWidth>innerWidth}})()");
+ assert.ok(login.background==='rgba(0, 0, 0, 0)'&&login.radius>=20&&login.border>=1&&!login.overflow,'Login uses the shared transparent round style '+JSON.stringify({width,...login}));
+ await writeFile(`/tmp/controls-login-${width}.png`,Buffer.from((await cdp('Page.captureScreenshot',{format:'png'})).data,'base64'));
+}
+console.log('PASS: transparent rounded login buttons at every required viewport.');
 ws.close();

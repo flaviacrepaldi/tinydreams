@@ -37,8 +37,10 @@ try{
   assert.ok(actions.every(b=>b.icon&&b.label&&b.text===''&&b.width>=44&&b.height>=44),'Icon-only wishlist actions retain names and 44px targets '+width);
   if(width<600){
    const compact=await js("(()=>{const row=document.querySelector('.wish-item'),title=row.querySelector('h3'),link=row.querySelector('.wish-mobile-link');return {height:row.getBoundingClientRect().height,title:parseFloat(getComputedStyle(title).fontSize),link:!!link&&getComputedStyle(link).display!=='none',scroll:row.scrollHeight-row.clientHeight}})()");
-   assert.ok(compact.height<=205&&compact.title===18&&compact.link&&compact.scroll<=1,'Long wishlist item stays compact without hiding content '+JSON.stringify({width,...compact}));
+   assert.ok(compact.height<=205&&compact.title===16&&compact.link&&compact.scroll<=1,'Long wishlist item stays compact without hiding content '+JSON.stringify({width,...compact}));
   }
+  const controls=await js("[...document.querySelectorAll('.wish-actions button,.wish-heading button,.wish-filters button,.tabs .tab')].map(b=>{const s=getComputedStyle(b);return {background:s.backgroundColor,radius:parseFloat(s.borderRadius),border:parseFloat(s.borderTopWidth),outline:s.outlineStyle}})");
+  assert.ok(controls.every(b=>b.background==='rgba(0, 0, 0, 0)'&&b.radius>=20&&(b.border>=1||b.outline==='solid')),'Shared transparent rounded outlines '+JSON.stringify({width,controls}));
   assert.equal(nav.length,5);assert.ok(nav.every(n=>n.width>=44&&n.left>=0&&n.right<=width+1),'Navigation does not fit '+width);
   assert.equal(await js("getComputedStyle(document.querySelector('.welcome')).display"),'none');
  }
