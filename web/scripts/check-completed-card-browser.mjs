@@ -35,6 +35,18 @@ for(const width of [320,390,430,1280]){
   await wait("!!document.querySelector('.shelf-selected')");
   assert.equal(await js("document.querySelector('[data-action=redeem]')"),null);
   assert.equal(await js("state.goals[0].redeemed"),1,'Viewing a reward never changes saved records');
+  await js("document.querySelector('[data-action=shelf-book][aria-pressed=true]').click()");
+  await wait("!!document.querySelector('.shelf-intro')&&!document.querySelector('.shelf-selected')");
+  assert.equal(await js("document.querySelectorAll('.portrait-spine[aria-pressed=true]').length"),0,'Clicking selected book clears selection');
+  await js("document.querySelector('[data-action=shelf-book]').click()");await wait("!!document.querySelector('.shelf-selected')");
+  await js("document.querySelector('.shelf-selected h3').click()");
+  assert.equal(await js("!!document.querySelector('.shelf-selected')"),true,'Reading selected details keeps selection');
+  await js("document.querySelector('.shelf-heading').click()");
+  await wait("!!document.querySelector('.shelf-intro')&&!document.querySelector('.shelf-selected')");
+  assert.equal(await js("document.querySelectorAll('.portrait-spine[aria-pressed=true]').length"),0,'Clicking outside clears selection');
+  assert.equal(await js("document.documentElement.scrollWidth>innerWidth"),false,'Deselected shelf does not overflow');
+  if(kind==='habit')await writeFile('/tmp/shelf-deselected-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'));
+
  }
 }
 console.log('PASS: completed habit/impulse/amount/list cards, long reward, no redemption controls, collection destination, fixed height and no overlap at four widths');

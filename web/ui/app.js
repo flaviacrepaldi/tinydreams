@@ -847,13 +847,14 @@ async function renderShelf(){
  if(focusKey){const match=[...document.querySelectorAll('#content [data-action]')].find(b=>b.dataset.action===focusKey.action&&b.dataset.id===focusKey.id&&b.dataset.writer===focusKey.writer);match?.focus({preventScroll:true})}
 }
 document.addEventListener('click',event=>{
+ if(state.view==='shelf'&&collectionView==='shelf'&&selectedShelfBook&&!event.target.closest('.portrait-spine,.shelf-selected,button,a,input,select,textarea,dialog')){selectedShelfBook=null;renderShelf();return}
  const b=event.target.closest('[data-action]');if(!b)return;
  const action=b.dataset.action;
  if(action==='completed-shelf'){const books=state.goals.filter(complete).sort((a,b)=>completionDay(a).localeCompare(completionDay(b))||(a.created_at||'').localeCompare(b.created_at||'')||a.id.localeCompare(b.id));selectedShelfBook=b.dataset.id;shelfPage=Math.floor(books.findIndex(g=>g.id===selectedShelfBook)/8);collectionView='shelf';state.view='shelf';render()}
  if(action==='collection-achievements'){collectionView='achievements';renderShelf()}
  if(action==='collection-shelf'||action==='collection-album'){collectionView=action==='collection-album'?'album':'shelf';renderShelf()}
  if(action==='collection-retry')renderShelf();
- if(action==='shelf-book'){selectedShelfBook=b.dataset.id;renderShelf()}
+ if(action==='shelf-book'){selectedShelfBook=selectedShelfBook===b.dataset.id?null:b.dataset.id;renderShelf()}
  if(action==='select-writer'){selectedWriter=b.dataset.writer;renderShelf()}
  if(action==='shelf-prev'||action==='shelf-next'){shelfPage+=action==='shelf-next'?1:-1;selectedShelfBook=null;renderShelf()}
 });
