@@ -30,7 +30,7 @@ function showDemo(){$('#incompleteReviewDialog')?.close();resetMilestonePanel();
 window.addEventListener('resize',()=>requestAnimationFrame(alignDreamSummaries),{passive:true});
 document.fonts?.ready.then(alignDreamSummaries);
 function homeStatus(g){return planOf(g).kind!=='habit'?0:dayDone(g,today())?1:scheduled(g,today())?0:2}
-function visibleOnHome(g){return !isArchivedIncomplete(g)&&(!planOf(g).start||planOf(g).start<=today())&&(!complete(g)||[1,-1].includes(daysUntil(completionDay(g),today())))}
+function visibleOnHome(g){return !isArchivedIncomplete(g)&&(!planOf(g).start||planOf(g).start<=today())&&(!complete(g)||completionDay(g)===today())}
 function dailyStateBadge(g){
  if(complete(g))return `<span class="daily-state">${completionDay(g)===today()?'realizado hoje':'realizado ontem'}</span>`;
  if(planOf(g).impulse)return '';

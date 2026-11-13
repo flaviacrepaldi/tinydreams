@@ -25,13 +25,10 @@ for(const width of [320,390,430,1280]){
   const box=await js("(()=>{const r=document.querySelector('.goal').getBoundingClientRect();return{x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height,scale:1}})()");
   await writeFile('/tmp/completed-'+kind+'-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',clip:box,captureBeyondViewport:true})).data,'base64'));
   await js(`(()=>{const g=state.goals[0];g.days=[7,6,5,4,3,2,1].map(dayBefore);g.entries=g.entries.map(e=>({...e,day:dayBefore(1)}));if(g.plan.impulse)g.plan.impulseStartedAt=new Date(Date.now()-8*86400000-1000).toISOString();render()})()`);
-  assert.equal(await js("document.querySelector('.goal').dataset.complete"),'true','Yesterday’s completion remains on home');
-  assert.equal(await js("document.querySelector('.daily-state').textContent"),'realizado ontem');
-  await js('new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))');
-  await js("document.querySelector('.goal').scrollIntoView({block:'center',inline:'nearest',behavior:'instant'})");
-  const yesterdayBox=await js("(()=>{const r=document.querySelector('.goal').getBoundingClientRect();return{x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height,scale:1}})()");
-  if(kind==='habit')await writeFile('/tmp/completed-yesterday-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',clip:yesterdayBox,captureBeyondViewport:true})).data,'base64'));
-  await js("document.querySelector('.completed-shelf-link').click()");
+  assert.equal(await js("document.querySelector('.goal')"),null,'Yesterday’s completion leaves home');
+  await js("state.homeFilter='today';render()");
+  assert.equal(await js("document.querySelector('.goal')"),null,'Yesterday’s completion also leaves the today filter');
+  await js("state.view='shelf';selectedShelfBook='finished';render()");
   await wait("!!document.querySelector('.shelf-selected')");
   assert.equal(await js("document.querySelector('[data-action=redeem]')"),null);
   assert.equal(await js("state.goals[0].redeemed"),1,'Viewing a reward never changes saved records');
