@@ -42,6 +42,7 @@ for(const width of [320,390,430,1280]){
   }
   if(scenario==='art'){
    assert.equal(await js("collectionView==='achievements'"),true);
+   assert.deepEqual(await js("Array.from(document.querySelectorAll('.collection-tabs button'),b=>b.dataset.action)"),['collection-shelf','collection-album','collection-achievements'],'Collection tabs must follow the requested order');
    assert.equal(await js("document.querySelectorAll('.achievement-button').length"),6);
    assert.equal(await js("document.querySelector('.reward-reveal')"),null);
   }

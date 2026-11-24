@@ -825,7 +825,7 @@ function shelfDemo(count){
 async function renderShelf(){
  const token=++shelfRender,books=state.goals.filter(complete).sort((a,b)=>completionDay(a).localeCompare(completionDay(b))||(a.created_at||'').localeCompare(b.created_at||'')||a.id.localeCompare(b.id));
  const pages=Math.max(1,Math.ceil(books.length/8));shelfPage=Math.max(0,Math.min(shelfPage??Math.max(0,Math.ceil(books.length/8)-1),pages-1));
- const nav=`<div class="collection-tabs" role="group" aria-label="Sua coleção"><button class="secondary" data-action="collection-achievements" aria-pressed="${collectionView==='achievements'}">conquistas</button><button class="secondary" data-action="collection-shelf" aria-pressed="${collectionView==='shelf'}">Prateleira</button><button class="secondary" data-action="collection-album" aria-pressed="${collectionView==='album'}">escritores</button></div>`;
+ const nav=`<div class="collection-tabs" role="group" aria-label="Sua coleção"><button class="secondary" data-action="collection-shelf" aria-pressed="${collectionView==='shelf'}">Prateleira</button><button class="secondary" data-action="collection-album" aria-pressed="${collectionView==='album'}">escritores</button><button class="secondary" data-action="collection-achievements" aria-pressed="${collectionView==='achievements'}">conquistas</button></div>`;
  if(collectionView==='achievements'){$('#content').innerHTML=`<section class="writer-collection">${nav}${achievementsMarkup()}</section>`;return}
  const focused=document.activeElement?.closest('[data-action]');
  const focusKey=focused?{action:focused.dataset.action,id:focused.dataset.id,writer:focused.dataset.writer}:null;
