@@ -321,10 +321,32 @@ Object.assign(icons,{
  strength:'<path d="m7 7 10 10M3 8l5-5M2 5l3-3m11 19 5-5m-2 6 3-3M5 10l5-5m4 14 5-5"/>',
  apple:'<path d="M12 7c-8-5-12 4-7 12 2 3 4 2 7 1 3 1 5 2 7-1 5-8 1-17-7-12Zm0 0c0-4 2-5 4-5M12 7C8 7 7 5 7 3c3 0 5 1 5 4Z"/>'
 });
-const emojiChoices=[['📖','Livro','book'],['💧','Água','water'],['🌿','Folha','leaf'],['⭐','Estrela','star'],['🎯','Meta','target'],['🌙','Lua','moon'],['🍎','Fruta','apple'],['💪','Força','strength'],['🎵','Música','music'],['✍️','Escrita','pen'],['💰','Poupança','coin'],['🌸','Flor','flower'],['☀️','Sol','sun'],['❤️','Coração','heart'],['☕','Café','coffee'],['🏡','Casa','home']];
+Object.assign(icons,{
+ party:'<path d="m4 20 4-13 9 9-13 4ZM8 7l9 9M15 4l1-2m3 6 3-1m-9-1 2-3m4 9 2 1"/><circle cx="20" cy="3" r="1"/>',
+ balloon:'<path d="M12 16c-4 0-6-3-6-7a6 6 0 0 1 12 0c0 4-2 7-6 7Zm0 0-1 2h2l-1-2Zm0 2c3 2-3 3 0 5"/>',
+ cake:'<path d="M4 12h16v8H4zM3 20h18M4 15q2 2 4 0t4 0 4 0 4 0M12 12V7m0-2c-2-2 0-3 0-3s2 1 0 3Z"/>',
+ meditation:'<circle cx="12" cy="5" r="2"/><path d="M9 9h6l2 4 3 1M9 9l-2 4-3 1m5-4 1 5m4-5-1 5m-3 0-5 3c-2 2 1 3 3 2l4-2 4 2c2 1 5 0 3-2l-5-3"/>',
+ candle:'<path d="M8 10h8v11H8zM12 10V8m0-1c-3-2 0-5 0-5s3 3 0 5ZM6 21h12"/>',
+ shopping:'<path d="M5 8h14l1 13H4L5 8Zm4 0V6a3 3 0 0 1 6 0v2"/>',
+ film:'<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M7 4v16m10-16v16M3 8h4M3 16h4M17 8h4m-4 8h4M7 12h10"/>',
+ popcorn:'<path d="m5 10 2 11h10l2-11H5Zm4 0 1 11m5-11-1 11M6 10C2 8 5 4 8 6c0-4 5-4 5-1 3-3 6 0 5 2 4 0 4 3 1 3"/>',
+ plane:'<path d="m3 13 8 1 5 7 2-1-2-7 5-4c2-2 0-4-2-2l-5 3-7-4-2 1 5 6-5-1-2 1Z"/>',
+ suitcase:'<rect x="4" y="6" width="16" height="15" rx="2"/><path d="M9 6V4h6v2M8 6v15m8-15v15M7 21v1m10-1v1"/>',
+ camera:'<path d="M4 7h4l2-3h4l2 3h4v13H4V7Z"/><circle cx="12" cy="13" r="4"/>',
+ tree:'<path d="m12 2-5 7h3l-5 6h4l-4 4h14l-4-4h4l-5-6h3l-5-7Zm0 17v3"/>',
+ snowflake:'<path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M4 10l4-1-1-4m13 9-4 1 1 4M4 14l4 1-1 4M20 10l-4-1 1-4"/>',
+ egg:'<path d="M12 3C9 3 5 10 5 15a7 7 0 0 0 14 0c0-5-4-12-7-12ZM6 13l3 2 3-2 3 2 3-2"/>',
+ rabbit:'<path d="M8 10C5 2 8 1 10 8m4 0c2-7 5-6 2 2 3 1 4 3 4 5a8 8 0 0 1-16 0c0-2 1-4 4-5Z"/><path d="M9 14h.01M15 14h.01m-4 3h2"/>',
+ pumpkin:'<path d="M12 6c-2-3 0-4 2-4m-2 4C2 2 1 19 8 20c2 1 3 0 4 0s2 1 4 0c7-1 6-18-4-14Zm0 0c-4 1-4 13 0 14m0-14c4 1 4 13 0 14"/>',
+ bonfire:'<path d="M7 21h10M5 19l14 3M19 19 5 22M12 18c-4 0-6-3-4-7 1 2 2 2 2 2 0-3 2-4 3-7 1 3 4 5 4 8 0 2-2 4-5 4Zm0 0c-2-1-1-3 0-4 1 1 2 3 0 4Z"/>',
+ flags:'<path d="M2 5c6 3 14 3 20 0M4 6v6l4-4 4 5 4-5 4 4V6"/>',
+ umbrella:'<path d="M3 12a9 9 0 0 1 18 0c-2-2-4-2-6 0-2-2-4-2-6 0-2-2-4-2-6 0Zm9 0v7a2 2 0 0 0 4 0"/>',
+ paw:'<circle cx="6" cy="8" r="2"/><circle cx="11" cy="5" r="2"/><circle cx="17" cy="7" r="2"/><circle cx="20" cy="12" r="1.5"/><path d="M6 17c0-2 3-5 6-5s6 3 6 5-2 4-4 3a5 5 0 0 0-4 0c-2 1-4-1-4-3Z"/>'
+});
+const emojiChoices=[['📖','Livro','book'],['💧','Água','water'],['🌿','Folha','leaf'],['⭐','Estrela','star'],['🎯','Meta','target'],['🌙','Lua','moon'],['🍎','Fruta','apple'],['💪','Força','strength'],['🎵','Música','music'],['✍️','Escrita','pen'],['💰','Poupança','coin'],['🌸','Flor','flower'],['☀️','Sol','sun'],['❤️','Coração','heart'],['☕','Café','coffee'],['🏡','Casa','home'],['🎉','Festa','party'],['🎈','Balão','balloon'],['🎂','Bolo de aniversário','cake'],['🧘','Meditação','meditation'],['🕯️','Vela','candle'],['🛍️','Compras','shopping'],['🎬','Filmes','film'],['🍿','Pipoca','popcorn'],['✈️','Avião','plane'],['🧳','Mala de viagem','suitcase'],['📷','Fotografia','camera'],['🎄','Natal','tree'],['❄️','Neve','snowflake'],['🥚','Ovo de Páscoa','egg'],['🐰','Coelho de Páscoa','rabbit'],['🎃','Halloween','pumpkin'],['👻','Fantasma','ghost'],['🔥','Fogueira de festa junina','bonfire'],['🎏','Bandeirinhas de festa junina','flags'],['🏖️','Praia','umbrella'],['🐾','Animais','paw'],['🎁','Presente','gift'],['🧭','Aventura','compass']];
 function symbolChoice(value){return emojiChoices.find(([emoji])=>emoji===value)||emojiChoices.find(([emoji])=>emoji===({'✨':'⭐','💫':'⭐','🍓':'🍎','🫧':'💧'}[value]))||emojiChoices[0]}
 function goalEmoji(g){const value=planOf(g).emoji||({sage:'🌿',peach:'⭐',lavender:'📖'}[g.color]||'📖');return icon(symbolChoice(value)[2],'card-symbol')}
-$('#emojiChoices').innerHTML=emojiChoices.map(([value,name,symbol])=>`<button type="button" class="emoji-choice" data-emoji="${value}" aria-label="${name}" aria-pressed="false">${icon(symbol)}</button>`).join('');
+$('#emojiChoices').innerHTML=emojiChoices.map(([value,name,symbol])=>`<button type="button" class="emoji-choice" data-emoji="${value}" aria-label="${name}" title="${name}" aria-pressed="false">${icon(symbol)}</button>`).join('');
 function updateEmojiPicker(){const selected=symbolChoice($('#goalEmoji').value.trim());$('#emojiPreview').innerHTML=icon(selected[2]);document.querySelectorAll('[data-emoji]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.emoji===selected[0])))}
 $('#emojiChoices').addEventListener('click',event=>{const button=event.target.closest('[data-emoji]');if(button){$('#goalEmoji').value=button.dataset.emoji;updateEmojiPicker()}});
 const weekNames=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];

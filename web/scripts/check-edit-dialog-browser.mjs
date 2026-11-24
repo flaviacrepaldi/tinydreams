@@ -11,6 +11,13 @@ await js(`showDemo();state.groups=[{id:'one',name:'Cuidados'},{id:'two',name:'Ro
 await js("openForm();document.querySelector('#goalKind').value='list';syncKind()");
 assert.equal(await js("document.querySelector('#completionModeField').hidden"),true,'Creating a one-time list hides the day completion mode');
 await js("document.querySelector('#goalDialog').close()");
+// New symbols must select, serialize, and render their own icon rather than a fallback.
+await js("openForm() ");
+for(const name of ['Festa','Meditação','Compras','Filmes','Avião','Natal','Ovo de Páscoa','Halloween','Fogueira de festa junina','Bandeirinhas de festa junina']){
+ const result=await js(`(()=>{const b=[...document.querySelectorAll('.emoji-choice')].find(e=>e.getAttribute('aria-label')===${JSON.stringify(name)});if(!b)return null;b.click();const value=document.querySelector('#goalEmoji').value;return {selected:b.getAttribute('aria-pressed'),value,serialized:formPlan().emoji,rendered:goalEmoji({plan:{emoji:value}})===icon(symbolChoice(value)[2],'card-symbol'),fallback:symbolChoice(value)[2]==='star'}})()`);
+ assert.ok(result&&result.selected==='true'&&result.value===result.serialized&&result.rendered&&!result.fallback,`Symbol ${name} failed: ${JSON.stringify(result)}`);
+}
+await js("document.querySelector('#goalDialog').close()");
 for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});
  const ids=await js('state.goals.map(g=>g.id)');
