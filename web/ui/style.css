@@ -238,7 +238,8 @@ html[data-celebration-motion=active] .painted-glints>span{animation:painted-twin
 .history-day-mark{height:20px;display:block;color:var(--accent)}
 .outcome-status:empty{display:none}
 .counter-controls{display:flex;gap:12px;margin:20px 0}
-.counter-controls .primary{flex:1}
+.counter-controls .primary{flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.counter-controls .primary svg{width:18px;height:18px;flex:none}
 .day-note{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--line)}
 
 #progressDialog .progress-heading{min-width:0;flex:1}

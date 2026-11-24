@@ -20,6 +20,12 @@ for(const name of ['Festa','Meditação','Compras','Filmes','Avião','Natal','Ov
 await js("document.querySelector('#goalDialog').close()");
 for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});
+ await js("openDetails('align4',today())");
+ const counter=await js(`(()=>{const b=document.querySelector('#routineChecks [data-add-repeat]'),i=b.querySelector('svg'),r=b.getBoundingClientRect(),ir=i.getBoundingClientRect();return {width:r.width,height:r.height,iconWidth:ir.width,iconHeight:ir.height,overflow:document.querySelector('#progressDialog').scrollWidth-document.querySelector('#progressDialog').clientWidth}})()`);
+ assert.ok(counter.iconWidth===18&&counter.iconHeight===18&&counter.height<=60&&counter.width>counter.iconWidth&&counter.overflow<=1,`Counter button layout at ${width}px: ${JSON.stringify(counter)}`);
+ await js("document.querySelector('#routineChecks [data-add-repeat]').click()");await wait("!state.busy&&dailyTotal(state.goals.find(g=>g.id==='align4'),today())===1");
+ await js("document.querySelector('#routineChecks [data-undo-repeat]').click()");await wait("!state.busy&&dailyTotal(state.goals.find(g=>g.id==='align4'),today())===0");
+ await js("document.querySelector('#progressDialog').close()");
  const ids=await js('state.goals.map(g=>g.id)');
  for(const id of ids){
   await js(`openForm(${JSON.stringify(id)})`);await js('document.fonts.ready');await js("document.querySelector('#goalExtras').open=true;document.querySelector('#durationInfo').open=true");
