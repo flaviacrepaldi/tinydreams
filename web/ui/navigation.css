@@ -826,3 +826,5 @@ html[data-edition] .dream-overview .big-dream-volume>.group-heading>.group-creat
 html[data-edition] .dream-overview .big-dream-volume>.group-heading>.rename-group-button{grid-column:3;grid-row:1}
 html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading{grid-template-columns:minmax(0,1fr) 44px 44px;gap:4px}
 html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading>.rename-group-button{grid-column:3}
+
+.streak-square.is-partial{background:linear-gradient(to right,color-mix(in srgb,var(--goal) 28%,transparent) 0 var(--partial-progress),transparent var(--partial-progress) 100%)}
