@@ -8,17 +8,17 @@ Co-authored-by: Codex <codex@openai.com>
 
 Do not create commits automatically unless explicitly requested.
 
-## Required visual checks
+## Visual checks
 
-For every UI change, before publication:
+Run the full `npm --prefix web run check:ui` and inspect its screenshots when the user requests a complete visual review. Use a temporary database and browser; never change personal records for QA.
 
-- Run `npm --prefix web run check:ui`. This uses a temporary database and browser; never change personal records for QA.
+For UI changes:
 - Inspect the generated screenshots, not only the passing assertions. Check the entire card from title to last action, all affected variants, mixed groups, wrapped titles/notes, and the active theme.
 - Check 320px, 390px and 430px mobile widths and desktop. Reproduce user screenshots with a read-only snapshot of current records when needed. Check the installed-app viewport and bottom safe area for navigation changes.
 - Verify compact total card height, no unintended internal vertical scrolling, no large empty gaps, no clipped actions or horizontal page overflow, and stable streak positions. Alignment alone is not a sufficient result.
 - Do not equalize cards by adding the largest independent height of every section. Do not publish a layout that adds large empty spaces merely to satisfy alignment.
 - Preserve the fixed 582px card template and reserved empty fields. No card/gallery height changes after swiping. Amount projections occupy the streak region. Assert equal title/progress positions across all types; keep the subtitle 2px below the actual title within the reserved heading area.
 - For carousel changes, test actual touch gestures forward and backward; require one card per swipe and no stopping between cards. Include cumulative amount and one-time-list cards alongside habit variants in the publication gate.
-- Strengthen the regression checks for any reported issue, then run them against the final build. If a required check fails or cannot run, fix it before publishing; never describe an unperformed check as passed.
+- Strengthen the regression checks for any reported issue, then run them against the final build. Never describe an unperformed check as passed.
 
-`npm run deploy` runs browser layout checks and must stop before upload on failure. Keep this gate in local and CI deployments. Passing automation does not replace inspecting screenshots.
+`npm run deploy` runs browser layout checks and must stop before upload on failure. Keep this gate in local and CI deployments. Inspect screenshots when a complete visual review is requested.

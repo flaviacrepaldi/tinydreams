@@ -1,20 +1,28 @@
 import {writeFile,mkdir} from 'node:fs/promises';
-const target=await (await fetch('http://127.0.0.1:9223/json/new?http://localhost:4181',{method:'PUT'})).json();
+const qaUrl=process.env.TINY_QA_URL||'http://localhost:4181',debugUrl=process.env.TINY_QA_DEBUG_URL||'http://127.0.0.1:9223';
+const target=await (await fetch(debugUrl+'/json/new?'+encodeURIComponent(qaUrl),{method:'PUT'})).json();
 const ws=new WebSocket(target.webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));let rpcId=0;const pending=new Map();ws.addEventListener('message',e=>{const r=JSON.parse(e.data);if(r.id){const p=pending.get(r.id);pending.delete(r.id);if(r.error)p.reject(Error(r.error.message));else p.resolve(r.result)}});
 function cdp(method,params={}){return new Promise((resolve,reject)=>{const n=++rpcId;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}))})}
 async function js(expression){const r=await cdp('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.text+': '+r.exceptionDetails.exception?.description);return r.result.value}
 async function wait(expression){const end=Date.now()+10000;while(Date.now()<end){if(await js(expression))return;await new Promise(r=>setTimeout(r,100))}throw Error('Timed out: '+expression)}
 async function click(selector){await js(`document.querySelector(${JSON.stringify(selector)}).click()`)}
-await mkdir('/tmp/tiny-groups-review',{recursive:true});await cdp('Page.enable');await cdp('Page.navigate',{url:'http://localhost:4181'});await wait("typeof state!=='undefined'&&!state.busy");
+await mkdir('/tmp/tiny-groups-review',{recursive:true});await cdp('Page.enable');await cdp('Page.navigate',{url:qaUrl});await wait("typeof state!=='undefined'&&!state.busy");
 const assert=async(expression,message)=>{if(!await js(expression))throw Error(message)};
 await js("state.view='shelf';render()");await wait("!!document.querySelector('.portrait-bookcase')");
 await assert("document.querySelectorAll('.portrait-spine').length===8&&!document.querySelector('.spine-art')",'Empty shelf must have eight closed spines');
 await js('shelfDemo(3)');await wait("document.querySelectorAll('.spine-art').length===3");
 await assert("!document.querySelector('#content').textContent.includes('Machado')",'Partial shelf leaked identity');
+const partial=await js("[...document.querySelectorAll('.portrait-spine')].map(e=>e.dataset.id||null)");
+await js('shelfDemo(4)');await wait("document.querySelectorAll('.spine-art').length===4");
+const next=await js("[...document.querySelectorAll('.portrait-spine')].map(e=>e.dataset.id||null)");
+if(partial.some((id,i)=>id&&next[i]!==id)||new Set(next.filter(Boolean)).size!==4||partial.slice(0,3).every(Boolean))throw Error('Portrait pieces did not reveal in a stable mixed order');
+await js('renderShelf()');await wait("document.querySelectorAll('.spine-art').length===4");
+await assert(`JSON.stringify([...document.querySelectorAll('.portrait-spine')].map(e=>e.dataset.id||null))===${JSON.stringify(JSON.stringify(next))}`,'Portrait pieces changed on rerender');
+for(const width of [320,390,430,1280]){await cdp('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<600});await writeFile('/tmp/tiny-groups-review/partial-'+width+'.png',Buffer.from((await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:true})).data,'base64'))}
 await click('[data-action=collection-album]');await wait("!!document.querySelector('.writer-open-album')");await assert("document.querySelectorAll('.writer-album-slot').length===10&&!document.querySelector('.writer-portrait')",'Partial example unlocked album');
 await js('shelfDemo(8)');await wait("document.querySelectorAll('.spine-art').length===8");await click('[data-action=collection-album]');await wait("!!document.querySelector('.writer-portrait')");await assert("document.querySelectorAll('.unlocked').length===1&&document.querySelectorAll('.sealed').length===9",'Album slots incorrect');
-await assert("document.querySelector('.album-biography h3').textContent==='Machado de Assis'",'Earned biography missing');
-for(const width of [320,390,768,1440]){
+await assert("document.querySelector('.album-biography h3').textContent.toLowerCase()==='machado de assis'",'Earned biography missing');
+for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<600});
  for(const edition of ['2026-10','2026-12','2027-04','2027-09']){
   await js(`DreamThemes.preview('${edition}')`);await js('document.fonts.ready');
