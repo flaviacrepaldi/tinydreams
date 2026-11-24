@@ -35,8 +35,8 @@ for(const width of [320,390,430,1280]){
  const touch=width<600;
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:touch});
  await cdp('Emulation.setTouchEmulationEnabled',{enabled:touch});
- const heading=await js(`(()=>{const h=document.querySelector('.big-dream-volume .group-heading'),title=h.querySelector('h2').getBoundingClientRect(),add=h.querySelector('.group-create-button').getBoundingClientRect(),edit=h.querySelector('.rename-group-button').getBoundingClientRect(),r=h.getBoundingClientRect();return {overlap:title.right>add.left||add.right>edit.left,overflow:r.right>innerWidth||h.scrollWidth>h.clientWidth+1,addWidth:add.width}})()`);
- assert.ok(!heading.overlap&&!heading.overflow&&heading.addWidth===44,`Big Dream controls at ${width}px: ${JSON.stringify(heading)}`);
+ const heading=await js(`(()=>{const h=document.querySelector('.big-dream-volume .group-heading'),title=h.querySelector('h2').getBoundingClientRect(),add=h.querySelector('.group-create-button').getBoundingClientRect(),edit=h.querySelector('.rename-group-button').getBoundingClientRect(),r=h.getBoundingClientRect();return {overlap:title.right>add.left||add.right>edit.left,verticalDifference:Math.abs(add.top-edit.top),overflow:r.right>innerWidth||h.scrollWidth>h.clientWidth+1,addWidth:add.width}})()`);
+ assert.ok(!heading.overlap&&!heading.overflow&&heading.verticalDifference<1&&heading.addWidth===44,`Big Dream controls at ${width}px: ${JSON.stringify(heading)}`);
  if(width===390){await js("document.querySelector('.mobile-chapter-link')?.click();document.querySelector('.big-dream-volume').scrollIntoView({block:'start'})");const shot=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/group-create-390.png',Buffer.from(shot.data,'base64'))}
  await js(`openGroup('order')`);
  assert.deepEqual(await js("[...document.querySelectorAll('#groupOrder .group-order-row')].map(r=>r.dataset.id)"),original,'Only active dreams appear');

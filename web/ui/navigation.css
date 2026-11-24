@@ -822,7 +822,7 @@ body[data-view="dreams"].has-big-dreams .topbar .header-create{display:none}
 .group-heading>.group-create-button{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;min-width:44px;padding:10px;align-self:start}
 .group-create-button svg{width:20px;height:20px}
 html[data-edition] .dream-overview .big-dream-volume>.group-heading{grid-template-columns:minmax(0,1fr) 44px 44px;gap:4px}
-html[data-edition] .dream-overview .big-dream-volume>.group-heading>.group-create-button{grid-column:2;grid-row:1}
+html[data-edition] .dream-overview .big-dream-volume>.group-heading>.group-create-button{grid-column:2;grid-row:1;align-self:start}
 html[data-edition] .dream-overview .big-dream-volume>.group-heading>.rename-group-button{grid-column:3;grid-row:1}
 html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading{grid-template-columns:minmax(0,1fr) 44px 44px;gap:4px}
 html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading>.rename-group-button{grid-column:3}
