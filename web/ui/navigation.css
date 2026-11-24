@@ -812,3 +812,5 @@ html[data-edition] .dream-overview .goal[data-complete="true"] .countdown>span{f
 html[data-edition] .dream-overview .goal[data-complete="true"] .countdown strong{font-size:40px;color:var(--goal)}
 html[data-edition] .dream-overview .goal .completed-shelf-link{width:100%;min-height:44px;flex:0 0 auto;margin:0;gap:8px}
 .completed-shelf-link svg{width:18px;height:18px;flex-shrink:0}
+
+.streak-partial{font-size:10px;font-weight:600;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
