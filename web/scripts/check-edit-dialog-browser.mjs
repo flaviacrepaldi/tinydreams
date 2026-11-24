@@ -8,6 +8,9 @@ async function js(expression){const r=await cdp('Runtime.evaluate',{expression,a
 async function wait(expression){const end=Date.now()+10000;while(Date.now()<end){if(await js(expression))return;await new Promise(r=>setTimeout(r,100))}throw Error('Timed out: '+expression)}
 await cdp('Page.enable');await cdp('Page.navigate',{url:qaUrl});await wait("typeof state!=='undefined'&&!state.busy");
 await js(`showDemo();state.groups=[{id:'one',name:'Cuidados'},{id:'two',name:'Rotina'}];const p={kind:'habit',start:dayBefore(4),end:'',weekdays:[0,1,2,3,4,5,6],notes:'',unit:'',tasks:[],items:[]};state.goals=['Hábito simples','Quantidade diária','Minha lista de cuidados com um título mais longo','Resistir ao impulso','Contar repetições','Outro hábito'].map((title,i)=>({id:'align'+i,title,target:30,reward:i===2?'Uma pausa para mim':'',color:['sage','peach','lavender'][i%3],created_at:new Date().toISOString(),group_id:i<4?'one':'two',days:[dayBefore(1)],failures:[],entries:[],plan:{...p,notes:i===2?'Uma observação sobre os cuidados.':'',impulse:i===3,support:i===3?'Meu combinado anterior.':'',impulseStartedAt:i===3?new Date(Date.now()-183845000).toISOString():undefined,dailyTarget:i===1?2:i===4?3:null,dailyCounter:i===4,unit:i===1?'litros':'',dailyList:i===2,tasks:i===2?[{id:'a',title:'Cuidar de mim',weekdays:p.weekdays}]:[]}}));state.goals.push({id:'amount-check',title:'somar 10K em investimentos',target:10000,reward:'',color:'peach',days:[],failures:[],group_id:'two',created_at:new Date().toISOString(),entries:[{key:'a',day:dayBefore(3),value:100},{key:'b',day:dayBefore(1),value:200}],plan:{...p,kind:'amount',unit:'R$'}},{id:'list-check',title:'Meus livros',target:2,reward:'',color:'sage',days:[],failures:[],entries:[],group_id:'two',created_at:new Date().toISOString(),plan:{...p,kind:'list',items:[{id:'one',title:'Um livro'},{id:'two',title:'Outro livro'}]}});render()`);
+await js("openForm();document.querySelector('#goalKind').value='list';syncKind()");
+assert.equal(await js("document.querySelector('#completionModeField').hidden"),true,'Creating a one-time list hides the day completion mode');
+await js("document.querySelector('#goalDialog').close()");
 for(const width of [320,390,430,1280]){
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});
  const ids=await js('state.goals.map(g=>g.id)');
@@ -16,6 +19,11 @@ for(const width of [320,390,430,1280]){
   const result=await js(`(()=>{const d=document.querySelector('#goalDialog'),r=d.getBoundingClientRect();return {overflow:d.scrollWidth-d.clientWidth,outside:r.left<0||r.right>innerWidth,offenders:[...d.querySelectorAll('*')].filter(e=>{const s=getComputedStyle(e);return s.display!=='none'&&e.getClientRects().length&&e.getBoundingClientRect().right>r.right-10}).map(e=>({tag:e.tagName,id:e.id,cls:e.className,width:e.getBoundingClientRect().width}))}})()`);
   assert.ok(result.overflow<=1&&!result.outside,JSON.stringify({width,id,...result}));
   assert.equal(await js("document.querySelector('#goalSupport')"),null);
+  if(id==='list-check'){
+   assert.equal(await js("document.querySelector('#completionModeField').hidden"),true,'One-time lists do not choose a day completion mode');
+   assert.equal(await js("document.querySelector('#goalTarget').required"),false,'One-time list target comes from its items');
+   assert.deepEqual(await js("(()=>{const c=cardCountdown(state.goals.find(g=>g.id==='list-check'));return {value:c.value,label:c.label}})()"),{value:'2',label:'itens para realizar seu tydream'});
+  }
   if(id==='align3'){
    assert.equal(await js("document.querySelector('#goalNotes').value"),'Meu combinado anterior.');
    if(width===390){await js("document.querySelector('#goalNotes').scrollIntoView({block:'center'})");const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/combined-field-390.png',Buffer.from(png.data,'base64'))}

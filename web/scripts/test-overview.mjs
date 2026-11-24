@@ -89,7 +89,7 @@ for(const currency of ['R$','BRL','reais']){
  assert.match(countdown({...amount,target:1}).label,/real /);
 }
 assert.match(countdown({...sample,plan:{...planOf({}),kind:'amount',unit:'páginas'}}).label,/páginas/);
-assert.match(countdown({...sample,plan:{...planOf({}),kind:'list',items:[{id:'a'},{id:'b'}]}}).label,/conclusões/);
+assert.match(countdown({...sample,plan:{...planOf({}),kind:'list',items:[{id:'a'},{id:'b'}]}}).label,/itens/);
 console.log('PASS: remaining counts name completions, days, consecutive days, reais or the custom unit, with singular/plural.');
 
 // Skipped dreams leave Today and remain available under All for corrections.

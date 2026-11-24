@@ -352,14 +352,14 @@ function cardCountdown(g){
  }
  if(!measure){
   if(p.kind==='habit')measure=completionMode(p)==='streak'?(count===1?'dia consecutivo':'dias consecutivos'):(count===1?'conclusão':'conclusões');
-  else if(p.kind==='list')measure=count===1?'conclusão':'conclusões';
+  else if(p.kind==='list')measure=count===1?'item':'itens';
   else if(['R$','BRL'].includes(currencyOf(g))||/^(real|reais)$/i.test(p.unit.trim()))measure=count===1?'real':'reais';
   else if(currencyOf(g)){value=amountText(g,count);measure=''}
   else measure=p.unit.trim()||(count===1?'unidade':'unidades');
  }
  return {value:value||fmt(count),lead:count===1?'Só falta':'Só faltam',label:`${measure?measure+' ':''}para realizar seu tydream`};
 }
-function unit(g){const p=planOf(g);return p.kind==='habit'?(completionMode(p)==='streak'?'dias consecutivos':'dias'):p.kind==='list'?'etapas':p.unit||'unidades'}
+function unit(g){const p=planOf(g);return p.kind==='habit'?(completionMode(p)==='streak'?'dias consecutivos':'dias'):p.kind==='list'?'itens':p.unit||'unidades'}
 function routineLabel(g){const p=planOf(g);return p.kind==='habit'?(p.weekdays.length===7?'Todos os dias':p.weekdays.map(d=>weekNames[d]).join(', ')):p.kind==='list'?'Livros, consultas e etapas':'Meta de valor'}
 function frontDailyActions(g,iconOnly=false){
  if(planOf(g).kind!=='habit')return '';
