@@ -814,3 +814,5 @@ html[data-edition] .dream-overview .goal .completed-shelf-link{width:100%;min-he
 .completed-shelf-link svg{width:18px;height:18px;flex-shrink:0}
 
 .streak-partial{font-size:10px;font-weight:600;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+
+.list-item-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;list-style:none;margin:0;padding:0}
