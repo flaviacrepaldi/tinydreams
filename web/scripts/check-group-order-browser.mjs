@@ -9,6 +9,12 @@ async function wait(expression){const end=Date.now()+10000;while(Date.now()<end)
 await cdp('Page.enable');await cdp('Page.navigate',{url:qaUrl});await wait("typeof state!=='undefined'&&!state.busy");
 
 await js(`showDemo();state.homeFilter='all';state.groups=[{id:'order',name:'Meus cuidados'}];state.goals.forEach((g,i)=>{g.group_id='order';g.title=i===0?'Um título longo para conferir a ordem dos meus cuidados na tela inicial':g.title});render()`);
+await js(`state.groups.push({id:'empty-group',name:'Big Dream vazio'});render();document.querySelector('[data-action="new"][data-group="empty-group"]').click()`);
+assert.equal(await js("document.querySelector('#goalGroup').value"),'empty-group','Creation starts in the selected Big Dream');
+await js(`document.querySelector('#goalTitle').value='Novo tiny dream';document.querySelector('#goalTarget').value=5;showGoalStep(3,false);document.querySelector('#goalForm').requestSubmit()`);
+await wait("!document.querySelector('#goalDialog').open");
+assert.equal(await js("state.goals.find(g=>g.title==='Novo tiny dream').group_id"),'empty-group','The created dream belongs to the chosen Big Dream');
+await js(`state.goals=state.goals.filter(g=>g.title!=='Novo tiny dream');state.groups=state.groups.filter(g=>g.id!=='empty-group');render()`);
 const original=await js('state.goals.map(g=>g.id)');
 await js(`state.goals.push({...state.goals[0],id:'order-completed',title:'Já concluído',target:1,days:[dayBefore(2)],plan:{...planOf({}),kind:'habit',completionMode:'total'}},{...state.goals[0],id:'order-archived',title:'Encerrado incompleto',days:[],plan:{...planOf({}),start:'2020-01-01',end:'2020-01-02',incompleteAccepted:true}});render()`);
 const hidden=['order-completed','order-archived'];
@@ -29,6 +35,9 @@ for(const width of [320,390,430,1280]){
  const touch=width<600;
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:touch});
  await cdp('Emulation.setTouchEmulationEnabled',{enabled:touch});
+ const heading=await js(`(()=>{const h=document.querySelector('.big-dream-volume .group-heading'),title=h.querySelector('h2').getBoundingClientRect(),add=h.querySelector('.group-create-button').getBoundingClientRect(),edit=h.querySelector('.rename-group-button').getBoundingClientRect(),r=h.getBoundingClientRect();return {overlap:title.right>add.left||add.right>edit.left,overflow:r.right>innerWidth||h.scrollWidth>h.clientWidth+1,addWidth:add.width}})()`);
+ assert.ok(!heading.overlap&&!heading.overflow&&heading.addWidth===44,`Big Dream controls at ${width}px: ${JSON.stringify(heading)}`);
+ if(width===390){await js("document.querySelector('.mobile-chapter-link')?.click();document.querySelector('.big-dream-volume').scrollIntoView({block:'start'})");const shot=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/group-create-390.png',Buffer.from(shot.data,'base64'))}
  await js(`openGroup('order')`);
  assert.deepEqual(await js("[...document.querySelectorAll('#groupOrder .group-order-row')].map(r=>r.dataset.id)"),original,'Only active dreams appear');
  assert.equal(await js("document.querySelector('#groupOrder svg path').getAttribute('d')"),'M5 9h14M5 15h14');
