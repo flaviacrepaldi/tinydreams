@@ -9,8 +9,9 @@ const elements=Object.fromEntries(['#demoBanner','#goalsCount','#content'].map(i
 let day='2026-10-29';
 const goal={id:'aerobic',title:'Fazer aeróbico',target:30,days:['2026-10-28'],entries:[],plan:{...planOf({}),start:'2026-10-28'}};
 const state={goals:[goal],groups:[],view:'dreams',homeFilter:'all',demo:false};
+const bodyClasses=new Set();
 const context=vm.createContext({state,planOf,complete,dayDone,progress,targetOf,completionMode,daysUntil,scheduled,isArchivedIncomplete,outcomeOf,today:()=>day,completionDay:g=>g.days.at(-1),
-  $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{}},querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){}},
+  $:id=>elements[id],window:{matchMedia:()=>({matches:false})},document:{body:{dataset:{},classList:{toggle:(name,enabled)=>enabled?bodyClasses.add(name):bodyClasses.delete(name)}},querySelector:()=>null,querySelectorAll:()=>[],addEventListener(){}},
   esc:String,icon:()=>'',goalEmoji:()=>'<svg></svg>',goalCard:g=>`<article data-goal="${g.id}"></article>`,
   fitDreamGalleries(){},fitAmountTrends(){},requestAnimationFrame(){},queueMicrotask(){},checkIncompleteNotice(){}});
 const rewardSource=await readFile(new URL('../ui/rewards.js',import.meta.url),'utf8');
@@ -29,13 +30,14 @@ assert.deepEqual(goal.days,['2026-10-28']);
 assert.equal(state.goals.length,1);
 // The same rule applies inside a Big Dream.
 state.groups=[{id:'health',name:'Saúde'}];goal.group_id='health';render();
+assert.ok(bodyClasses.has('has-big-dreams'));
 assert.doesNotMatch(elements['#content'].innerHTML,/data-goal="aerobic"/);
 day='2026-11-01';render();
 assert.match(elements['#content'].innerHTML,/data-goal="aerobic"/);
 assert.equal(elements['#goalsCount'].textContent,1);
 goal.plan.start='';render();
 assert.match(elements['#content'].innerHTML,/data-goal="aerobic"/);
-state.groups=[];
+state.groups=[];render();assert.equal(bodyClasses.has('has-big-dreams'),false);
 const pending={...goal,id:'pending',plan:{...planOf({}),completionMode:'total'},days:[]};
 const done={...pending,id:'done',days:[day]};
 const rest={...pending,id:'rest',plan:{...pending.plan,weekdays:[1]}};
