@@ -62,6 +62,15 @@ for(const width of [320,390,430,1280]){
  }
  console.log('PASS reward scenarios at '+width);
 }
+// Completing the ninth dream opens its new shelf, even if achievements was the last view.
+await js(`(async()=>{await rewardDemo('dream');const finished=state.goals[0];state.goals.push(...Array.from({length:8},(_,i)=>({...finished,target:1,id:'shelf-prior-'+i,title:'História anterior '+i,created_at:'2026-01-01T00:00:00Z',days:[dayBefore(20-i)],plan:{...planOf(finished),kind:'habit',impulse:false,completionMode:'total',start:'',end:'',tasks:[],dailyTarget:null}})));collectionView='achievements'})()`);
+assert.equal(await js("document.querySelector('#milestone [data-action=open-shelf]').textContent.toLocaleLowerCase('pt-BR')"),'ver meu livrinho');
+await js("document.querySelector('#milestone [data-action=open-shelf]').click()");
+await wait("state.view==='shelf'&&document.querySelector('.shelf-selected')");
+assert.equal(await js("collectionView"),'shelf');
+assert.equal(await js("shelfPage"),1,'The ninth book opens the next shelf');
+assert.equal(await js("selectedShelfBook"),await js("state.goals[0].id"));
+assert.equal(await js("document.querySelector('.portrait-bookcase').getAttribute('aria-label')"),'1 de 8 livros nesta prateleira');
 await js("rewardDemo('item')");
 await js("document.querySelector('.daily-list-item[aria-pressed=true]').click()");await wait('!state.busy');
 await js("document.querySelector('.daily-list-item[aria-pressed=false]').click()");await wait('!state.busy');

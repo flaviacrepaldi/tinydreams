@@ -51,6 +51,11 @@ for(const width of [320,390,430,1280]){
  }
  await js("document.querySelector('[data-action=select-dream-group][data-group=two]').click()");
  assert.equal(await js("document.querySelector('.dream-group:not([hidden]) h2').textContent"),'Rotina');
+ await js("(()=>{window.savedAmountEntries=state.goals.find(g=>g.id==='amount-check').entries;const amount=state.goals.find(g=>g.id==='amount-check');amount.entries=[];amount.plan.initialAmount=250;amount.plan.end=dayBefore(-10);renderOverview()})()");
+ assert.equal(await js("!!document.querySelector('[data-goal=amount-check] .amount-trend')"),true,'Amount card shows a chart with only a starting value and a deadline');
+ assert.equal(await js("document.querySelector('[data-goal=amount-check] .amount-trend').getAttribute('aria-label').includes('250')"),true,'Chart includes the starting value');
+ assert.equal(await js("!!document.querySelector('[data-goal=amount-check] .amount-trend-projection' )"),false,'No rate is invented without deposits');
+ await js("(()=>{const amount=state.goals.find(g=>g.id==='amount-check');amount.entries=window.savedAmountEntries;amount.plan.end='';amount.plan.initialAmount=0;renderOverview()})()");
  assert.equal(await js("document.documentElement.scrollWidth>innerWidth"),false,'Tabs must not overflow the page');
  const navigationScreenshot=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/big-dream-tabs-${width}.png`,Buffer.from(navigationScreenshot.data,'base64'));
  await js("document.querySelector('[data-action=select-dream-group][data-group=one]').click()");
