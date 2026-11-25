@@ -31,6 +31,7 @@ export function validatePlan(p){
  if(p?.dayNotes!=null&&(typeof p.dayNotes!=='object'||Array.isArray(p.dayNotes)||Object.entries(p.dayNotes).some(([d,n])=>!validDay(d)||typeof n!=='string'||n.length>2000)))throw Error('Confira as observações dos dias.');
  if(p?.emoji!=null&&!validEmoji(p.emoji))throw Error('Escolha um único emoji para o sonho.');
  if(!p || !['habit','list','amount'].includes(p.kind))throw Error('Escolha como acompanhar este sonho.');
+ if(p.initialAmount!=null&&(p.kind!=='amount'||!Number.isFinite(p.initialAmount)||p.initialAmount<0||p.initialAmount>1000000000||Math.abs(Math.round(p.initialAmount*100)-p.initialAmount*100)>0.00001))throw Error('Informe um valor inicial válido, com até duas casas decimais.');
  if(p.completionMode!=null&&(p.kind!=='habit'||!['total','streak','period'].includes(p.completionMode)))throw Error('Escolha como alcançar a meta de dias.');
  if(p.kind==='habit'&&p.completionMode==='period'&&(!p.start||!p.end))throw Error('Defina o início e o término do período.');
  if(p.kind==='habit'&&p.completionMode&&p.completionMode!=='period'&&p.end)throw Error('Use um período definido para escolher uma data de término.');
@@ -75,7 +76,7 @@ export function habitSequence(g,asOf=practiceToday()){
  return {current,completedOn};
 }
 export function habitCompletionDay(g){if(planOf(g).impulse){const {start,seconds}=impulseElapsed(g);return seconds>=targetOf(g)*86400?new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(start+targetOf(g)*86400000)):''}return completionMode(planOf(g))==='streak'?habitSequence(g).completedOn:habitDays(g)[targetOf(g)-1]||'';}
-export function progress(g){const p=planOf(g);if(p.impulse)return Math.floor(impulseElapsed(g).seconds/86400);if(p.kind==='amount')return Math.round((g.entries||[]).reduce((n,e)=>n+e.value,0)*100)/100;if(p.kind==='list')return p.items.filter(i=>(g.entries||[]).some(e=>e.key===i.id)).length;if(completionMode(p)==='streak'){const sequence=habitSequence(g);return sequence.completedOn?targetOf(g):sequence.current}return habitDays(g).length;}
+export function progress(g){const p=planOf(g);if(p.impulse)return Math.floor(impulseElapsed(g).seconds/86400);if(p.kind==='amount')return Math.round((g.entries||[]).reduce((n,e)=>n+e.value,p.initialAmount||0)*100)/100;if(p.kind==='list')return p.items.filter(i=>(g.entries||[]).some(e=>e.key===i.id)).length;if(completionMode(p)==='streak'){const sequence=habitSequence(g);return sequence.completedOn?targetOf(g):sequence.current}return habitDays(g).length;}
 export function targetOf(g){
  const p=planOf(g);if(p.kind==='list')return p.items.length;
  if(p.kind==='habit'&&completionMode(p)==='period'&&p.start&&p.end){const count=practiceDays(p.start,p.end,p.weekdays);if(count!==null)return Math.max(1,count-(p.skippedDays||[]).filter(day=>day>=p.start&&day<=p.end&&p.weekdays.includes(weekday(day))).length)}

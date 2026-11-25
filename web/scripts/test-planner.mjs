@@ -55,6 +55,16 @@ try{
  assert.equal((await call('/'+g.id+'/redeem','POST',{})).status,200);
  r=await entry('book1','2026-01-06',false);assert.equal(r.data.redeemed,0);assert.equal(complete(r.data),false);
  g=(await call('','POST',{...goal,target:10000,plan:{...plan,kind:'amount',unit:'R$'}})).data;
+ const initialPlan={...plan,kind:'amount',unit:'R$',initialAmount:200.25};
+ let initial=(await call('','POST',{...goal,target:1000,plan:initialPlan})).data;
+ assert.equal(progress(initial),200.25);
+ initial=(await call('/'+initial.id+'/entry','POST',{key:'initial-test',day:'2026-01-05',value:50.5,done:true})).data;
+ assert.equal(progress(initial),250.75);
+ initial=(await call('/'+initial.id,'PATCH',{...goal,target:1000,plan:{...initialPlan,initialAmount:300}})).data;
+ assert.equal(progress(initial),350.5);
+ assert.equal(progress((await call('','GET')).data.find(item=>item.id===initial.id)),350.5);
+ for(const invalid of [-1,0.001,1000000001])assert.equal((await call('','POST',{...goal,target:1000,plan:{...initialPlan,initialAmount:invalid}})).status,400);
+ assert.equal((await call('','POST',{...goal,plan:{...plan,initialAmount:10}})).status,400);
  assert.equal((await call('/'+g.id+'/entry','POST',{key:'deposit',day:'2026-01-05',value:-10,done:true})).status,400);
  r=await call('/'+g.id+'/entry','POST',{key:'deposit',day:'2026-01-05',value:1234.56,done:true});assert.equal(progress(r.data),1234.56);
  r=await call('/'+g.id+'/entry','POST',{key:'deposit',day:'2026-01-05',value:1234.56,done:true});assert.equal(progress(r.data),1234.56);
