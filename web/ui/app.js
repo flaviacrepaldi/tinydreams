@@ -406,15 +406,18 @@ function amountTrend(g){
  const daily=new Map();for(const entry of g.entries||[])daily.set(entry.day,(daily.get(entry.day)||0)+entry.value);
  let total=planOf(g).initialAmount||0;const points=[...daily].sort(([a],[b])=>a.localeCompare(b)).map(([day,value])=>({day,value:total=Math.round((total+value)*100)/100}));
  if(!points.length)return '';
+ const start=planOf(g).start||(g.created_at?localDay(new Date(g.created_at)):'');
+ if(start&&start<points[0].day)points.unshift({day:start,value:planOf(g).initialAmount||0});
  const first=Date.parse(points[0].day),last=Date.parse(points.at(-1).day),current=points.at(-1).value,target=targetOf(g),gain=current-points[0].value;
- const projected=points.length>1&&last>first&&gain>0&&current<target?last+(target-current)/(gain/(last-first)):null;
+ const projectedAt=points.length>1&&last>first&&gain>0&&current<target?last+(target-current)/(gain/(last-first)):null;
+ const projected=Number.isFinite(projectedAt)&&projectedAt<Date.parse('2100-01-01')?projectedAt:null;
  const until=projected||last,max=Math.max(target,current,1),x=time=>until===first?125:4+(time-first)/(until-first)*242,y=value=>92-value/max*76;
  const coords=points.map(p=>({x:x(Date.parse(p.day)),y:y(p.value)})),path=coords.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' '),end=coords.at(-1);
  const estimate=projected&&Number.isFinite(projected)&&projected<Date.parse('2100-01-01')?new Date(projected).toISOString().slice(0,10):null;
  const endDay=estimate||points.at(-1).day;
  const shortDate=day=>prettyDay(day).slice(0,5);
- const caption=projected?`pontilhado: projeção pelo ritmo dos aportes${estimate?' · '+prettyDay(estimate):''}`:points.length>1?'valor acumulado por data':'primeiro registro';
- return `<div class="amount-trend" role="img" aria-label="${esc(`valor acumulado: ${points.map(p=>`${amountText(g,p.value)} em ${prettyDay(p.day)}`).join('; ')}. meta: ${amountText(g,target)}. ${caption}`)}"><div class="amount-trend-heading"><strong>projeção</strong><span data-user-content>${esc(amountText(g,target))}</span></div><svg viewBox="0 0 250 100" preserveAspectRatio="none" aria-hidden="true"><path class="amount-trend-axes" d="M4 4V96H246"/><path class="amount-trend-target" d="M4 ${y(target)}H246"/>${points.length>1?`<path class="amount-trend-area" d="${path} L${end.x} 96 L${coords[0].x} 96 Z"/><path class="amount-trend-line" d="${path}"/>`:''}${projected?`<path class="amount-trend-projection" d="M${end.x} ${end.y}L246 ${y(target)}"/>`:''}<circle cx="${end.x}" cy="${end.y}" r="2.5"/></svg><span class="amount-axis-zero" aria-hidden="true">0</span><div class="amount-trend-dates" aria-hidden="true"><span>${shortDate(points[0].day)}</span><span>${shortDate(endDay)}</span></div></div>`;
+ const caption=projected?`pontilhado: estimativa pelo ritmo desde ${prettyDay(points[0].day)}${estimate?' · '+prettyDay(estimate):''}`:current>=target?'meta alcançada':'registre valores em dias diferentes para calcular uma estimativa';
+ return `<div class="amount-trend" role="img" aria-label="${esc(`valor acumulado: ${points.map(p=>`${amountText(g,p.value)} em ${prettyDay(p.day)}`).join('; ')}. meta: ${amountText(g,target)}. ${caption}`)}"><div class="amount-trend-heading"><strong>${projected?'projeção estimada':current>=target?'meta alcançada':'aguardando mais dias'}</strong><span data-user-content>${esc(amountText(g,target))}</span></div><svg viewBox="0 0 250 100" preserveAspectRatio="none" aria-hidden="true"><path class="amount-trend-axes" d="M4 4V96H246"/><path class="amount-trend-target" d="M4 ${y(target)}H246"/>${points.length>1?`<path class="amount-trend-area" d="${path} L${end.x} 96 L${coords[0].x} 96 Z"/><path class="amount-trend-line" d="${path}"/>`:''}${projected?`<path class="amount-trend-projection" d="M${end.x} ${end.y}L246 ${y(target)}"/>`:''}<circle cx="${end.x}" cy="${end.y}" r="2.5"/></svg><span class="amount-axis-zero" aria-hidden="true">0</span><div class="amount-trend-dates" aria-hidden="true"><span>${shortDate(points[0].day)}</span><span>${shortDate(endDay)}</span></div></div>`;
 }
 function fitAmountTrends(){
  document.querySelectorAll('.amount-trend').forEach(chart=>{

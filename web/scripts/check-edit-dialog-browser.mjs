@@ -24,6 +24,15 @@ await js("document.querySelector('#goalKind').value='habit';syncKind()");
 assert.equal(await js("document.querySelector('#goalTarget').placeholder"),'quantos dias?','Habit target restores the days placeholder');
 assert.equal(await js("document.querySelector('#initialAmountField').hidden"),true,'Starting point is hidden for habits');
 await js("document.querySelector('#goalDialog').close()");
+// A dated starting point allows a projection after the first later deposit.
+await js(`window.trendGoal={id:'trend-test',target:1000,created_at:new Date().toISOString(),entries:[{day:dayBefore(1),value:100}],plan:{...planOf({}),kind:'amount',start:dayBefore(11),initialAmount:200,unit:'R$'}}`);
+assert.equal(await js("amountTrend(trendGoal).includes('amount-trend-projection')"),true,'Project from the starting value and first later deposit');
+assert.equal(await js("amountTrend(trendGoal).includes('estimativa pelo ritmo desde')"),true,'Describe the basis for the estimate');
+await js("trendGoal.plan.start=trendGoal.entries[0].day");
+assert.equal(await js("amountTrend(trendGoal).includes('amount-trend-projection')"),false,'Do not invent a rate for a same-day deposit');
+assert.equal(await js("amountTrend(trendGoal).includes('aguardando mais dias')"),true,'Explain when a rate cannot yet be calculated');
+await js("trendGoal.entries.push({day:dayBefore(0),value:100})");
+assert.equal(await js("amountTrend(trendGoal).includes('amount-trend-projection')"),true,'Two dated deposits establish a rate');
 // New symbols must select, serialize, and render their own icon rather than a fallback.
 await js("openForm() ");
 for(const name of ['Festa','Meditação','Compras','Filmes','Avião','Natal','Ovo de Páscoa','Halloween','Fogueira de festa junina','Bandeirinhas de festa junina']){
