@@ -34,7 +34,13 @@ for(const selector of ['#newGoalButton','.goal .small-button','.goal .check-butt
  assert.equal((await paint()).at(-1),'none',`Focus ring remains: ${selector}`);
  await cdp('CSS.forcePseudoState',{nodeId,forcedPseudoClasses:[]});
 }
+assert.equal(await js("document.querySelectorAll('.dream-group:not([hidden])').length"),1,'One Big Dream is visible');
+await js("document.querySelector('[data-action=select-dream-group][data-group=two]').click()");
+assert.equal(await js("document.querySelector('.dream-group:not([hidden]) h2').textContent"),'Rotina','Selecting a Big Dream shows its cards');
+assert.equal(await js("document.querySelector('[data-action=select-dream-group][data-group=two]').getAttribute('aria-pressed')"),'true');
+await js("document.querySelector('[data-action=select-dream-group][data-group=one]').click()");
 for(const width of [320,390,430,1280]){
+ await js("renderOverview()");
  await cdp('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<600});await js('document.fonts.ready');if(width<600)await js("document.querySelector('.mobile-chapter-link')?.click()");await js('new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))');
  if(width<600){
   await js("document.querySelector('#demoBanner').hidden=true;document.querySelector('#mobileDreams').scrollTop=0");
@@ -43,6 +49,12 @@ for(const width of [320,390,430,1280]){
   assert.ok(headerFit.cardBottom<=headerFit.menuTop,`Header pushes first card under menu: ${JSON.stringify({width,...headerFit})}`);
   if(width===390){const png=await cdp('Page.captureScreenshot',{format:'png'});await writeFile('/tmp/big-dream-header-390.png',Buffer.from(png.data,'base64'))}
  }
+ await js("document.querySelector('[data-action=select-dream-group][data-group=two]').click()");
+ assert.equal(await js("document.querySelector('.dream-group:not([hidden]) h2').textContent"),'Rotina');
+ assert.equal(await js("document.documentElement.scrollWidth>innerWidth"),false,'Tabs must not overflow the page');
+ const navigationScreenshot=await cdp('Page.captureScreenshot',{format:'png'});await writeFile(`/tmp/big-dream-tabs-${width}.png`,Buffer.from(navigationScreenshot.data,'base64'));
+ await js("document.querySelector('[data-action=select-dream-group][data-group=one]').click()");
+ await js("document.querySelectorAll('.dream-group[hidden]').forEach(group=>group.hidden=false)");
  const offsets=await js(`(()=>{const cards=[...document.querySelectorAll('.goal')];return cards.map(card=>{const r=card.getBoundingClientRect(),grid=(card.querySelector('.streak-grid')||card.querySelector('.dream-progress')).getBoundingClientRect();const summary=card.querySelector('.dream-summary'),sr=summary.getBoundingClientRect(),last=card.lastElementChild.getBoundingClientRect(),contentBottom=Math.max(...[...summary.children].map(el=>el.getBoundingClientRect().bottom));return {kind:card.dataset.goalKind,hasGrid:!!card.querySelector('.streak-grid'),title:card.querySelector('h2').textContent,grid:grid.top-r.top,width:card.clientWidth,scroll:card.scrollWidth,height:r.height,verticalOverflow:card.scrollHeight-card.clientHeight,summaryWaste:sr.bottom-contentBottom,footerWaste:r.bottom-last.bottom,gridGap:grid.top-sr.bottom}})})()`);
  assert.ok(Math.max(...offsets.filter(v=>v.hasGrid).map(v=>v.grid))-Math.min(...offsets.filter(v=>v.hasGrid).map(v=>v.grid))<2,JSON.stringify({width,offsets}));
  assert.ok(offsets.every(v=>v.scroll<=v.width+1),JSON.stringify({width,offsets}));

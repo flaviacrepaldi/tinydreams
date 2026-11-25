@@ -828,3 +828,11 @@ html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-drea
 html[data-mobile-book="true"] body[data-view="dreams"] .dream-overview .big-dream-volume>.group-heading>.rename-group-button{grid-column:3}
 
 .streak-square.is-partial{background:linear-gradient(to top,color-mix(in srgb,var(--goal) 28%,transparent) 0 var(--partial-progress),transparent var(--partial-progress) 100%)}
+
+/* Big Dreams are selected independently from each group's card carousel. */
+.dream-group-tabs{display:flex;gap:6px;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;margin:0 0 12px;padding:2px 0 5px}
+.dream-group-tabs button{flex:0 0 auto;max-width:min(75vw,260px);min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--muted);font:inherit;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dream-group-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.dream-group[hidden]{display:none!important}
+@media(max-width:560px){.dream-group-tabs{margin-bottom:4px;padding-bottom:3px}.dream-group-tabs button{min-height:40px;padding:6px 12px}}
+@media(max-width:560px){.dream-overview:has(.dream-group-tabs)>.daily-keepsakes{display:none}}
